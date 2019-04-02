@@ -1,7 +1,9 @@
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 public class Main extends Application{
 
@@ -11,11 +13,18 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("ZombiLand");
+		
+		Rectangle player = new Rectangle(8, 8);
+		player.setFill(Color.BLUEVIOLET);
+		player.setX(300);
+		player.setY(250);
+		
 		Pane pane = new Pane();
-		Scene scene = new Scene(pane, 300, 250, Color.GREEN);
+		pane.getChildren().add(player);
+		Scene scene = new Scene(pane, 600, 500);
+		scene.setFill(Color.LIGHTGREEN);
 		
-		
+		primaryStage.setTitle("ZombiLand");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
