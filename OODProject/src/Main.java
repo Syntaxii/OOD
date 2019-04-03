@@ -13,7 +13,7 @@ public class Main extends Application{
 	private Image playerImage;
 	private Node  player;
 	boolean goUp, goDown, goRight, goLeft;
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -29,9 +29,9 @@ public class Main extends Application{
 		moveTo(width/2, height/2);
 		Scene scene = new Scene(root, width, height);
 		BackgroundImage myBI= new BackgroundImage(new Image("http://www.dundjinni.com/forums/uploads/Eanwulf/237_Sample.jpg",750,700,false,true),
-		        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-		        BackgroundSize.DEFAULT);
-		
+				BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+				BackgroundSize.DEFAULT);
+
 		root.setBackground(new Background(myBI));
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
@@ -61,18 +61,47 @@ public class Main extends Application{
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				int dx = 0, dy = 0;
-				if (goUp) dy -= 3;
-				if (goDown) dy += 3;
-				if (goRight)  dx += 4;
-				if (goLeft)  dx -= 4;
-				moveBy(dx, dy);
+				double[] offsetAmount = {0, 0};
+				double currentAngle = 0; //Proper diagonal movement
+				boolean moving = false;
+				if (goDown) {
+					currentAngle = 90;
+					moving = true;
+					if (goLeft) {
+						currentAngle = 135;
+					}
+					else if (goRight) {
+						currentAngle = 45;
+					}
+				}
+				else if (goUp) {
+					currentAngle = 270;
+					moving = true;
+					if (goLeft) {
+						currentAngle = 225;
+					}
+					else if (goRight) {
+						currentAngle = 315;
+					}
+				}
+				else if (goRight) {
+					moving = true;
+					currentAngle = 0;
+				}
+				else if (goLeft) {
+					moving = true;
+					currentAngle = 180;
+				}
+				if (moving == true) { 
+				offsetAmount = getXandY(currentAngle);
+				moveBy(offsetAmount[0]*3, offsetAmount[1]*3);
+				}
 			}
 		};
 		timer.start();
 	}
-	private void moveBy(int dx, int dy) {
-		if (dx == 0 && dy == 0) return;
+	private void moveBy(double dx, double dy) {
+		if (dx == 0 && dy == 0) return; //redundant
 		double cx = player.getBoundsInLocal().getWidth()  / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getLayoutX() + dx;
@@ -86,5 +115,12 @@ public class Main extends Application{
 				y - cy >= 0 && y + cy <= height) {
 			player.relocate(x - cx, y - cy);
 		}
+	}
+
+	private double[] getXandY(double angle) { //for correct diagonal speed
+		double radianAngle = Math.toRadians(angle);
+		double newX = Math.cos(radianAngle);
+		double newY = Math.sin(radianAngle);
+		return new double[] {newX, newY};
 	}
 }
