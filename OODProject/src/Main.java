@@ -14,7 +14,7 @@ import javafx.scene.image.*;
 
 public class Main extends Application{
 	static final double width = 750, height = 700;
-	static final String imgURL = "https://i.imgur.com/Jyc4TWx.png";
+	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
 	private Node  player;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
@@ -37,8 +37,8 @@ public class Main extends Application{
 		playerImage.getWidth();
 		playerImage.getHeight();
 		player = new ImageView(playerImage);
-		player.setScaleX(1.4);
-		player.setScaleY(1.4);
+		player.setScaleX(.5);
+		player.setScaleY(.5);
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 		
@@ -122,15 +122,17 @@ public class Main extends Application{
 		});
 		scene.setOnMouseMoved(new EventHandler<MouseEvent> () {
 			public void handle(MouseEvent event) {
-				double x = event.getX();
-				double y = event.getY();
-				moveMouse(x, y);
-				if(x+centerOffsetX < player.getLayoutX()) {
+				double MouseX = event.getX();
+				double MouseY = event.getY();
+				moveMouse(MouseX, MouseY);
+				if(MouseX/2 < player.getLayoutX()) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
 					player.setScaleX(Math.abs(player.getScaleX()));
 				}
+				
+				System.out.println("PlayerX: " + player.getLayoutX() + " MouseX: " + event.getX());
 			}
 		});
 		scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
@@ -138,7 +140,7 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX+centerOffsetX < player.getLayoutX()) {
+				if(MouseX/2 < player.getLayoutX()) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
