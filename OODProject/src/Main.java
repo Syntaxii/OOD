@@ -70,6 +70,17 @@ public class Main extends Application{
 				}
 			}
 		});
+		scene.setOnMouseMoved(new EventHandler<MouseEvent> () {
+			public void handle(MouseEvent event) {
+				System.out.println(event.getX() + "\t" + event.getSceneX() + "\t" + event.getScreenX() + "\t" + player.getLayoutX());
+				if(event.getX() < player.getLayoutX()) {
+					player.setScaleX(-1.4);
+				}
+				else {
+					player.setScaleX(1.4);
+				}
+			}
+		});
 		stage.setScene(scene);
 		stage.show();
 		AnimationTimer timer = new AnimationTimer() {
