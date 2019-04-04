@@ -218,16 +218,24 @@ public class Main extends Application{
 		
 	}
 	
+	// make a function to make player face the direction of the mouse more fluidly
 	private void rotatePlayer(double x, double y) {
-		if(x < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
-			player.setScaleX(Math.abs(player.getScaleX()) * -1);
+		if(x < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX() - player.getBoundsInParent().getMinX())/2) {
+			//player.setScaleX(Math.abs(player.getScaleX()));
+			player.setRotate(180);
+		}
+		else if(y < player.getBoundsInParent().getMinY() + (player.getBoundsInParent().getMaxY() - player.getBoundsInParent().getMinY())/2) {
+			player.setRotate(270);
+		}
+		else if(y > player.getBoundsInParent().getMaxY() + (player.getBoundsInParent().getMaxY() - player.getBoundsInParent().getMinY())/2) {
+			player.setRotate(90);
 		}
 		else {
-			player.setScaleX(Math.abs(player.getScaleX()));
+			//player.setScaleX(Math.abs(player.getScaleX()) * -1);
+			player.setRotate(0);
 		}
 	}
 
-	
 	private void moveBy(double dx, double dy) {
 		if (dx == 0 && dy == 0) return; //redundant
 		double cx = player.getBoundsInLocal().getWidth()  / 2;
