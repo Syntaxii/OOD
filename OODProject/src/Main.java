@@ -125,7 +125,7 @@ public class Main extends Application{
 				moveMouse();
 				rotatePlayer();
 
-				System.out.println("PlayerX: " + player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2 + " MouseX: " + event.getX());
+		//		System.out.println("PlayerX: " + player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2 + " MouseX: " + event.getX());
 			}
 		});
 		scene.setOnMouseDragged(new EventHandler<MouseEvent>() {

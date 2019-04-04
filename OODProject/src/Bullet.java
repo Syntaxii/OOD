@@ -6,8 +6,20 @@ public class Bullet extends Projectile{
     private double VelX, VelY;
     public Bullet(double mouseX, double mouseY, double cx, double cy) {
         super(cx, cy, mouseX, mouseY);
-        VelX = (mouseX - x ) / 10;
-        VelY = (mouseY - y) / 10;
+//        VelX = (mouseX - x ) / 10;
+//        VelY = (mouseY - y) / 10;
+        //TODO fix this lol
+        double angle = Math.atan2(mouseY - y, mouseX - x) * 180 / Math.PI;
+        System.out.println("mouseY " +mouseY);
+        System.out.println("mouseX " + mouseX);
+        System.out.println("cy " + cy);
+        System.out.println("cx " + cx);
+		double radianAngle = Math.toRadians(angle);
+		System.out.println("radianAngle " + radianAngle);
+		double VelX = Math.cos(radianAngle) *100;
+		System.out.println("velx " + VelX);
+		double VelY = Math.sin(radianAngle) *100;
+		System.out.println("vely " + VelY);
         sphere = new Circle(5);
         sphere.setFill(Color.YELLOW);
         sphere.setCenterX(cx);
