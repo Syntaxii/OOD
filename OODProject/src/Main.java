@@ -1,4 +1,5 @@
 import javafx.stage.*;
+
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.scene.*;
@@ -13,6 +14,8 @@ public class Main extends Application{
 	private Image playerImage;
 	private Node  player;
 	boolean goUp, goDown, goRight, goLeft;
+	private bulletHandling bHandler;
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -20,17 +23,25 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		bHandler = new bulletHandling();
 
 		playerImage = new Image(imgURL);
 		player = new ImageView(playerImage);
 		player.setScaleX(1.4);
 		player.setScaleY(1.4);
+		
 		BorderPane root = new BorderPane();
+		
 		Pane floor = new Pane(player);
+		
 		root.getChildren().add(floor);
+		
 		moveTo(width/2, height/2);
+		
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.CROSSHAIR);
+		
 		BackgroundImage myBI= new BackgroundImage(new Image("http://www.dundjinni.com/forums/uploads/Eanwulf/237_Sample.jpg",750,700,false,true),
 				BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
@@ -84,10 +95,20 @@ public class Main extends Application{
 		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				double MouseX = e.getX();
+
 				double MouseY = e.getY();		
-				double cx = player.getBoundsInLocal().getWidth()  / 2;
-				double cy = player.getBoundsInLocal().getHeight() / 2;
+
+		//		double cx = player.getBoundsInLocal().getWidth()  / 2;
+				double cx = player.getLayoutX();
+
+		//		double cy = player.getBoundsInLocal().getHeight() / 2;
+				double cy = player.getLayoutY();
+				
+				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
 				Bullet pBullet = new Bullet(MouseX,MouseY,cx,cy);
+				bHandler.addProjectile(pBullet);
+				floor.getChildren().add(pBullet.getBullet());
+
 			}
 		});
 		stage.setScene(scene);
@@ -130,6 +151,9 @@ public class Main extends Application{
 					offsetAmount = getXandY(currentAngle);
 					moveBy(offsetAmount[0]*3, offsetAmount[1]*3);
 				}
+				
+				bHandler.cycleProjectiles();
+			
 			}
 		};
 		timer.start();
