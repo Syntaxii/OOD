@@ -81,6 +81,15 @@ public class Main extends Application{
 				}
 			}
 		});
+		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				double MouseX = e.getX();
+				double MouseY = e.getY();		
+				double cx = player.getBoundsInLocal().getWidth()  / 2;
+				double cy = player.getBoundsInLocal().getHeight() / 2;
+				Bullet pBullet = new Bullet(MouseX,MouseY,cx,cy);
+			}
+		});
 		stage.setScene(scene);
 		stage.show();
 		AnimationTimer timer = new AnimationTimer() {
