@@ -30,6 +30,7 @@ public class Main extends Application{
 		root.getChildren().add(floor);
 		moveTo(width/2, height/2);
 		Scene scene = new Scene(root, width, height);
+		scene.setCursor(Cursor.CROSSHAIR);
 		BackgroundImage myBI= new BackgroundImage(new Image("http://www.dundjinni.com/forums/uploads/Eanwulf/237_Sample.jpg",750,700,false,true),
 				BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
