@@ -7,6 +7,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.image.*;
@@ -19,6 +20,8 @@ public class Main extends Application{
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private bulletHandling bHandler;
+	private double centerOffsetX, centerOffsetY;
+	private Circle shadow;
 
 
 	public static void main(String[] args) {
@@ -31,9 +34,18 @@ public class Main extends Application{
 		bHandler = new bulletHandling();
 
 		playerImage = new Image(imgURL);
+		playerImage.getWidth();
+		playerImage.getHeight();
 		player = new ImageView(playerImage);
 		player.setScaleX(1.4);
 		player.setScaleY(1.4);
+		centerOffsetX = (playerImage.getWidth())/2;
+		centerOffsetY = (playerImage.getHeight())/2;
+		
+//		TODO make shadow
+//		shadow = new Circle(2);
+//		shadow.setOpacity(40);
+//		shadow.setFill(Color.BLACK);
 		
 		//TODO condense
 		mouseCursor1 = new Rectangle(10, 5);
@@ -113,7 +125,7 @@ public class Main extends Application{
 				double x = event.getX();
 				double y = event.getY();
 				moveMouse(x, y);
-				if(x < player.getLayoutX()) {
+				if(x+centerOffsetX < player.getLayoutX()) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
@@ -126,7 +138,7 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX < player.getLayoutX()) {
+				if(MouseX+centerOffsetX < player.getLayoutX()) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
@@ -154,11 +166,13 @@ public class Main extends Application{
 				double cy = player.getLayoutY();
 				
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
-				createBullet(MouseX, MouseY, cx, cy, floor);
+				createBullet(MouseX, MouseY, cx+centerOffsetX, cy+centerOffsetY, floor);
 
 			}
 		});
 		stage.setScene(scene);
+		stage.setTitle("ZombiLand");
+		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png"));
 		stage.show();
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -231,6 +245,7 @@ public class Main extends Application{
 				y - cy >= 0 && y + cy <= height) {
 			player.relocate(x - cx, y - cy);
 		}
+
 	}
 
 	private double[] getXandY(double angle) { //for correct diagonal speed
@@ -242,17 +257,17 @@ public class Main extends Application{
 	
 	private void moveMouse(double x, double y) {
 		int d = 10; //displacement. Easier to change with a single variable
-		mouseCursor1.setX(x+d);
-		mouseCursor1.setY(y+d);
+		mouseCursor1.setX(x+d-5);
+		mouseCursor1.setY(y+d-2);
 		
-		mouseCursor2.setX(x+d);
-		mouseCursor2.setY(y-d);
+		mouseCursor2.setX(x+d-5);
+		mouseCursor2.setY(y-d-2);
 		
-		mouseCursor3.setX(x-d);
-		mouseCursor3.setY(y-d);
+		mouseCursor3.setX(x-d-5);
+		mouseCursor3.setY(y-d-2);
 		
-		mouseCursor4.setX(x-d);
-		mouseCursor4.setY(y+d);
+		mouseCursor4.setX(x-d-5);
+		mouseCursor4.setY(y+d-2);
 	}
 	
 	private void setMouseColor(Paint color) {
