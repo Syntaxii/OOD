@@ -23,6 +23,8 @@ public class Main extends Application{
 
 		playerImage = new Image(imgURL);
 		player = new ImageView(playerImage);
+		player.setScaleX(1.4);
+		player.setScaleY(1.4);
 		BorderPane root = new BorderPane();
 		Pane floor = new Pane(player);
 		root.getChildren().add(floor);
@@ -42,6 +44,12 @@ public class Main extends Application{
 				case S:  goDown = true; break;
 				case A:  goLeft  = true; break;
 				case D: goRight  = true; break;
+				case UP:    goUp = true; break;
+				case DOWN:  goDown = true; break;
+				case LEFT:  goLeft = true; break;
+				case RIGHT: goRight = true; break;
+				default:
+					break;
 				}
 			}
 		});
@@ -53,6 +61,12 @@ public class Main extends Application{
 				case S:  goDown = false; break;
 				case A:  goLeft  = false; break;
 				case D: goRight  = false; break;
+				case UP:    goUp = false; break;
+				case DOWN:  goDown = false; break;
+				case LEFT:  goLeft = false; break;
+				case RIGHT: goRight = false; break;
+				default:
+					break;
 				}
 			}
 		});
@@ -64,7 +78,7 @@ public class Main extends Application{
 				double[] offsetAmount = {0, 0};
 				double currentAngle = 0; //Proper diagonal movement
 				boolean moving = false;
-				if (goDown) {
+				if (goUp) {
 					currentAngle = 90;
 					moving = true;
 					if (goLeft) {
@@ -74,7 +88,7 @@ public class Main extends Application{
 						currentAngle = 45;
 					}
 				}
-				else if (goUp) {
+				else if (goDown) {
 					currentAngle = 270;
 					moving = true;
 					if (goLeft) {
@@ -93,8 +107,8 @@ public class Main extends Application{
 					currentAngle = 180;
 				}
 				if (moving == true) { 
-				offsetAmount = getXandY(currentAngle);
-				moveBy(offsetAmount[0]*3, offsetAmount[1]*3);
+					offsetAmount = getXandY(currentAngle);
+					moveBy(offsetAmount[0]*3, offsetAmount[1]*3);
 				}
 			}
 		};
@@ -105,7 +119,7 @@ public class Main extends Application{
 		double cx = player.getBoundsInLocal().getWidth()  / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getLayoutX() + dx;
-		double y = cy + player.getLayoutY() + dy;
+		double y = cy + player.getLayoutY() - dy;
 		moveTo(x, y);
 	}
 	private void moveTo(double x, double y) {
