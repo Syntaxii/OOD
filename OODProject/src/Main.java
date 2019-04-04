@@ -121,12 +121,7 @@ public class Main extends Application{
 				double MouseX = event.getX();
 				double MouseY = event.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
-					player.setScaleX(Math.abs(player.getScaleX()) * -1);
-				}
-				else {
-					player.setScaleX(Math.abs(player.getScaleX()));
-				}
+				rotatePlayer(MouseX, MouseY);
 				
 				System.out.println("PlayerX: " + player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2 + " MouseX: " + event.getX());
 			}
@@ -136,12 +131,8 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
-					player.setScaleX(Math.abs(player.getScaleX()) * -1);
-				}
-				else {
-					player.setScaleX(Math.abs(player.getScaleX()));
-				}
+				rotatePlayer(MouseX, MouseY);
+
 			}
 		});
 		
@@ -225,6 +216,15 @@ public class Main extends Application{
 		bHandler.addProjectile(pBullet);
 		floor.getChildren().add(pBullet.getBullet());
 		
+	}
+	
+	private void rotatePlayer(double x, double y) {
+		if(x < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
+			player.setScaleX(Math.abs(player.getScaleX()) * -1);
+		}
+		else {
+			player.setScaleX(Math.abs(player.getScaleX()));
+		}
 	}
 
 	
