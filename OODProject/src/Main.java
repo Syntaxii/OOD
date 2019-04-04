@@ -42,10 +42,6 @@ public class Main extends Application{
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 		
-//		TODO make shadow
-//		shadow = new Circle(2);
-//		shadow.setOpacity(40);
-//		shadow.setFill(Color.BLACK);
 		
 		//TODO condense
 		mouseCursor1 = new Rectangle(10, 5);
@@ -125,14 +121,14 @@ public class Main extends Application{
 				double MouseX = event.getX();
 				double MouseY = event.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX/2 < player.getLayoutX()) {
+				if(MouseX < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
 					player.setScaleX(Math.abs(player.getScaleX()));
 				}
 				
-				System.out.println("PlayerX: " + player.getLayoutX() + " MouseX: " + event.getX());
+				System.out.println("PlayerX: " + player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2 + " MouseX: " + event.getX());
 			}
 		});
 		scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
@@ -140,7 +136,7 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();
 				moveMouse(MouseX, MouseY);
-				if(MouseX/2 < player.getLayoutX()) {
+				if(MouseX < player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2) {
 					player.setScaleX(Math.abs(player.getScaleX()) * -1);
 				}
 				else {
