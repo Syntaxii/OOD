@@ -37,8 +37,8 @@ public class Main extends Application{
 		playerImage.getWidth();
 		playerImage.getHeight();
 		player = new ImageView(playerImage);
-		player.setScaleX(.5);
-		player.setScaleY(.5);
+		player.setScaleX(.4);
+		player.setScaleY(.4);
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 		
@@ -199,7 +199,7 @@ public class Main extends Application{
 				}
 				if (moving == true) { 
 					offsetAmount = getXandY(currentAngle);
-					moveBy(offsetAmount[0]*3, offsetAmount[1]*3);
+					moveBy(offsetAmount[0]*5, offsetAmount[1]*5);
 				}
 				
 				bHandler.cycleProjectiles();
