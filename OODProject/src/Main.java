@@ -19,9 +19,8 @@ public class Main extends Application{
 	private Node  player;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
-	private bulletHandling bHandler;
+	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
-//	private Circle shadow;
 
 
 	public static void main(String[] args) {
@@ -31,7 +30,7 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		bHandler = new bulletHandling();
+		pHandler = new ProjectileHandling();
 		mouseX = 0.0;
 		mouseY = 0.0;
 
@@ -185,7 +184,7 @@ public class Main extends Application{
 					moveBy(offsetAmount[0]*5, offsetAmount[1]*5);
 				}
 
-				bHandler.cycleProjectiles();
+				pHandler.cycleProjectiles();
 				rotatePlayer();
 
 			}
@@ -220,7 +219,7 @@ public class Main extends Application{
 
 	private void createBullet(double mouseX, double mouseY, double cx, double cy, Pane thefloor) {
 		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
-		bHandler.addProjectile(pBullet);
+		pHandler.addProjectile(pBullet);
 		thefloor.getChildren().add(pBullet.getBullet());
 
 	}
