@@ -44,27 +44,8 @@ public class Main extends Application{
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 
-
-		//TODO condense
-		mouseCursor1 = new Rectangle(10, 5);
-		mouseCursor1.setRotate(45);
-		mouseCursor1.setFill(Color.FLORALWHITE);
-		mouseCursor1.setStroke(Color.BLACK);
-
-		mouseCursor2 = new Rectangle(10, 5);
-		mouseCursor2.setRotate(135);
-		mouseCursor2.setFill(Color.FLORALWHITE);
-		mouseCursor2.setStroke(Color.BLACK);
-
-		mouseCursor3 = new Rectangle(10, 5);
-		mouseCursor3.setRotate(225);
-		mouseCursor3.setFill(Color.FLORALWHITE);
-		mouseCursor3.setStroke(Color.BLACK);
-
-		mouseCursor4 = new Rectangle(10, 5);
-		mouseCursor4.setRotate(315);
-		mouseCursor4.setFill(Color.FLORALWHITE);
-		mouseCursor4.setStroke(Color.BLACK);
+		createMouseCursor();
+		
 
 		BorderPane root = new BorderPane();
 
@@ -163,7 +144,7 @@ public class Main extends Application{
 		});
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png"));
+		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png")); //we mean business :^)
 		stage.show();
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -214,17 +195,40 @@ public class Main extends Application{
 
 	}
 
-	private void createBullet(double mouseX, double mouseY, double cx, double cy, Pane floor) {
+	private void createMouseCursor() {
+		mouseCursor1 = new Rectangle(10, 5);
+		mouseCursor1.setRotate(45);
+		mouseCursor1.setFill(Color.FLORALWHITE);
+		mouseCursor1.setStroke(Color.BLACK);
+
+		mouseCursor2 = new Rectangle(10, 5);
+		mouseCursor2.setRotate(135);
+		mouseCursor2.setFill(Color.FLORALWHITE);
+		mouseCursor2.setStroke(Color.BLACK);
+
+		mouseCursor3 = new Rectangle(10, 5);
+		mouseCursor3.setRotate(225);
+		mouseCursor3.setFill(Color.FLORALWHITE);
+		mouseCursor3.setStroke(Color.BLACK);
+
+		mouseCursor4 = new Rectangle(10, 5);
+		mouseCursor4.setRotate(315);
+		mouseCursor4.setFill(Color.FLORALWHITE);
+		mouseCursor4.setStroke(Color.BLACK);
+		
+	}
+
+	private void createBullet(double mouseX, double mouseY, double cx, double cy, Pane thefloor) {
 		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
 		bHandler.addProjectile(pBullet);
-		floor.getChildren().add(pBullet.getBullet());
+		thefloor.getChildren().add(pBullet.getBullet());
 
 	}
 
 	// make a function to make player face the direction of the mouse more fluidly
 	private void rotatePlayer() {
-		double playerPosx = player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2;
-		double playerPosy = player.getBoundsInParent().getMinY() + (player.getBoundsInParent().getMaxY()-player.getBoundsInParent().getMinY())/2;
+		double playerPosx = player.getLayoutX()+centerOffsetX;
+		double playerPosy = player.getLayoutY()+centerOffsetY;
 		double angle = Math.atan2(mouseY - playerPosy, mouseX - playerPosx) * 180 / Math.PI;
 		player.setRotate(angle);
 	}
