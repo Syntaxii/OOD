@@ -21,7 +21,7 @@ public class Main extends Application{
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
 	private double weaponX, weaponY;
-
+	private int d = 10; //pixel gap between mouseCursor elements
 
 	public static void main(String[] args) {
 		launch(args);
@@ -112,15 +112,17 @@ public class Main extends Application{
 			public void handle(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
+				setMouseCursorGap(8);
 				moveMouse();
 				rotatePlayer();
-
 			}
 		});
 
 		scene.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				setMouseColor(Color.FLORALWHITE);
+				setMouseCursorGap(10);
+				moveMouse();
 			}
 		});
 
@@ -129,6 +131,8 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();		
 				setMouseColor(Color.SALMON);
+				setMouseCursorGap(8);
+				moveMouse();
 
 				double cx = player.getLayoutX()+centerOffsetX;
 				double cy = player.getLayoutY()+centerOffsetY;
@@ -223,7 +227,6 @@ public class Main extends Application{
 
 	}
 
-	// make a function to make player face the direction of the mouse more fluidly
 	private void rotatePlayer() {
 		double playerPosx = player.getLayoutX()+centerOffsetX;
 		double playerPosy = player.getLayoutY()+centerOffsetY;
@@ -233,8 +236,8 @@ public class Main extends Application{
 		weaponY = playerPosy + Math.sin(Math.toRadians(angle+40))*35;
 	}
 
+	//TODO clean both methods up a bit
 	private void moveBy(double dx, double dy) {
-		if (dx == 0 && dy == 0) return; //redundant
 		double cx = player.getBoundsInLocal().getWidth()  / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getLayoutX() + dx;
@@ -259,7 +262,6 @@ public class Main extends Application{
 	}
 
 	private void moveMouse() {
-		int d = 10; //displacement. Easier to change with a single variable
 		mouseCursor1.setX(mouseX+d-5);
 		mouseCursor1.setY(mouseY+d-2);
 
@@ -271,6 +273,10 @@ public class Main extends Application{
 
 		mouseCursor4.setX(mouseX-d-5);
 		mouseCursor4.setY(mouseY+d-2);
+	}
+	
+	private void setMouseCursorGap(int gap) {
+		d = gap;
 	}
 
 	private void setMouseColor(Paint color) {
