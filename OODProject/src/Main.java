@@ -16,7 +16,7 @@ public class Main extends Application{
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
 	private Node  player;
-	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
+	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
@@ -42,6 +42,11 @@ public class Main extends Application{
 		player.setScaleY(.4);
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
+		
+		UI = new Rectangle(400, 100);
+		UI.setX(175);
+		UI.setY(600);
+		UI.setFill(Color.BLUE);
 
 		createMouseCursor();
 		
@@ -51,7 +56,7 @@ public class Main extends Application{
 		Pane floor = new Pane(player);
 
 		root.getChildren().add(floor);
-		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
+		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI);
 
 		moveTo(width/2, height/2);
 
