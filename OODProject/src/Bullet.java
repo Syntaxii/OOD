@@ -19,7 +19,6 @@ public class Bullet extends Projectile{
     public void createBullet() {
         sphere = new Circle(5);
         sphere.setFill(Color.YELLOW);
-        //TODO offset x and y using math so bullet comes out of gun
         sphere.setCenterX(x);
         sphere.setCenterY(y);
 

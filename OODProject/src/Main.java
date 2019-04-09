@@ -20,6 +20,7 @@ public class Main extends Application{
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
+	private double weaponX, weaponY;
 
 
 	public static void main(String[] args) {
@@ -129,14 +130,12 @@ public class Main extends Application{
 				double MouseY = e.getY();		
 				setMouseColor(Color.SALMON);
 
-				//		double cx = player.getBoundsInLocal().getWidth()  / 2;
-				double cx = player.getLayoutX();
-
-				//		double cy = player.getBoundsInLocal().getHeight() / 2;
-				double cy = player.getLayoutY();
+				double cx = player.getLayoutX()+centerOffsetX;
+				double cy = player.getLayoutY()+centerOffsetY;
 
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
-				createBullet(MouseX, MouseY, cx+centerOffsetX, cy+centerOffsetY, floor);
+		//		createBullet(MouseX, MouseY, cx, cy, floor);
+				createBullet(MouseX, MouseY, weaponX, weaponY, floor);
 
 			}
 		});
@@ -229,6 +228,8 @@ public class Main extends Application{
 		double playerPosy = player.getLayoutY()+centerOffsetY;
 		double angle = Math.atan2(mouseY - playerPosy, mouseX - playerPosx) * 180 / Math.PI;
 		player.setRotate(angle);
+		weaponX = playerPosx + Math.cos(Math.toRadians(angle+40))*35;
+		weaponY = playerPosy + Math.sin(Math.toRadians(angle+40))*35;
 	}
 
 	private void moveBy(double dx, double dy) {
