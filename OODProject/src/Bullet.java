@@ -16,9 +16,9 @@ public class Bullet extends Projectile{
         System.out.println("cx " + cx);
 		double radianAngle = Math.toRadians(angle);
 		System.out.println("radianAngle " + radianAngle);
-		double VelX = Math.cos(radianAngle) *100;
+		VelX = Math.cos(radianAngle) *20;
 		System.out.println("velx " + VelX);
-		double VelY = Math.sin(radianAngle) *100;
+		VelY = Math.sin(radianAngle) *20;
 		System.out.println("vely " + VelY);
         sphere = new Circle(5);
         sphere.setFill(Color.YELLOW);

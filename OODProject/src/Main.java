@@ -7,7 +7,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
+//import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.image.*;
@@ -21,7 +21,7 @@ public class Main extends Application{
 	boolean goUp, goDown, goRight, goLeft;
 	private bulletHandling bHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
-	private Circle shadow;
+//	private Circle shadow;
 
 
 	public static void main(String[] args) {
