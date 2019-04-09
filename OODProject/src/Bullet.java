@@ -5,15 +5,15 @@ public class Bullet extends Projectile{
     private Circle sphere;
     public Bullet(double mouseX, double mouseY, double cx, double cy) {
         super(cx, cy, mouseX, mouseY);
-        setVelocity(speed, angle);
+        setVelocity(angle);
         createBullet();
         
     }
     
-    public void setVelocity(double newSpeed, double newAngle) {
+    public void setVelocity(double newAngle) {
 		double radianAngle = Math.toRadians(newAngle);
-		VelX = Math.cos(radianAngle) *newSpeed;
-		VelY = Math.sin(radianAngle) *newSpeed;
+		VelX = Math.cos(radianAngle) *speed;
+		VelY = Math.sin(radianAngle) *speed;
     }
     
     public void createBullet() {

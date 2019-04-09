@@ -135,7 +135,7 @@ public class Main extends Application{
 
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
 		//		createBullet(MouseX, MouseY, cx, cy, floor);
-				createBullet(MouseX, MouseY, weaponX, weaponY, floor);
+				createBullet(MouseX, MouseY, weaponX, weaponY, cx, cy, floor);
 
 			}
 		});
@@ -215,8 +215,9 @@ public class Main extends Application{
 		
 	}
 
-	private void createBullet(double mouseX, double mouseY, double cx, double cy, Pane thefloor) {
+	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane thefloor) {
 		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
+		pBullet.setVelocity(Math.atan2(mouseY - cy2, mouseX - cx2) * 180 / Math.PI); //sets angle to be (mouse - characterPos)
 		pHandler.addProjectile(pBullet);
 		thefloor.getChildren().add(pBullet.getBullet());
 
