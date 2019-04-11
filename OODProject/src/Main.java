@@ -83,6 +83,7 @@ public class Main extends Application{
 				case DOWN:  goDown = true; break;
 				case LEFT:  goLeft = true; break;
 				case RIGHT: goRight = true; break;
+				case ESCAPE: System.exit(0);
 				default:
 					break;
 				}
