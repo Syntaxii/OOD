@@ -13,11 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
 public class Main extends Application{
-	static final double width = 750, height = 700;
+	static final double width = 1920, height = 1080;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
-
-	private Node  player, player2;//testing use
+	private Node player, player2;//testing use
 
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI;
 	boolean goUp, goDown, goRight, goLeft;
@@ -65,7 +64,7 @@ public class Main extends Application{
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.NONE);
 
-		BackgroundImage myBI= new BackgroundImage(new Image("http://www.dundjinni.com/forums/uploads/Eanwulf/237_Sample.jpg",750,700,false,true),
+		BackgroundImage myBI= new BackgroundImage(new Image("https://i.imgur.com/g4B0JMe.jpg",512,512,false,true),
 				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 
@@ -154,7 +153,11 @@ public class Main extends Application{
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
 		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png")); //we mean business :^)
+		
 		stage.show();
+		
+		stage.setFullScreen(true);
+		
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
