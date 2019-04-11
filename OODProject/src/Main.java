@@ -19,7 +19,7 @@ public class Main extends Application{
 
 	private Node  player, player2;//testing use
 
-	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI;
+	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
@@ -46,19 +46,22 @@ public class Main extends Application{
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 		
-		UI = new Rectangle(400, 100);
-		UI.setX(175);
-		UI.setY(600);
-		UI.setFill(Color.BLUE);
+		
 
 		createMouseCursor();
 		
 		BorderPane root = new BorderPane();
 
 		Pane floor = new Pane(player);
-
+		Pane projectiles = new Pane();
+		
+		UI uiElements = UI.getUI();
+		
+		
 		root.getChildren().add(floor);
-		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI);
+		floor.getChildren().add(projectiles);
+		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
+		floor.getChildren().addAll(uiElements.getUIElements());
 
 		moveTo(width/2, height/2);
 
@@ -147,7 +150,7 @@ public class Main extends Application{
 
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
 		//		createBullet(MouseX, MouseY, cx, cy, floor);
-				createBullet(MouseX, MouseY, weaponX, weaponY, cx, cy, floor);
+				createBullet(MouseX, MouseY, weaponX, weaponY, cx, cy, projectiles);
 
 			}
 		});
@@ -227,11 +230,11 @@ public class Main extends Application{
 		
 	}
 
-	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane thefloor) {
+	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane pane) {
 		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
 		pBullet.setVelocity(Math.atan2(mouseY - cy2, mouseX - cx2) * 180 / Math.PI); //sets angle to be (mouse - characterPos)
 		pHandler.addProjectile(pBullet);
-		thefloor.getChildren().add(pBullet.getBullet());
+		pane.getChildren().add(pBullet.getBullet());
 
 	}
 
