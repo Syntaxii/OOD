@@ -7,7 +7,7 @@ public class customImageView extends ImageView{
 	private static Image playerImage = new Image(imgURL);
 	
 	private customImageView() {
-		
+	
 	}
 	public static ImageView getInstance() {
 		if(object != null) {
