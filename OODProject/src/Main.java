@@ -49,7 +49,6 @@ public class Main extends Application{
 
 		createMouseCursor();
 		
-
 		BorderPane root = new BorderPane();
 
 		Pane floor = new Pane(player);
