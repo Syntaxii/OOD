@@ -1,5 +1,4 @@
 import javafx.stage.*;
-
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.scene.*;
@@ -7,7 +6,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.image.*;
@@ -16,13 +14,13 @@ public class Main extends Application{
 	static final double width = 750, height = 700;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
-	private Node  player;
-	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
+	private Node  player, player2;//testing use
+	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI;
 	boolean goUp, goDown, goRight, goLeft;
-	private bulletHandling bHandler;
+	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
-	private Circle shadow;
-
+	private double weaponX, weaponY;
+	private int d = 10; //pixel gap between mouseCursor elements
 
 	public static void main(String[] args) {
 		launch(args);
@@ -31,47 +29,33 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		bHandler = new bulletHandling();
+		pHandler = new ProjectileHandling();
 		mouseX = 0.0;
 		mouseY = 0.0;
-
 		playerImage = new Image(imgURL);
-		playerImage.getWidth();
-		playerImage.getHeight();
-		player = new ImageView(playerImage);
+		
+		player = customImageView.getInstance(); //Singleton instantiation of player
+		player2 = customImageView.getInstance(); //Test 2nd instantiation
 		player.setScaleX(.4);
 		player.setScaleY(.4);
+		
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
+		
+		UI = new Rectangle(400, 100);
+		UI.setX(175);
+		UI.setY(600);
+		UI.setFill(Color.BLUE);
 
-
-		//TODO condense
-		mouseCursor1 = new Rectangle(10, 5);
-		mouseCursor1.setRotate(45);
-		mouseCursor1.setFill(Color.FLORALWHITE);
-		mouseCursor1.setStroke(Color.BLACK);
-
-		mouseCursor2 = new Rectangle(10, 5);
-		mouseCursor2.setRotate(135);
-		mouseCursor2.setFill(Color.FLORALWHITE);
-		mouseCursor2.setStroke(Color.BLACK);
-
-		mouseCursor3 = new Rectangle(10, 5);
-		mouseCursor3.setRotate(225);
-		mouseCursor3.setFill(Color.FLORALWHITE);
-		mouseCursor3.setStroke(Color.BLACK);
-
-		mouseCursor4 = new Rectangle(10, 5);
-		mouseCursor4.setRotate(315);
-		mouseCursor4.setFill(Color.FLORALWHITE);
-		mouseCursor4.setStroke(Color.BLACK);
+		createMouseCursor();
+		
 
 		BorderPane root = new BorderPane();
 
 		Pane floor = new Pane(player);
 
 		root.getChildren().add(floor);
-		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
+		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI);
 
 		moveTo(width/2, height/2);
 
@@ -132,15 +116,17 @@ public class Main extends Application{
 			public void handle(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
+				setMouseCursorGap(8);
 				moveMouse();
 				rotatePlayer();
-
 			}
 		});
 
 		scene.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				setMouseColor(Color.FLORALWHITE);
+				setMouseCursorGap(10);
+				moveMouse();
 			}
 		});
 
@@ -149,21 +135,21 @@ public class Main extends Application{
 				double MouseX = e.getX();
 				double MouseY = e.getY();		
 				setMouseColor(Color.SALMON);
+				setMouseCursorGap(8);
+				moveMouse();
 
-				//		double cx = player.getBoundsInLocal().getWidth()  / 2;
-				double cx = player.getLayoutX();
-
-				//		double cy = player.getBoundsInLocal().getHeight() / 2;
-				double cy = player.getLayoutY();
+				double cx = player.getLayoutX()+centerOffsetX;
+				double cy = player.getLayoutY()+centerOffsetY;
 
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
-				createBullet(MouseX, MouseY, cx+centerOffsetX, cy+centerOffsetY, floor);
+		//		createBullet(MouseX, MouseY, cx, cy, floor);
+				createBullet(MouseX, MouseY, weaponX, weaponY, cx, cy, floor);
 
 			}
 		});
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png"));
+		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png")); //we mean business :^)
 		stage.show();
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -204,7 +190,7 @@ public class Main extends Application{
 					moveBy(offsetAmount[0]*5, offsetAmount[1]*5);
 				}
 
-				bHandler.cycleProjectiles();
+				pHandler.cycleProjectiles();
 				rotatePlayer();
 
 			}
@@ -214,23 +200,48 @@ public class Main extends Application{
 
 	}
 
-	private void createBullet(double mouseX, double mouseY, double cx, double cy, Pane floor) {
+	private void createMouseCursor() {
+		mouseCursor1 = new Rectangle(10, 5);
+		mouseCursor1.setRotate(45);
+		mouseCursor1.setFill(Color.FLORALWHITE);
+		mouseCursor1.setStroke(Color.BLACK);
+
+		mouseCursor2 = new Rectangle(10, 5);
+		mouseCursor2.setRotate(135);
+		mouseCursor2.setFill(Color.FLORALWHITE);
+		mouseCursor2.setStroke(Color.BLACK);
+
+		mouseCursor3 = new Rectangle(10, 5);
+		mouseCursor3.setRotate(225);
+		mouseCursor3.setFill(Color.FLORALWHITE);
+		mouseCursor3.setStroke(Color.BLACK);
+
+		mouseCursor4 = new Rectangle(10, 5);
+		mouseCursor4.setRotate(315);
+		mouseCursor4.setFill(Color.FLORALWHITE);
+		mouseCursor4.setStroke(Color.BLACK);
+		
+	}
+
+	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane thefloor) {
 		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
-		bHandler.addProjectile(pBullet);
-		floor.getChildren().add(pBullet.getBullet());
+		pBullet.setVelocity(Math.atan2(mouseY - cy2, mouseX - cx2) * 180 / Math.PI); //sets angle to be (mouse - characterPos)
+		pHandler.addProjectile(pBullet);
+		thefloor.getChildren().add(pBullet.getBullet());
 
 	}
 
-	// make a function to make player face the direction of the mouse more fluidly
 	private void rotatePlayer() {
-		double playerPosx = player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2;
-		double playerPosy = player.getBoundsInParent().getMinY() + (player.getBoundsInParent().getMaxY()-player.getBoundsInParent().getMinY())/2;
+		double playerPosx = player.getLayoutX()+centerOffsetX;
+		double playerPosy = player.getLayoutY()+centerOffsetY;
 		double angle = Math.atan2(mouseY - playerPosy, mouseX - playerPosx) * 180 / Math.PI;
 		player.setRotate(angle);
+		weaponX = playerPosx + Math.cos(Math.toRadians(angle+40))*35;
+		weaponY = playerPosy + Math.sin(Math.toRadians(angle+40))*35;
 	}
 
+	//TODO clean both methods up a bit
 	private void moveBy(double dx, double dy) {
-		if (dx == 0 && dy == 0) return; //redundant
 		double cx = player.getBoundsInLocal().getWidth()  / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getLayoutX() + dx;
@@ -255,7 +266,6 @@ public class Main extends Application{
 	}
 
 	private void moveMouse() {
-		int d = 10; //displacement. Easier to change with a single variable
 		mouseCursor1.setX(mouseX+d-5);
 		mouseCursor1.setY(mouseY+d-2);
 
@@ -267,6 +277,10 @@ public class Main extends Application{
 
 		mouseCursor4.setX(mouseX-d-5);
 		mouseCursor4.setY(mouseY+d-2);
+	}
+	
+	private void setMouseCursorGap(int gap) {
+		d = gap;
 	}
 
 	private void setMouseColor(Paint color) {
