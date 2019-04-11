@@ -55,12 +55,14 @@ public class Main extends Application{
 		Pane projectiles = new Pane();
 		
 		UI uiElements = UI.getUI();
-		
+		uiElements.changeUIPositions((width/2)-200, height-110);
 		
 		root.getChildren().add(floor);
 		floor.getChildren().add(projectiles);
 		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
 		floor.getChildren().addAll(uiElements.getUIElements());
+		
+		uiElements.changeWeaponFocus(1);
 
 		moveTo(width/2, height/2);
 
@@ -85,6 +87,9 @@ public class Main extends Application{
 				case DOWN:  goDown = true; break;
 				case LEFT:  goLeft = true; break;
 				case RIGHT: goRight = true; break;
+				case DIGIT1: uiElements.changeWeaponFocus(1); break;
+				case DIGIT2: uiElements.changeWeaponFocus(2); break;
+				case DIGIT3: uiElements.changeWeaponFocus(3); break;
 				case ESCAPE: System.exit(0);
 				default:
 					break;
