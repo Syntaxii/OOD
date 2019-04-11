@@ -21,7 +21,7 @@ public class Main extends Application{
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
 	private double weaponX, weaponY;
 	private int d = 10; //pixel gap between mouseCursor elements
-
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
