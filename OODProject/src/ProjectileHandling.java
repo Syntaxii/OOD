@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class bulletHandling {
+public class ProjectileHandling {
 	
 	LinkedList<Projectile> projectiles = new LinkedList<Projectile>();
 

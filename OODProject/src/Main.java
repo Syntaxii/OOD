@@ -14,14 +14,16 @@ public class Main extends Application{
 	static final double width = 750, height = 700;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
+
 	private Node  player, player2;//testing use
+
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4, UI;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
 	private double weaponX, weaponY;
 	private int d = 10; //pixel gap between mouseCursor elements
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
