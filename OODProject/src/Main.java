@@ -13,11 +13,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
 public class Main extends Application{
+	//TODO change aspect ratio for width and height
 	static final double width = 1920, height = 1080;
 	static final double newWidth = 750, newHeight = 750;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
-	private Node player, player2;//testing use
+	private Node player, player2; //testing use
 
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
@@ -36,6 +37,7 @@ public class Main extends Application{
 		pHandler = new ProjectileHandling();
 		mouseX = 0.0;
 		mouseY = 0.0;
+		
 		playerImage = new Image(imgURL);
 		
 		player = customImageView.getInstance(); //Singleton instantiation of player
@@ -48,8 +50,8 @@ public class Main extends Application{
 		
 		createMouseCursor();
 		
-		BorderPane root = new BorderPane();
-
+		Pane root = new Pane();
+		//BorderPane root = new BorderPane();
 		Pane floor = new Pane(player);
 		Pane projectiles = new Pane();
 		
@@ -78,33 +80,36 @@ public class Main extends Application{
 			@Override
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				case W:    		goUp = true; break;
-				case S:  		goDown = true; break;
-				case A:  		goLeft  = true; break;
-				case D: 		goRight  = true; break;
-				case UP:    	goUp = true; break;
-				case DOWN:  	goDown = true; break;
-				case LEFT:  	goLeft = true; break;
-				case RIGHT: 	goRight = true; break;
-				case DIGIT1: 	uiElements.changeWeaponFocus(1); break;
-				case DIGIT2: 	uiElements.changeWeaponFocus(2); break;
-				case DIGIT3: 	uiElements.changeWeaponFocus(3); break;
-				
-				case SHIFT: 	stage.setFullScreen(true); 
-								uiElements.changeUIPositions((width/2)-200, height-110);
-								stage.setFullScreenExitHint("");
-								break;
-				case ESCAPE: 	System.exit(0); break;
-				case ENTER:                
-								stage.setHeight(newHeight);
-								stage.setWidth(newWidth);
-								stage.setFullScreen(false);
-								stage.setMaximized(false);
-								moveTo(newWidth/2, newHeight/2);
-								uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
-								break;
-				default:
-					break;
+					case W:    		goUp = true; break;
+					case S:  		goDown = true; break;
+					case A:  		goLeft  = true; break;
+					case D: 		goRight  = true; break;
+					case UP:    	goUp = true; break;
+					case DOWN:  	goDown = true; break;
+					case LEFT:  	goLeft = true; break;
+					case RIGHT: 	goRight = true; break;
+					case DIGIT1: 	uiElements.changeWeaponFocus(1); break;
+					case DIGIT2: 	uiElements.changeWeaponFocus(2); break;
+					case DIGIT3: 	uiElements.changeWeaponFocus(3); break;
+					
+					case SHIFT: 	stage.setFullScreen(true); 
+									uiElements.changeUIPositions((width/2)-200, height-110);
+									stage.setFullScreenExitHint("");
+									break;
+					
+					case ESCAPE: 	System.exit(0); break;
+					
+					//TODO fix boundaries and UI position for windowed mode; get rid of maximization when going windowed after first key press
+					case ENTER:                
+									stage.setHeight(newHeight);
+									stage.setWidth(newWidth);
+									stage.setFullScreen(false);
+									stage.setMaximized(false);
+									moveTo(newWidth/2, newHeight/2);
+									uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
+									break;
+					default:
+									break;
 				}
 			}
 		});
@@ -112,16 +117,16 @@ public class Main extends Application{
 			@Override
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				case W:    		goUp = false; break;
-				case S:  		goDown = false; break;
-				case A:  		goLeft  = false; break;
-				case D: 		goRight  = false; break;
-				case UP:    	goUp = false; break;
-				case DOWN:  	goDown = false; break;
-				case LEFT: 	 	goLeft = false; break;
-				case RIGHT:	 	goRight = false; break;
-				default:
-					break;
+					case W:    		goUp = false; break;
+					case S:  		goDown = false; break;
+					case A:  		goLeft  = false; break;
+					case D: 		goRight  = false; break;
+					case UP:    	goUp = false; break;
+					case DOWN:  	goDown = false; break;
+					case LEFT: 	 	goLeft = false; break;
+					case RIGHT:	 	goRight = false; break;
+					default:
+									break;
 				}
 			}
 		});
@@ -131,8 +136,6 @@ public class Main extends Application{
 				mouseY = event.getY();
 				moveMouse();
 				rotatePlayer();
-
-		//		System.out.println("PlayerX: " + player.getBoundsInParent().getMinX() + (player.getBoundsInParent().getMaxX()-player.getBoundsInParent().getMinX())/2 + " MouseX: " + event.getX());
 			}
 		});
 		scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
@@ -144,7 +147,6 @@ public class Main extends Application{
 				rotatePlayer();
 			}
 		});
-
 		scene.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				setMouseColor(Color.FLORALWHITE);
@@ -152,7 +154,6 @@ public class Main extends Application{
 				moveMouse();
 			}
 		});
-
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				double MouseX = e.getX();
@@ -165,17 +166,15 @@ public class Main extends Application{
 				double cy = player.getLayoutY()+centerOffsetY;
 
 				System.out.println(MouseX + " MouseX\n " + MouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
-		//		createBullet(MouseX, MouseY, cx, cy, floor);
 				createBullet(MouseX, MouseY, weaponX, weaponY, cx, cy, projectiles);
 
 			}
 		});
+		
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
 		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png")); //we mean business :^)
-		
 		stage.show();
-		
 		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);
 		
