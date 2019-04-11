@@ -1,14 +1,16 @@
 import javafx.stage.*;
 import javafx.animation.*;
 import javafx.application.*;
-import javafx.scene.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
-import javafx.scene.image.*;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 public class Main extends Application{
 	static final double width = 750, height = 700;
@@ -64,7 +66,7 @@ public class Main extends Application{
 		scene.setCursor(Cursor.NONE);
 
 		BackgroundImage myBI= new BackgroundImage(new Image("http://www.dundjinni.com/forums/uploads/Eanwulf/237_Sample.jpg",750,700,false,true),
-				BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 
 		root.setBackground(new Background(myBI));
