@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 
 public class Main extends Application{
 	static final double width = 1920, height = 1080;
+	static final double newWidth = 750, newHeight = 750;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
 	private Node player, player2;//testing use
@@ -45,8 +46,6 @@ public class Main extends Application{
 		centerOffsetX = (playerImage.getWidth())/2;
 		centerOffsetY = (playerImage.getHeight())/2;
 		
-		
-
 		createMouseCursor();
 		
 		BorderPane root = new BorderPane();
@@ -79,18 +78,31 @@ public class Main extends Application{
 			@Override
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				case W:    goUp = true; break;
-				case S:  goDown = true; break;
-				case A:  goLeft  = true; break;
-				case D: goRight  = true; break;
-				case UP:    goUp = true; break;
-				case DOWN:  goDown = true; break;
-				case LEFT:  goLeft = true; break;
-				case RIGHT: goRight = true; break;
-				case DIGIT1: uiElements.changeWeaponFocus(1); break;
-				case DIGIT2: uiElements.changeWeaponFocus(2); break;
-				case DIGIT3: uiElements.changeWeaponFocus(3); break;
-				case ESCAPE: System.exit(0);
+				case W:    		goUp = true; break;
+				case S:  		goDown = true; break;
+				case A:  		goLeft  = true; break;
+				case D: 		goRight  = true; break;
+				case UP:    	goUp = true; break;
+				case DOWN:  	goDown = true; break;
+				case LEFT:  	goLeft = true; break;
+				case RIGHT: 	goRight = true; break;
+				case DIGIT1: 	uiElements.changeWeaponFocus(1); break;
+				case DIGIT2: 	uiElements.changeWeaponFocus(2); break;
+				case DIGIT3: 	uiElements.changeWeaponFocus(3); break;
+				
+				case SHIFT: 	stage.setFullScreen(true); 
+								uiElements.changeUIPositions((width/2)-200, height-110);
+								stage.setFullScreenExitHint("");
+								break;
+				case ESCAPE: 	System.exit(0); break;
+				case ENTER:                
+								stage.setHeight(newHeight);
+								stage.setWidth(newWidth);
+								stage.setFullScreen(false);
+								stage.setMaximized(false);
+								moveTo(newWidth/2, newHeight/2);
+								uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
+								break;
 				default:
 					break;
 				}
@@ -100,14 +112,14 @@ public class Main extends Application{
 			@Override
 			public void handle(KeyEvent event) {
 				switch (event.getCode()) {
-				case W:    goUp = false; break;
-				case S:  goDown = false; break;
-				case A:  goLeft  = false; break;
-				case D: goRight  = false; break;
-				case UP:    goUp = false; break;
-				case DOWN:  goDown = false; break;
-				case LEFT:  goLeft = false; break;
-				case RIGHT: goRight = false; break;
+				case W:    		goUp = false; break;
+				case S:  		goDown = false; break;
+				case A:  		goLeft  = false; break;
+				case D: 		goRight  = false; break;
+				case UP:    	goUp = false; break;
+				case DOWN:  	goDown = false; break;
+				case LEFT: 	 	goLeft = false; break;
+				case RIGHT:	 	goRight = false; break;
 				default:
 					break;
 				}
@@ -164,6 +176,7 @@ public class Main extends Application{
 		
 		stage.show();
 		
+		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);
 		
 		AnimationTimer timer = new AnimationTimer() {
@@ -211,8 +224,6 @@ public class Main extends Application{
 			}
 		};
 		timer.start();
-
-
 	}
 
 	private void createMouseCursor() {
@@ -235,7 +246,6 @@ public class Main extends Application{
 		mouseCursor4.setRotate(315);
 		mouseCursor4.setFill(Color.FLORALWHITE);
 		mouseCursor4.setStroke(Color.BLACK);
-		
 	}
 
 	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane pane) {
@@ -257,14 +267,15 @@ public class Main extends Application{
 
 	//TODO clean both methods up a bit
 	private void moveBy(double dx, double dy) {
-		double cx = player.getBoundsInLocal().getWidth()  / 2;
+		double cx = player.getBoundsInLocal().getWidth() / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getLayoutX() + dx;
 		double y = cy + player.getLayoutY() - dy;
 		moveTo(x, y);
 	}
+	
 	private void moveTo(double x, double y) {
-		double cx = player.getBoundsInLocal().getWidth()  / 2;
+		double cx = player.getBoundsInLocal().getWidth() / 2;
 		double cy = player.getBoundsInLocal().getHeight() / 2;
 		if (x - cx >= 0 && x + cx <= width &&
 				y - cy >= 0 && y + cy <= height) {
@@ -300,11 +311,8 @@ public class Main extends Application{
 
 	private void setMouseColor(Paint color) {
 		mouseCursor1.setFill(color);
-
 		mouseCursor2.setFill(color);
-
 		mouseCursor3.setFill(color);
-
 		mouseCursor4.setFill(color);
 	}
 }
