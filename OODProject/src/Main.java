@@ -1,4 +1,7 @@
 import javafx.stage.*;
+
+import java.util.ArrayList;
+
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.scene.input.*;
@@ -8,6 +11,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,15 +22,16 @@ public class Main extends Application{
 	static final double newWidth = 750, newHeight = 750;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
-	private Node player, player2; //testing use
-
+	private Node player;
+	private Rectangle playerCollision;
+	private ArrayList<Rectangle> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY;
 	private double weaponX, weaponY;
 	private int d = 10; //pixel gap between mouseCursor elements
-
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -41,7 +46,6 @@ public class Main extends Application{
 		playerImage = new Image(imgURL);
 		
 		player = customImageView.getInstance(); //Singleton instantiation of player
-		player2 = customImageView.getInstance(); //Test 2nd instantiation
 		player.setScaleX(.4);
 		player.setScaleY(.4);
 		
@@ -50,15 +54,26 @@ public class Main extends Application{
 		
 		createMouseCursor();
 		
+		
 		Pane root = new Pane();
 		//BorderPane root = new BorderPane();
 		Pane floor = new Pane(player);
 		Pane projectiles = new Pane();
 		
+		
+		
 		UI uiElements = UI.getUI();
 		uiElements.changeUIPositions((width/2)-200, height-110);
 		
+		//collisions
+		Collision col = new Collision();
+		playerCollision = col.getPlayercollision();
+		obstacleCollision = col.getObstacles();
+		
+		
 		root.getChildren().add(floor);
+		floor.getChildren().addAll(obstacleCollision); //collision boxes WIP
+		floor.getChildren().add(playerCollision);
 		floor.getChildren().add(projectiles);
 		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
 		floor.getChildren().addAll(uiElements.getUIElements());
@@ -224,7 +239,16 @@ public class Main extends Application{
 		};
 		timer.start();
 	}
-
+	private void checkCollision() {
+		for(int i = 0; i < obstacleCollision.size(); i++) {
+			if(playerCollision.getLayoutX() > 150 && playerCollision.getLayoutX() < 250 && playerCollision.getLayoutY() > 200 && playerCollision.getLayoutY() < 300) {
+				System.out.println("COLLISSION");
+			} else {
+				System.out.println("No Collission");
+			}
+		} 
+	}
+	
 	private void createMouseCursor() {
 		mouseCursor1 = new Rectangle(10, 5);
 		mouseCursor1.setRotate(45);
@@ -280,6 +304,15 @@ public class Main extends Application{
 				y - cy >= 0 && y + cy <= height) {
 			player.relocate(x - cx, y - cy);
 		}
+		
+		//Have player's collision box repeat movements
+		double cx2 = playerCollision.getBoundsInLocal().getWidth() / 2;
+		double cy2 = playerCollision.getBoundsInLocal().getHeight() / 2;
+		if (x - cx2 >= 0 && x + cx2 <= width &&
+				y - cy2 >= 0 && y + cy2 <= height) {
+			playerCollision.relocate(x - cx2, y - cy2);
+		}
+		checkCollision();
 
 	}
 
