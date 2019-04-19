@@ -27,5 +27,11 @@ public class ProjectileHandling {
 	public void removeProjectile(Projectile d) {
 		projectiles.remove(d);
 	}
+	
+	public void clearProjectiles() {
+		for (int i = 0; i < projectiles.size(); i++) {
+			projectiles.get(i).timeoutProjectile();
+		}
+	}
 
 }
