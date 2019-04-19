@@ -175,7 +175,6 @@ public class Main extends Application{
 				mouseY = e.getY();
 				moveMouse();
 				if (player.isAlive()) {
-					setMouseCursorGap(8);
 					rotatePlayer();
 				}
 
@@ -384,6 +383,7 @@ public class Main extends Application{
 	}
 
 	private void moveMouse() {
+		//TODO decide if the offset is worth it. Right now, the mouse position changes to get where the gun is aiming.
 		NewmouseX = mouseX + Math.cos(Math.toRadians(angle+40))*35;
 		NewmouseY = mouseY + Math.sin(Math.toRadians(angle+40))*35;
 
