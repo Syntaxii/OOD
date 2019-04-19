@@ -28,6 +28,8 @@ public class Main extends Application{
 	private double weaponX, weaponY, angle;
 	private UI uiElements;
 	private int frameCount = 0;
+	private int weapon1CD = 0, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
+	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
 	private int d = 10; //pixel gap between mouseCursor elements
 
 	public static void main(String[] args) {
@@ -194,15 +196,18 @@ public class Main extends Application{
 				mouseY = e.getY();
 
 				if (player.isAlive()) {
-					
+
 					//TODO change this to all weapons, and check ammo, etc.
 					if(uiElements.getCurrentWeaponSelection() == 1) {
-					setMouseCursorGap(8);
-					setMouseColor(Color.SALMON);
-					double cx = player.getPic().getLayoutX()+centerOffsetX;
-					double cy = player.getPic().getLayoutY()+centerOffsetY;
-					System.out.println(mouseX + " MouseX\n " + mouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
-					createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
+						if (weapon1CDRemaining == 0) {
+							setMouseCursorGap(8);
+							setMouseColor(Color.SALMON);
+							double cx = player.getPic().getLayoutX()+centerOffsetX;
+							double cy = player.getPic().getLayoutY()+centerOffsetY;
+							System.out.println(mouseX + " MouseX\n " + mouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
+							createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
+							weapon1CD = frameCount + 15; //the "+15" is the cooldown
+						}
 					}
 				}
 				moveMouse();
@@ -237,6 +242,9 @@ public class Main extends Application{
 
 
 				frameCount++;
+				weapon1CDRemaining = weapon1CD - frameCount;
+				if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
+				uiElements.updateWeaponCD(1, weapon1CDRemaining);
 
 				try {
 					Thread.sleep(1000/60);

@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
-	private Rectangle weaponsUI, weapon1, weapon2, weapon3, HealthBar, HealthBarBG;
+	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox, HealthBar, HealthBarBG;
 	private Label weapon1ammo, HealthWarning;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
@@ -28,6 +28,8 @@ public class UI {
 	}
 
 	public void changeWeaponFocus(int i) {
+		
+		//TODO switch to switch statement lol
 		if (current == 1) {
 			changeColorToNormal(weapon1);
 		}
@@ -56,10 +58,13 @@ public class UI {
 		y = newy;
 		weaponsUI.relocate(x, y);
 		weapon1.relocate(x, y);
+		weapon1CDbox.relocate(x, y);
 		weapon1Image.relocate(x-30, y-50);
 		weapon1ammo.relocate(x+78, y+40);
 		weapon2.relocate(x+spaceDifference, y);
+		weapon2CDbox.relocate(x+spaceDifference, y);
 		weapon3.relocate(x+spaceDifference*2, y);
+		weapon3CDbox.relocate(x+spaceDifference*2, y);
 		HealthBar.relocate(x, y-60);
 		HealthWarning.relocate(x+179, y-63);
 		HealthBarBG.relocate(x, y-60);
@@ -101,6 +106,14 @@ public class UI {
 		weapon1.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon1.setStrokeWidth(2);
 		
+		weapon1CDbox = new Rectangle(133.33, 100);
+		weapon1CDbox.setX(175);
+		weapon1CDbox.setY(600);
+		weapon1CDbox.setFill(Color.rgb(50, 50, 200, 0.5));
+		weapon1CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
+		weapon1CDbox.setStrokeWidth(2);
+		weapon1CDbox.setHeight(100);
+		
 		weapon1Image.setX(180);
 		weapon1Image.setY(650);
 		weapon1Image.setScaleX(-0.4);
@@ -116,6 +129,14 @@ public class UI {
 		weapon2.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStrokeWidth(2);
+		
+		weapon2CDbox = new Rectangle(133.33, 100);
+		weapon2CDbox.setX(175+spaceDifference);
+		weapon2CDbox.setY(600);
+		weapon2CDbox.setFill(Color.rgb(100, 200, 200, 0.5));
+		weapon2CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
+		weapon2CDbox.setStrokeWidth(2);
+		weapon2CDbox.setHeight(0);
 
 		weapon3 = new Rectangle(133.33, 100);
 		weapon3.setX(175+spaceDifference*2);
@@ -123,6 +144,14 @@ public class UI {
 		weapon3.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStrokeWidth(2);
+		
+		weapon3CDbox = new Rectangle(133.33, 100);
+		weapon3CDbox.setX(175+spaceDifference*2);
+		weapon3CDbox.setY(600);
+		weapon3CDbox.setFill(Color.rgb(100, 200, 200, 0.5));
+		weapon3CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
+		weapon3CDbox.setStrokeWidth(2);
+		weapon3CDbox.setHeight(0);
 
 		HealthBar = new Rectangle(400, 50);
 		HealthBar.setX(175);
@@ -143,10 +172,13 @@ public class UI {
 
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
+		UIParts.add(weapon1CDbox);
 		UIParts.add(weapon1Image);
 		UIParts.add(weapon1ammo);
 		UIParts.add(weapon2);
+		UIParts.add(weapon2CDbox);
 		UIParts.add(weapon3);
+		UIParts.add(weapon3CDbox);
 		UIParts.add(HealthBar);
 		UIParts.add(HealthWarning);
 		UIParts.add(HealthBarBG);
@@ -176,6 +208,15 @@ public class UI {
 	
 	public int getCurrentWeaponSelection() {
 		return current;
+	}
+	
+	public void updateWeaponCD(int weapon, int cooldown) {
+		switch(weapon) {
+		case 1:	weapon1CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon
+		case 2: weapon2CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
+		case 3: weapon3CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
+			default: break;
+		}
 	}
 
 
