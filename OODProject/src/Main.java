@@ -417,5 +417,6 @@ public class Main extends Application{
 		player.setAlive();
 		uiElements.resetHP();
 		pHandler.clearProjectiles();
+		weapon1CD = frameCount;
 	}
 }
