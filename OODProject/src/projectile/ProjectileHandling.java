@@ -1,3 +1,4 @@
+package projectile;
 import java.util.LinkedList;
 
 public class ProjectileHandling {

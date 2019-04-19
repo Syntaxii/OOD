@@ -1,3 +1,4 @@
+package projectile;
 public abstract class Projectile {
 	protected double x, y, mouseX, mouseY;
 	protected double VelX = 0, VelY = 0;

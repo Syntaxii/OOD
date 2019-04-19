@@ -1,3 +1,4 @@
+package player;
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -6,7 +7,7 @@ public class Collision {
 	private ArrayList<Rectangle> obstacles; 
 	private Rectangle playerBox;
 	
-	Collision() {
+	public Collision() {
 		playerBox = new Rectangle(60,60);
 		playerBox.setX(150);
 		playerBox.setY(150);

@@ -1,5 +1,12 @@
+package game;
 import javafx.stage.*;
+import player.Collision;
+import player.Player;
+import projectile.Bullet;
+import projectile.ProjectileHandling;
+
 import java.util.ArrayList;
+
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.scene.input.*;
@@ -239,7 +246,6 @@ public class Main extends Application{
 					uiElements.warnHP();
 				}
 
-
 				frameCount++;
 				weapon1CDRemaining = weapon1CD - frameCount;
 				if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
@@ -248,7 +254,6 @@ public class Main extends Application{
 				try {
 					Thread.sleep(1000/60);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
