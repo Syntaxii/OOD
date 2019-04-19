@@ -114,7 +114,7 @@ public class Main extends Application{
 					}
 				}
 				switch (event.getCode()) {
-				
+
 				case BACK_SPACE: Reset(); break;
 
 				case SHIFT: 	stage.setFullScreen(true); 
@@ -194,18 +194,18 @@ public class Main extends Application{
 				mouseY = e.getY();
 
 				if (player.isAlive()) {
+					
+					//TODO change this to all weapons, and check ammo, etc.
+					if(uiElements.getCurrentWeaponSelection() == 1) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
 					double cx = player.getPic().getLayoutX()+centerOffsetX;
 					double cy = player.getPic().getLayoutY()+centerOffsetY;
 					System.out.println(mouseX + " MouseX\n " + mouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
 					createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
+					}
 				}
 				moveMouse();
-
-
-
-
 
 			}
 		});
@@ -227,14 +227,14 @@ public class Main extends Application{
 				}
 
 				pHandler.cycleProjectiles();
-				
+
 				if(!player.isAlive()) {
 					uiElements.deadHP();
 				}
 				else if (player.checkHPWarn() && frameCount%10==0) {
 					uiElements.warnHP();
 				}
-				
+
 
 				frameCount++;
 
@@ -378,7 +378,7 @@ public class Main extends Application{
 	private void moveMouse() {
 		NewmouseX = mouseX + Math.cos(Math.toRadians(angle+40))*35;
 		NewmouseY = mouseY + Math.sin(Math.toRadians(angle+40))*35;
-		
+
 		mouseCursor1.setX(NewmouseX+d-5);
 		mouseCursor1.setY(NewmouseY+d-2);
 
@@ -402,7 +402,7 @@ public class Main extends Application{
 		mouseCursor3.setFill(color);
 		mouseCursor4.setFill(color);
 	}
-	
+
 	private void Reset() {
 		moveTo(width/2, height/2);
 		player.setHealth(100);

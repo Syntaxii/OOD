@@ -15,7 +15,7 @@ public class UI {
 	private Label weapon1ammo, HealthWarning;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
-	private int current;
+	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private double x, y; //coordinates that UI is based off of
 
@@ -172,6 +172,10 @@ public class UI {
 		HealthWarning.setText("!!!");
 		HealthWarning.relocate(x+179, y-63);
 		HealthBar.setWidth(400);
+	}
+	
+	public int getCurrentWeaponSelection() {
+		return current;
 	}
 
 
