@@ -1,14 +1,28 @@
 package enemy;
+
+import javafx.scene.image.ImageView;
+
 public abstract class Enemy {
 	double enemyX, enemyY, playerX, playerY;
-	double eVelosity;
+	double eSpeed; //enemy Speed
+	double angle;
 	boolean alive = true;
 	int health;
 	
+	public Enemy(double enemyX, double enemyY, double playerX, double playerY, double speed) {
+		this.enemyX = enemyX;
+		this.enemyY = enemyY; 
+		this.playerX = playerX;
+		this.playerY = playerY;
+		eSpeed = speed;
+	}
+	
 	public abstract void spawn();
+	public abstract void rotate();
 	public abstract void move();
-	public abstract void damage();
+	public abstract void receiveDamage();
 	public abstract void attack();
-	public abstract void tick();
+	public abstract void tick(double newPlayerX, double newPlayerY);
+	public abstract ImageView getEnemy();
 	
 }

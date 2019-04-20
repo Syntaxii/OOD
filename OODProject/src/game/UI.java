@@ -13,11 +13,12 @@ public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox, HealthBar, HealthBarBG;
-	private Label weapon1ammo, HealthWarning;
+	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
+	private boolean debugMode;
 	private double x, y; //coordinates that UI is based off of
 
 	private UI(){
@@ -170,6 +171,35 @@ public class UI {
 		HealthBarBG.setFill(Color.rgb(250, 15, 15, 0.2));
 		HealthBarBG.setStroke(Color.rgb(250, 250, 250, 1));
 		HealthBarBG.setStrokeWidth(3);
+		
+		//debug stuff
+		debugLabel = new Label("Debug Mode");
+		debugLabel.setVisible(false);
+		debugLabel.setFont(new Font("Arial", 20));
+		debugLabel.relocate(30, 20);
+		debugLabel.setTextFill(Color.YELLOW);
+		debuginfo1 = new Label();
+		debuginfo1.setVisible(false);
+		debuginfo1.setFont(new Font("Arial", 20));
+		debuginfo1.relocate(30, 50);
+		debuginfo1.setTextFill(Color.YELLOW);
+		debuginfo2 = new Label();
+		debuginfo2.setVisible(false);
+		debuginfo2.setFont(new Font("Arial", 20));
+		debuginfo2.relocate(30, 80);
+		debuginfo2.setTextFill(Color.YELLOW);
+		debuginfo3 = new Label();
+		debuginfo3.setVisible(false);
+		debuginfo3.setFont(new Font("Arial", 20));
+		debuginfo3.relocate(30, 110);
+		debuginfo3.setTextFill(Color.YELLOW);
+		debuginfo4 = new Label();
+		debuginfo4.setVisible(false);
+		debuginfo4.setFont(new Font("Arial", 20));
+		debuginfo4.relocate(30, 140);
+		debuginfo4.setTextFill(Color.YELLOW);
+		
+		
 
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
@@ -183,6 +213,12 @@ public class UI {
 		UIParts.add(HealthBar);
 		UIParts.add(HealthWarning);
 		UIParts.add(HealthBarBG);
+		
+		UIParts.add(debuginfo1);
+		UIParts.add(debuginfo2);
+		UIParts.add(debuginfo3);
+		UIParts.add(debuginfo4);
+		UIParts.add(debugLabel);
 	}
 
 	public void ChangeHP(int hp) {
@@ -218,6 +254,36 @@ public class UI {
 		case 3: weapon3CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
 			default: break;
 		}
+	}
+	
+	public void setDebug() {
+		if(debugMode == false) {
+			debugMode = true;
+			debuginfo1.setVisible(true);
+			debuginfo2.setVisible(true);
+			debuginfo3.setVisible(true);
+			debuginfo4.setVisible(true);
+			debugLabel.setVisible(true);
+		}
+		else {
+			debugMode = false;
+			debuginfo1.setVisible(false);
+			debuginfo2.setVisible(false);
+			debuginfo3.setVisible(false);
+			debuginfo4.setVisible(false);
+			debugLabel.setVisible(false);
+		}
+	}
+	
+	public boolean isDebug() {
+		return debugMode;
+	}
+	
+	public void showInfo(double playerX, double playerY, double MouseX, double MouseY) {
+		debuginfo1.setText("player x = " + playerX);
+		debuginfo2.setText("player y = " + playerY);
+		debuginfo3.setText("mouse x = " + MouseX);
+		debuginfo4.setText("mouse y = " + MouseY);
 	}
 
 

@@ -1,12 +1,14 @@
 package game;
-import javafx.stage.*;
+
 import player.Collision;
 import player.Player;
 import projectile.Bullet;
 import projectile.ProjectileHandling;
+import enemy.BasicZombie;
+import enemy.EnemyHandling;
 
 import java.util.ArrayList;
-
+import javafx.stage.*;
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.scene.input.*;
@@ -31,8 +33,10 @@ public class Main extends Application{
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
+	private EnemyHandling eHandler;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY, NewmouseX, NewmouseY;
 	private double weaponX, weaponY, angle;
+	private double cx, cy; //character coordinate x, character coordinate 
 	private UI uiElements;
 	private int frameCount = 0;
 	private int weapon1CD = 0, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
@@ -48,6 +52,8 @@ public class Main extends Application{
 
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
+		eHandler = new EnemyHandling();
+		
 
 		mouseX = 0.0;
 		mouseY = 0.0;
@@ -123,6 +129,16 @@ public class Main extends Application{
 					}
 				}
 				switch (event.getCode()) {
+				
+				
+				//TODO FOR TESTING; DELETE LATER
+				case P: BasicZombie bz = new BasicZombie(300, 300, cx, cy, 20);
+						eHandler.addEnemy(bz);
+						floor.getChildren().add(bz.getEnemy());
+						bz.spawn();
+						break;
+						
+				case M: uiElements.setDebug(); break;
 
 				case BACK_SPACE: Reset(); break;
 
@@ -208,8 +224,8 @@ public class Main extends Application{
 						if (weapon1CDRemaining == 0) {
 							setMouseCursorGap(8);
 							setMouseColor(Color.SALMON);
-							double cx = player.getPic().getLayoutX()+centerOffsetX;
-							double cy = player.getPic().getLayoutY()+centerOffsetY;
+							cx = player.getPic().getLayoutX()+centerOffsetX;
+							cy = player.getPic().getLayoutY()+centerOffsetY;
 							System.out.println(mouseX + " MouseX\n " + mouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
 							createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
 							weapon1CD = frameCount + 15; //the "+15" is the cooldown
@@ -227,6 +243,32 @@ public class Main extends Application{
 		stage.show();
 		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);
+		
+//		
+//
+//		
+//		
+//		
+//		Game Loop Section Begins
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
 
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -237,7 +279,9 @@ public class Main extends Application{
 					checkCollision();
 				}
 
+				//handle projectiles and enemies
 				pHandler.cycleProjectiles();
+				eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
 				if(!player.isAlive()) {
 					uiElements.deadHP();
@@ -245,13 +289,17 @@ public class Main extends Application{
 				else if (player.checkHPWarn() && frameCount%10==0) {
 					uiElements.warnHP();
 				}
+				
+				if(uiElements.isDebug()) {
+					uiElements.showInfo(cx, cy, mouseX, mouseY);
+				}
 
 				frameCount++;
 				weapon1CDRemaining = weapon1CD - frameCount;
 				if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
 				uiElements.updateWeaponCD(1, weapon1CDRemaining);
 
-				try {
+				try { //very janky way of setting a framerate limit
 					Thread.sleep(1000/60);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -260,6 +308,31 @@ public class Main extends Application{
 			}
 		};
 		timer.start();
+//		
+//
+//		
+//		
+//		
+//		Game Loop Section Ends
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//
 	}
 
 	private void handleMovement() {
@@ -344,26 +417,26 @@ public class Main extends Application{
 	}
 
 	private void rotatePlayer() {
-		double playerPosx = player.getPic().getLayoutX()+centerOffsetX;
-		double playerPosy = player.getPic().getLayoutY()+centerOffsetY;
-		angle = Math.atan2(mouseY - playerPosy, mouseX - playerPosx) * 180 / Math.PI;
+		cx = player.getPic().getLayoutX()+centerOffsetX;
+		cy = player.getPic().getLayoutY()+centerOffsetY;
+		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
 		player.getPic().setRotate(angle);
-		weaponX = playerPosx + Math.cos(Math.toRadians(angle+40))*35;
-		weaponY = playerPosy + Math.sin(Math.toRadians(angle+40))*35;
+		weaponX = cx + Math.cos(Math.toRadians(angle+40))*35;
+		weaponY = cy + Math.sin(Math.toRadians(angle+40))*35;
 	}
 
 	//TODO clean both methods up a bit
 	private void moveBy(double dx, double dy) {
-		double cx = player.getPic().getBoundsInLocal().getWidth() / 2;
-		double cy = player.getPic().getBoundsInLocal().getHeight() / 2;
+		cx = player.getPic().getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic().getBoundsInLocal().getHeight() / 2;
 		double x = cx + player.getPic().getLayoutX() + dx;
 		double y = cy + player.getPic().getLayoutY() - dy;
 		moveTo(x, y);
 	}
 
 	private void moveTo(double x, double y) {
-		double cx = player.getPic().getBoundsInLocal().getWidth() / 2;
-		double cy = player.getPic().getBoundsInLocal().getHeight() / 2;
+		cx = player.getPic().getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic().getBoundsInLocal().getHeight() / 2;
 		if (x - cx >= 0 && x + cx <= width &&
 				y - cy >= 0 && y + cy <= height) {
 			player.getPic().relocate(x - cx, y - cy);
