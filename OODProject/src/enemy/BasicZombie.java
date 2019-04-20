@@ -22,7 +22,7 @@ public class BasicZombie extends Enemy{
 
 	@Override
 	public void move() {
-		
+		//TODO add move; also make it so the enemy stops moving if within *some* distance of the player
 		rotate();
 	}
 	

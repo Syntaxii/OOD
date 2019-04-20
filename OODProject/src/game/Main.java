@@ -39,6 +39,8 @@ public class Main extends Application{
 	private double cx, cy; //character coordinate x, character coordinate 
 	private UI uiElements;
 	private int frameCount = 0;
+	private boolean isVulnerable = false;
+	private int invulnerableTime = 0;
 	private int weapon1CD = 0, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
 	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
 	private int d = 10; //pixel gap between mouseCursor elements
@@ -53,7 +55,7 @@ public class Main extends Application{
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();
-		
+
 
 		mouseX = 0.0;
 		mouseY = 0.0;
@@ -129,15 +131,15 @@ public class Main extends Application{
 					}
 				}
 				switch (event.getCode()) {
-				
-				
+
+
 				//TODO FOR TESTING; DELETE LATER
 				case P: BasicZombie bz = new BasicZombie(300, 300, cx, cy, 20);
-						eHandler.addEnemy(bz);
-						floor.getChildren().add(bz.getEnemy());
-						bz.spawn();
-						break;
-						
+				eHandler.addEnemy(bz);
+				floor.getChildren().add(bz.getEnemy());
+				bz.spawn();
+				break;
+
 				case M: uiElements.setDebug(); break;
 
 				case BACK_SPACE: Reset(); break;
@@ -243,32 +245,32 @@ public class Main extends Application{
 		stage.show();
 		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);
-		
-//		
-//
-//		
-//		
-//		
-//		Game Loop Section Begins
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
+
+		//		
+		//
+		//		
+		//		
+		//		
+		//		Game Loop Section Begins
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
 
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -289,16 +291,19 @@ public class Main extends Application{
 				else if (player.checkHPWarn() && frameCount%10==0) {
 					uiElements.warnHP();
 				}
-				
+
 				if(uiElements.isDebug()) {
 					uiElements.showInfo(cx, cy, mouseX, mouseY);
 				}
+				
+				if(invulnerableTime<frameCount) isVulnerable = true;
 
-				frameCount++;
 				weapon1CDRemaining = weapon1CD - frameCount;
 				if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
 				uiElements.updateWeaponCD(1, weapon1CDRemaining);
-
+				
+				frameCount++;
+				
 				try { //very janky way of setting a framerate limit
 					Thread.sleep(1000/60);
 				} catch (InterruptedException e) {
@@ -308,31 +313,31 @@ public class Main extends Application{
 			}
 		};
 		timer.start();
-//		
-//
-//		
-//		
-//		
-//		Game Loop Section Ends
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//		
-//
+		//		
+		//
+		//		
+		//		
+		//		
+		//		Game Loop Section Ends
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//		
+		//
 	}
 
 	private void handleMovement() {
@@ -377,9 +382,14 @@ public class Main extends Application{
 		for(int i = 0; i < obstacleCollision.size(); i++) {
 			if(playerCollision.getLayoutX() > 150 && playerCollision.getLayoutX() < 250 && playerCollision.getLayoutY() > 200 && playerCollision.getLayoutY() < 300) {
 				//				System.out.println("COLLISSION");
-				player.setHealth(player.getHealth()-1);
-				uiElements.ChangeHP(player.getHealth()*4);
-				System.out.println(player.getHealth());
+				if(isVulnerable==true) {
+					player.setHealth(player.getHealth()-10);
+					uiElements.ChangeHP(player.getHealth()*4);
+					System.out.println(player.getHealth());
+					invulnerableTime = frameCount + 10;
+					isVulnerable=false;
+				}
+
 			} else {
 				//				System.out.println("No Collission");
 			}
