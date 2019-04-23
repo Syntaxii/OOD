@@ -3,7 +3,7 @@ package enemy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class BasicZombie implements Enemy{
+public class LethalZombie implements Enemy{
 	private Image image = new Image("https://opengameart.org/sites/default/files/skeleton-attack_0.png");
 	private ImageView zomb = new ImageView(image);
 	double enemyX, enemyY, playerX, playerY;

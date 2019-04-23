@@ -2,21 +2,9 @@ package enemy;
 
 import javafx.scene.image.ImageView;
 
-public abstract class Enemy {
-	double enemyX, enemyY, playerX, playerY;
-	double eSpeed; //enemy Speed
-	double angle;
-	boolean alive = true;
-	int health;
+public interface Enemy {
 	
-	public Enemy(double enemyX, double enemyY, double playerX, double playerY, double speed) {
-		this.enemyX = enemyX;
-		this.enemyY = enemyY; 
-		this.playerX = playerX;
-		this.playerY = playerY;
-		eSpeed = speed;
-	}
-	
+	public abstract void setEnemy(double enemyX, double enemyY, double playerX, double playerY, double speed);
 	public abstract void spawn();
 	public abstract void rotate();
 	public abstract void move();
