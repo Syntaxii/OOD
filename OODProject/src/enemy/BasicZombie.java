@@ -34,13 +34,14 @@ public class BasicZombie extends Enemy{
 	public void move() {
 		//TODO add move; also make it so the enemy stops moving if within *some* distance of the player
 		rotate();
-		if(Math.abs((playerX-160)-enemyX)>= 25) {
-			moveX =1; //Math.cos(angle);
-			enemyX = enemyX + moveX*eSpeed;
+		double radianangle = Math.toRadians(angle);
+		if(Math.abs((playerX-160)-enemyX)>= 50) {
+			moveX = Math.cos(radianangle);
+			enemyX = enemyX + (moveX*eSpeed);
 		}
-		if(Math.abs((playerY-150)-enemyY)>= 25) {
-			moveY =1; // Math.sin(angle);
-			enemyY = enemyY + moveY*eSpeed;
+		if(Math.abs((playerY-150)-enemyY)>= 50) {
+			moveY = Math.sin(radianangle);
+			enemyY = enemyY + (moveY*eSpeed);
 			
 		}
 		zomb.relocate(enemyX, enemyY);
