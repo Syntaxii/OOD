@@ -20,6 +20,7 @@ import javafx.event.*;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Main extends Application{
 	//TODO change aspect ratio for width and height
@@ -29,7 +30,7 @@ public class Main extends Application{
 	private Image playerImage;
 	private Player player;
 	private Rectangle playerCollision;
-	private ArrayList<Rectangle> obstacleCollision;
+	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
@@ -74,8 +75,10 @@ public class Main extends Application{
 
 
 		Pane root = new Pane();
-		//BorderPane root = new BorderPane();
-		Pane floor = new Pane(player.getPic());
+		
+		Pane floor = new Pane();
+		Pane obstacles = new Pane();
+		floor.getChildren().add(obstacles);
 		Pane projectiles = new Pane();
 
 
@@ -88,17 +91,20 @@ public class Main extends Application{
 		playerCollision = col.getPlayercollision();
 		obstacleCollision = col.getObstacles();
 
-
 		root.getChildren().add(floor);
-		floor.getChildren().addAll(obstacleCollision); //collision boxes WIP
+		root.getChildren().add(player.getPic()); //collision boxes WIP
+		root.getChildren().addAll(uiElements.getUIElements());
+		root.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
+
 		floor.getChildren().add(playerCollision);
 		floor.getChildren().add(projectiles);
-		floor.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
-		floor.getChildren().addAll(uiElements.getUIElements());
+
 
 		uiElements.changeWeaponFocus(1);
 
 		moveTo(width/2, height/2);
+		
+		obstacles.getChildren().addAll(obstacleCollision);
 
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.NONE);
@@ -134,7 +140,7 @@ public class Main extends Application{
 
 
 				//TODO FOR TESTING; DELETE LATER
-				case P: BasicZombie bz = new BasicZombie(300, 300, cx, cy, 20);
+				case P: BasicZombie bz = new BasicZombie(1700,900, cx, cy, 20);
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
 				bz.spawn();
@@ -505,6 +511,7 @@ public class Main extends Application{
 		player.setAlive();
 		uiElements.resetHP();
 		pHandler.clearProjectiles();
+		eHandler.clearEnemies();
 		weapon1CD = frameCount;
 	}
 }

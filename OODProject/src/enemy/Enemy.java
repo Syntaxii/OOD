@@ -8,6 +8,7 @@ public abstract class Enemy {
 	double angle;
 	boolean alive = true;
 	int health;
+	boolean isAlive = false;
 	
 	public Enemy(double enemyX, double enemyY, double playerX, double playerY, double speed) {
 		this.enemyX = enemyX;
@@ -22,6 +23,7 @@ public abstract class Enemy {
 	public abstract void move();
 	public abstract void receiveDamage();
 	public abstract void attack();
+	public abstract void delete();
 	public abstract void tick(double newPlayerX, double newPlayerY);
 	public abstract ImageView getEnemy();
 	
