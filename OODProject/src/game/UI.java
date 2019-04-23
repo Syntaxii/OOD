@@ -12,7 +12,8 @@ import javafx.scene.text.Font;
 public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
-	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox, HealthBar, HealthBarBG;
+	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
+	HealthBar, hurtScreen, HealthBarBG, debugBox;
 	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
@@ -160,6 +161,12 @@ public class UI {
 		HealthBar.setY(540);
 		HealthBar.setFill(Color.rgb(250, 15, 15, 0.9));
 		
+		hurtScreen = new Rectangle(3000, 3000);
+		hurtScreen.setFill(Color.rgb(230, 50, 50, 0.2));
+		hurtScreen.setVisible(false);
+		hurtScreen.setX(-400);
+		hurtScreen.setY(-400);
+		
 		HealthWarning = new Label("!!!");
 		HealthWarning.setFont(new Font("Arial", 50));
 		HealthWarning.setTextFill(Color.DARKRED);
@@ -198,6 +205,13 @@ public class UI {
 		debuginfo4.setFont(new Font("Arial", 20));
 		debuginfo4.relocate(30, 140);
 		debuginfo4.setTextFill(Color.YELLOW);
+		debugBox = new Rectangle(170, 155);
+		debugBox.setVisible(false);
+		debugBox.setX(20);
+		debugBox.setY(15);
+		debugBox.setFill(Color.rgb(50, 50, 50, 0.8));
+		debugBox.setStroke(Color.rgb(200, 200, 200, 0.8));
+		debugBox.setStrokeWidth(4);
 		
 		
 
@@ -214,11 +228,14 @@ public class UI {
 		UIParts.add(HealthWarning);
 		UIParts.add(HealthBarBG);
 		
+		UIParts.add(debugBox);
 		UIParts.add(debuginfo1);
 		UIParts.add(debuginfo2);
 		UIParts.add(debuginfo3);
 		UIParts.add(debuginfo4);
 		UIParts.add(debugLabel);
+		
+		UIParts.add(hurtScreen);
 	}
 
 	public void ChangeHP(int hp) {
@@ -259,6 +276,7 @@ public class UI {
 	public void setDebug() {
 		if(debugMode == false) {
 			debugMode = true;
+			debugBox.setVisible(true);
 			debuginfo1.setVisible(true);
 			debuginfo2.setVisible(true);
 			debuginfo3.setVisible(true);
@@ -267,6 +285,7 @@ public class UI {
 		}
 		else {
 			debugMode = false;
+			debugBox.setVisible(false);
 			debuginfo1.setVisible(false);
 			debuginfo2.setVisible(false);
 			debuginfo3.setVisible(false);
@@ -280,10 +299,10 @@ public class UI {
 	}
 	
 	public void showInfo(double playerX, double playerY, double MouseX, double MouseY) {
-		debuginfo1.setText("player x = " + playerX);
-		debuginfo2.setText("player y = " + playerY);
-		debuginfo3.setText("mouse x = " + MouseX);
-		debuginfo4.setText("mouse y = " + MouseY);
+		debuginfo1.setText("player x = " + Math.floor(playerX));
+		debuginfo2.setText("player y = " + Math.floor(playerY));
+		debuginfo3.setText("mouse x = " + Math.floor(MouseX));
+		debuginfo4.setText("mouse y = " + Math.floor(MouseY));
 	}
 
 

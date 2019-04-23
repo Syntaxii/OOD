@@ -8,10 +8,10 @@ public class BasicZombie extends Enemy{
 	private ImageView zomb = new ImageView(image);
 	double enemyX, enemyY, playerX, playerY;
 	double eSpeed; //enemy Speed
-	double angle;
+	double angle, moveX, moveY;
 	int health;
 
-	
+
 	public void setEnemy(double enemyX, double enemyY, double playerX, double playerY, double speed) {
 		this.enemyX = enemyX;
 		this.enemyY = enemyY; 
@@ -24,7 +24,7 @@ public class BasicZombie extends Enemy{
 		zomb.relocate(enemyX, enemyY);
 		isAlive = true;
 	}
-	
+
 	@Override
 	public void spawn() {
 		zomb.setVisible(true);
@@ -34,24 +34,37 @@ public class BasicZombie extends Enemy{
 	public void move() {
 		//TODO add move; also make it so the enemy stops moving if within *some* distance of the player
 		rotate();
+		if(Math.abs((playerX-160)-enemyX)>= 25) {
+			moveX = Math.cos(angle);
+			enemyX = enemyX + moveX*eSpeed;
+		}
+		if(Math.abs((playerY-150)-enemyY)>= 25) {
+			enemyY = enemyY + moveY*eSpeed;
+			moveY = Math.sin(angle);
+			
+		}
+		zomb.relocate(enemyX, enemyY);
+
+		
 	}
-	
+
 	@Override
 	public void rotate() {
 		angle = Math.atan2(playerY-150 - enemyY, playerX-160 - enemyX) * 180 / Math.PI;
 		zomb.setRotate(angle);
+
 	}
 
 	@Override
 	public void receiveDamage() {
-		
+
 	}
 
 	@Override
 	public void attack() {
-		
+
 	}
-	
+
 	public void delete() {
 		zomb.setVisible(false);
 		isAlive = false;
@@ -62,9 +75,10 @@ public class BasicZombie extends Enemy{
 		if (isAlive == true) {
 			playerX = newPlayerX;
 			playerY = newPlayerY;
+			move();
 		}
 	}
-	
+
 	public ImageView getEnemy() {
 		return zomb;
 	}

@@ -11,7 +11,6 @@ public class EnemyHandling {
 			Enemy temp = enemies.get(j);
 			
 			temp.tick(newPlayerX, newPlayerY);
-			temp.move();
 			
 			}
 

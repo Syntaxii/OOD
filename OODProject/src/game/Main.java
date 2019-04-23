@@ -21,7 +21,8 @@ import javafx.scene.image.ImageView;
 
 public class Main extends Application{
 	//TODO change aspect ratio for width and height
-	static final double width = 1920, height = 1080;
+	//static final double width = 1920, height = 1080;
+	static final double width = 1650, height = 1050;
 	static final double newWidth = 750, newHeight = 750;
 	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
 	private Image playerImage;
@@ -141,7 +142,9 @@ public class Main extends Application{
 
 				//TODO FOR TESTING; CLEAN LATER
 				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
-				bz.setEnemy(300, 300, cx, cy, 20);
+				double rx = (double)(Math.random()*2000)-200;
+				double ry = (double)(Math.random()*1000)-200;
+				bz.setEnemy(rx, ry, cx, cy, 1);
 
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
