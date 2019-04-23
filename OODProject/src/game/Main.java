@@ -1,11 +1,8 @@
 package game;
 
-import player.Collision;
-import player.Player;
-import projectile.Bullet;
-import projectile.ProjectileHandling;
-import enemy.BasicZombie;
-import enemy.EnemyHandling;
+import player.*;
+import projectile.*;
+import enemy.*;
 
 import java.util.ArrayList;
 import javafx.stage.*;
@@ -34,7 +31,9 @@ public class Main extends Application{
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
+	private ZombieFactory zf;
 	private EnemyHandling eHandler;
+	private Enemy bz;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY, NewmouseX, NewmouseY;
 	private double weaponX, weaponY, angle;
 	private double cx, cy; //character coordinate x, character coordinate 
@@ -139,8 +138,11 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 
-				//TODO FOR TESTING; DELETE LATER
-				case P: BasicZombie bz = new BasicZombie(1700,900, cx, cy, 20);
+
+				//TODO FOR TESTING; CLEAN LATER
+				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
+				bz.setEnemy(300, 300, cx, cy, 20);
+
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
 				bz.spawn();

@@ -3,14 +3,13 @@ package enemy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class BasicZombie extends Enemy{
+public class LethalZombie extends Enemy{
 	private Image image = new Image("https://opengameart.org/sites/default/files/skeleton-attack_0.png");
 	private ImageView zomb = new ImageView(image);
 	double enemyX, enemyY, playerX, playerY;
 	double eSpeed; //enemy Speed
 	double angle;
 	int health;
-
 	
 	public void setEnemy(double enemyX, double enemyY, double playerX, double playerY, double speed) {
 		this.enemyX = enemyX;
@@ -22,7 +21,6 @@ public class BasicZombie extends Enemy{
 		zomb.setScaleX(.4);
 		zomb.setScaleY(.4);
 		zomb.relocate(enemyX, enemyY);
-		isAlive = true;
 	}
 	
 	@Override
@@ -38,7 +36,7 @@ public class BasicZombie extends Enemy{
 	
 	@Override
 	public void rotate() {
-		angle = Math.atan2(playerY-150 - enemyY, playerX-160 - enemyX) * 180 / Math.PI;
+		angle = Math.atan2(playerY - enemyY, playerX - enemyX) * 180 / Math.PI;
 		zomb.setRotate(angle);
 	}
 
@@ -51,21 +49,21 @@ public class BasicZombie extends Enemy{
 	public void attack() {
 		
 	}
-	
-	public void delete() {
-		zomb.setVisible(false);
-		isAlive = false;
-	}
 
 	@Override
 	public void tick(double newPlayerX, double newPlayerY) { //requires player coordinates
-		if (isAlive == true) {
-			playerX = newPlayerX;
-			playerY = newPlayerY;
-		}
+		playerX = newPlayerX;
+		playerY = newPlayerY;
 	}
 	
 	public ImageView getEnemy() {
 		return zomb;
+	}
+
+	@Override
+	public void delete() {
+		zomb.setVisible(false);
+		isAlive = false;
+		
 	}
 }
