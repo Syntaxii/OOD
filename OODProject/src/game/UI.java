@@ -235,7 +235,7 @@ public class UI {
 				+ 				"           ESC = Close Game\n"
 				+ 				"            P = Spawn Zombie\n"
 				+ 				"             M = Debug Mode\n"
-				+ 				"           P = Pause/Unpause\n"
+				+ 				"           L = Pause/Unpause\n"
 				+ "\n\n\n"
 				+ 				"                  Instructions\n"
 				+ 				"---------------------------------------------\n");

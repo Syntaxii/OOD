@@ -153,7 +153,27 @@ public class Main extends Application{
 				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
 				double rx = (double)(Math.random()*2000)-200;
 				double ry = (double)(Math.random()*1000)-200;
-				bz.setEnemy(rx, ry, cx, cy, 1);
+				bz.setEnemy(rx, ry);
+
+				eHandler.addEnemy(bz);
+				floor.getChildren().add(bz.getEnemy());
+				bz.spawn();
+				break;
+				
+				case U: bz = ZombieFactory.createEnemy(EnemyType.FAST); //FACTORY 
+				double rx2 = (double)(Math.random()*2000)-200;
+				double ry2 = (double)(Math.random()*1000)-200;
+				bz.setEnemy(rx2, ry2);
+
+				eHandler.addEnemy(bz);
+				floor.getChildren().add(bz.getEnemy());
+				bz.spawn();
+				break;
+				
+				case K: bz = ZombieFactory.createEnemy(EnemyType.LETHAL); //FACTORY 
+				double rx3 = (double)(Math.random()*2000)-200;
+				double ry3 = (double)(Math.random()*1000)-200;
+				bz.setEnemy(rx3, ry3);
 
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
