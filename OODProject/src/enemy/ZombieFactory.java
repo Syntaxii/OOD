@@ -5,16 +5,19 @@ public class ZombieFactory {
 		Enemy enemy = null;
         switch (type) {
             case BASIC:
-                enemy = new BasicZombie();
-                enemy.setSpeed(1);
+        		EnemyBehaviors move1 = new EnemyBehaviors(new Normal());
+                enemy = new BasicZombie(null);
+                enemy.setSpeed(move1.setMoveBehavior());
                 break;
             case FAST:
-                enemy = new FastZombie();
-                enemy.setSpeed(2);
+        		EnemyBehaviors move2 = new EnemyBehaviors(new Fast());
+                enemy = new FastZombie(null);
+                enemy.setSpeed(move2.setMoveBehavior());
                 break;
             case LETHAL:
-                enemy = new LethalZombie();
-                enemy.setSpeed(.75);
+        		EnemyBehaviors move3 = new EnemyBehaviors(new Slow());
+                enemy = new LethalZombie(null);
+                enemy.setSpeed(move3.setMoveBehavior());
                 break;
         }
         return enemy;
