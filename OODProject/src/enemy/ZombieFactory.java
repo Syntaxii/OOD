@@ -1,7 +1,7 @@
 package enemy;
 
 public class ZombieFactory {
-	public Enemy createEnemy(EnemyType type) {
+	public static Enemy createEnemy(EnemyType type) {
 		Enemy enemy = null;
         switch (type) {
             case BASIC:

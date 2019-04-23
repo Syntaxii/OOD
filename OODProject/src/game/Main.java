@@ -30,6 +30,7 @@ public class Main extends Application{
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
+	private ZombieFactory zf;
 	private EnemyHandling eHandler;
 	private Enemy bz;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY, NewmouseX, NewmouseY;
@@ -132,7 +133,7 @@ public class Main extends Application{
 
 
 				//TODO FOR TESTING; CLEAN LATER
-				case P: bz = new BasicZombie(); //FACTORY 
+				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
 				bz.setEnemy(300, 300, cx, cy, 20);
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
