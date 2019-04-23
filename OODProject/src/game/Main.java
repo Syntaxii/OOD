@@ -21,10 +21,10 @@ import javafx.scene.image.ImageView;
 
 public class Main extends Application{
 	//TODO change aspect ratio for width and height
-	//static final double width = 1920, height = 1080;
-	static final double width = 1650, height = 1050;
+	static final double width = 1920, height = 1080;
+	//static final double width = 1650, height = 1050;
 	static final double newWidth = 750, newHeight = 750;
-	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
+	static final String imgURL = "file:src/images/player.gif";
 	private Image playerImage;
 	private Player player;
 	private Rectangle playerCollision;
@@ -39,6 +39,7 @@ public class Main extends Application{
 	private double weaponX, weaponY, angle;
 	private double cx, cy; //character coordinate x, character coordinate 
 	private UI uiElements;
+	private boolean started = false;
 	private int frameCount = 0;
 	private boolean isVulnerable = false;
 	private int invulnerableTime = 0;
@@ -75,7 +76,7 @@ public class Main extends Application{
 
 
 		Pane root = new Pane();
-		
+
 		Pane floor = new Pane();
 		Pane obstacles = new Pane();
 		floor.getChildren().add(obstacles);
@@ -103,13 +104,13 @@ public class Main extends Application{
 		uiElements.changeWeaponFocus(1);
 
 		moveTo(width/2, height/2);
-		
+
 		obstacles.getChildren().addAll(obstacleCollision);
 
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.NONE);
 
-		BackgroundImage myBI= new BackgroundImage(new Image("https://i.imgur.com/g4B0JMe.jpg",512,512,false,true),
+		BackgroundImage myBI= new BackgroundImage(new Image("file:src/images/grass.jpg",512,512,false,true),
 				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 
@@ -121,6 +122,16 @@ public class Main extends Application{
 
 				if (player.isAlive()) {
 					switch (event.getCode()) {
+					case L:			
+						if (started == true) {
+							started = false;
+							uiElements.pauseChange();
+						}
+						else {
+							started = true;
+							uiElements.pauseChange();
+						}
+						break;
 					case W:    		goUp = true; break;
 					case S:  		goDown = true; break;
 					case A:  		goLeft  = true; break;
@@ -138,8 +149,6 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-
-
 				//TODO FOR TESTING; CLEAN LATER
 				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
 				double rx = (double)(Math.random()*2000)-200;
@@ -155,7 +164,7 @@ public class Main extends Application{
 
 				case BACK_SPACE: Reset(); break;
 
-				case SHIFT: 	stage.setFullScreen(true); 
+				case MINUS: 	stage.setFullScreen(true); 
 				uiElements.changeUIPositions((width/2)-200, height-110);
 				stage.setFullScreenExitHint("");
 				break;
@@ -196,7 +205,7 @@ public class Main extends Application{
 		});
 		scene.setOnMouseMoved(new EventHandler<MouseEvent> () {
 			public void handle(MouseEvent event) {
-				if (player.isAlive()) {
+				if (player.isAlive() && started==true) {
 					rotatePlayer();
 				}
 
@@ -210,7 +219,7 @@ public class Main extends Application{
 				mouseX = e.getX();
 				mouseY = e.getY();
 				moveMouse();
-				if (player.isAlive()) {
+				if (player.isAlive() && started==true) {
 					rotatePlayer();
 				}
 
@@ -230,7 +239,7 @@ public class Main extends Application{
 				mouseX = e.getX();
 				mouseY = e.getY();
 
-				if (player.isAlive()) {
+				if (player.isAlive() && started==true) {
 
 					//TODO change this to all weapons, and check ammo, etc.
 					if(uiElements.getCurrentWeaponSelection() == 1) {
@@ -286,35 +295,37 @@ public class Main extends Application{
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if (player.isAlive()) {
-					handleMovement();
-					rotatePlayer();
-					checkCollision();
-				}
+				if (started==true) {
+					if (player.isAlive() && started==true) {
+						handleMovement();
+						rotatePlayer();
+						checkCollision();
+					}
 
-				//handle projectiles and enemies
-				pHandler.cycleProjectiles();
-				eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
+					//handle projectiles and enemies
+					pHandler.cycleProjectiles();
+					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
-				if(!player.isAlive()) {
-					uiElements.deadHP();
-				}
-				else if (player.checkHPWarn() && frameCount%10==0) {
-					uiElements.warnHP();
-				}
+					if(!player.isAlive() && started==true) {
+						uiElements.deadHP();
+					}
+					else if (player.checkHPWarn() && frameCount%10==0) {
+						uiElements.warnHP();
+					}
 
-				if(uiElements.isDebug()) {
-					uiElements.showInfo(cx, cy, mouseX, mouseY);
-				}
-				
-				if(invulnerableTime<frameCount) isVulnerable = true;
+					if(uiElements.isDebug()) {
+						uiElements.showInfo(cx, cy, mouseX, mouseY);
+					}
 
-				weapon1CDRemaining = weapon1CD - frameCount;
-				if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
-				uiElements.updateWeaponCD(1, weapon1CDRemaining);
-				
-				frameCount++;
-				
+
+					if(invulnerableTime<frameCount) isVulnerable = true;
+
+					weapon1CDRemaining = weapon1CD - frameCount;
+					if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
+					uiElements.updateWeaponCD(1, weapon1CDRemaining);
+
+					frameCount++;
+				}
 				try { //very janky way of setting a framerate limit
 					Thread.sleep(1000/60);
 				} catch (InterruptedException e) {

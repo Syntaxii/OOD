@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Collision {
 	private ArrayList<ImageView> obstacles; 
-	private Image lavapic = new Image("https://www.seekpng.com/png/full/233-2339796_waba-funs-great-adventure-production-lava-pit-craft.png");
+	private Image lavapic = new Image("file:src/images/lava.png");
 	private ImageView lava = new ImageView(lavapic);
 	private Rectangle playerBox;
 	

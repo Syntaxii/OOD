@@ -13,8 +13,8 @@ public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
-	HealthBar, hurtScreen, HealthBarBG, debugBox;
-	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel;
+	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen;
+	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
 	private int current; //current weapon selection
@@ -71,6 +71,9 @@ public class UI {
 		HealthBar.relocate(x, y-60);
 		HealthWarning.relocate(x+179, y-63);
 		HealthBarBG.relocate(x, y-60);
+		pauseScreen.relocate(x-50, y-850);
+		pauseScreenText.relocate(x+80, y-845);
+		instruction.relocate(x+50, y-750);
 	}
 
 	private void changeColorToNormal(Rectangle rec) {
@@ -180,7 +183,7 @@ public class UI {
 		HealthBarBG.setStrokeWidth(3);
 		
 		//debug stuff
-		debugLabel = new Label("Debug Mode");
+		debugLabel = new Label("   Debug Mode");
 		debugLabel.setVisible(false);
 		debugLabel.setFont(new Font("Arial", 20));
 		debugLabel.relocate(30, 20);
@@ -205,7 +208,7 @@ public class UI {
 		debuginfo4.setFont(new Font("Arial", 20));
 		debuginfo4.relocate(30, 140);
 		debuginfo4.setTextFill(Color.YELLOW);
-		debugBox = new Rectangle(170, 155);
+		debugBox = new Rectangle(175, 155);
 		debugBox.setVisible(false);
 		debugBox.setX(20);
 		debugBox.setY(15);
@@ -213,7 +216,32 @@ public class UI {
 		debugBox.setStroke(Color.rgb(200, 200, 200, 0.8));
 		debugBox.setStrokeWidth(4);
 		
+		//pause screen
+		pauseScreen = new Rectangle(500, 750);
+		pauseScreen.setX(600);
+		pauseScreen.setY(300);
+		pauseScreen.setFill(Color.rgb(100, 100, 100, 0.8));
+		pauseScreen.setStroke(Color.rgb(200, 200, 200, 0.8));
+		pauseScreen.setStrokeWidth(3);
 		
+		pauseScreenText = new Label("PAUSED");
+		pauseScreenText.setFont(new Font("Arial", 60));
+		pauseScreenText.setTextFill(Color.rgb(200, 200, 60));
+		pauseScreenText.relocate(x, y);
+		
+		instruction = new Label("                    Controls\n"
+				+ 				"---------------------------------------------\n"
+				+ 				"  WASD/Arrow Keys = Movement\n"
+				+ 				"           ESC = Close Game\n"
+				+ 				"            P = Spawn Zombie\n"
+				+ 				"             M = Debug Mode\n"
+				+ 				"           P = Pause/Unpause\n"
+				+ "\n\n\n"
+				+ 				"                  Instructions\n"
+				+ 				"---------------------------------------------\n");
+		instruction.setFont(new Font("Arial", 20));
+		instruction.setTextFill(Color.rgb(200, 200, 60));
+		instruction.relocate(x, y);
 
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
@@ -236,6 +264,10 @@ public class UI {
 		UIParts.add(debugLabel);
 		
 		UIParts.add(hurtScreen);
+		
+		UIParts.add(pauseScreen);
+		UIParts.add(pauseScreenText);
+		UIParts.add(instruction);
 	}
 
 	public void ChangeHP(int hp) {
@@ -270,6 +302,19 @@ public class UI {
 		case 2: weapon2CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
 		case 3: weapon3CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
 			default: break;
+		}
+	}
+	
+	public void pauseChange() {
+		if (pauseScreen.isVisible()) {
+			pauseScreen.setVisible(false);
+			pauseScreenText.setVisible(false);
+			instruction.setVisible(false);
+		}
+		else {
+			pauseScreen.setVisible(true);
+			pauseScreenText.setVisible(true);
+			instruction.setVisible(true);
 		}
 	}
 	

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class BasicZombie extends Enemy{
-	private Image image = new Image("https://opengameart.org/sites/default/files/skeleton-attack_0.png");
+	private Image image = new Image("file:src/images/BasicZombie.png");
 	private ImageView zomb = new ImageView(image);
 	double enemyX, enemyY, playerX, playerY;
 	double eSpeed; //enemy Speed
@@ -35,12 +35,12 @@ public class BasicZombie extends Enemy{
 		//TODO add move; also make it so the enemy stops moving if within *some* distance of the player
 		rotate();
 		if(Math.abs((playerX-160)-enemyX)>= 25) {
-			moveX = Math.cos(angle);
+			moveX =1; //Math.cos(angle);
 			enemyX = enemyX + moveX*eSpeed;
 		}
 		if(Math.abs((playerY-150)-enemyY)>= 25) {
+			moveY =1; // Math.sin(angle);
 			enemyY = enemyY + moveY*eSpeed;
-			moveY = Math.sin(angle);
 			
 		}
 		zomb.relocate(enemyX, enemyY);
