@@ -27,6 +27,7 @@ public class Main extends Application{
 	static final String imgURL = "file:src/images/player.gif";
 	private Image playerImage;
 	private Player player;
+	private Pane root, floor, obstacles, projectiles;
 	private Rectangle playerCollision;
 	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
@@ -75,12 +76,12 @@ public class Main extends Application{
 		createMouseCursor();
 
 
-		Pane root = new Pane();
+		root = new Pane();
 
-		Pane floor = new Pane();
-		Pane obstacles = new Pane();
+		floor = new Pane();
+		obstacles = new Pane();
 		floor.getChildren().add(obstacles);
-		Pane projectiles = new Pane();
+		projectiles = new Pane();
 
 
 
@@ -151,34 +152,16 @@ public class Main extends Application{
 
 				//TODO FOR TESTING; CLEAN LATER
 				case P: 
-				double rx = (double)(Math.random()*2000)-200;
-				double ry = (double)(Math.random()*1000)-200;
-				bz = ZombieFactory.createEnemy(EnemyType.BASIC, rx, ry); //FACTORY 
+					spawnZombie(EnemyType.BASIC);
+					break;
 
-				eHandler.addEnemy(bz);
-				floor.getChildren().add(bz.getEnemy());
-				bz.spawn();
-				break;
-				
 				case U:
-				double rx2 = (double)(Math.random()*2000)-200;
-				double ry2 = (double)(Math.random()*1000)-200;
-				bz = ZombieFactory.createEnemy(EnemyType.FAST, rx2, ry2); //FACTORY 
+					spawnZombie(EnemyType.FAST);
+					break;
 
-				eHandler.addEnemy(bz);
-				floor.getChildren().add(bz.getEnemy());
-				bz.spawn();
-				break;
-				
 				case K:
-				double rx3 = (double)(Math.random()*2000)-200;
-				double ry3 = (double)(Math.random()*1000)-200;
-				bz = ZombieFactory.createEnemy(EnemyType.LETHAL, rx3, ry3); //FACTORY 
-
-				eHandler.addEnemy(bz);
-				floor.getChildren().add(bz.getEnemy());
-				bz.spawn();
-				break;
+					spawnZombie(EnemyType.LETHAL);
+					break;
 
 				case M: uiElements.setDebug(); break;
 
@@ -313,7 +296,7 @@ public class Main extends Application{
 			@Override
 			public void handle(long now) {
 				if (started==true) {
-					if (player.isAlive() && started==true) {
+					if (player.isAlive()) {
 						handleMovement();
 						rotatePlayer();
 						checkCollision();
@@ -323,16 +306,17 @@ public class Main extends Application{
 					pHandler.cycleProjectiles();
 					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
-					if(!player.isAlive() && started==true) {
-						uiElements.deadHP();
+					if(frameCount%30==0) tryZombieSpawn(); //spawn zombie
+
+
+					if(!player.isAlive()) {
+						uiElements.deadHP(); //if no health, tells the player he is dead
 					}
 					else if (player.checkHPWarn() && frameCount%10==0) {
-						uiElements.warnHP();
+						uiElements.warnHP(); ///if health is low, flash a warning for the player
 					}
 
-					if(uiElements.isDebug()) {
-						uiElements.showInfo(cx, cy, mouseX, mouseY);
-					}
+
 
 
 					if(invulnerableTime<frameCount) {
@@ -346,6 +330,10 @@ public class Main extends Application{
 					uiElements.updateWeaponCD(1, weapon1CDRemaining);
 
 					frameCount++;
+				}
+
+				if(uiElements.isDebug()) {
+					uiElements.showInfo(cx, cy, mouseX, mouseY);
 				}
 				try { //very janky way of setting a framerate limit
 					Thread.sleep(1000/60);
@@ -550,5 +538,39 @@ public class Main extends Application{
 		pHandler.clearProjectiles();
 		eHandler.clearEnemies();
 		weapon1CD = frameCount;
+	}
+
+	private void tryZombieSpawn() {
+		double  rngForZombieSpawn = Math.random();
+		if (rngForZombieSpawn <= .6) spawnZombie(EnemyType.BASIC);
+		else if (rngForZombieSpawn > .6 && rngForZombieSpawn <=.9)spawnZombie(EnemyType.FAST);
+		else spawnZombie(EnemyType.LETHAL);
+
+	}
+
+	private void spawnZombie(EnemyType type) { //spawn offscreen
+		double location = (Math.random());
+		double rx, ry;
+		if (location <.25) {//left
+			rx = -400;
+			ry = (Math.random()*(height+500))-250;
+		}
+		else if(location <.5) {//up
+			rx = (Math.random()*(width+500))-250;
+			ry = -400;
+		} 
+		else if(location <.75) {//right
+			rx = width;
+			ry = (Math.random()*(height+500))-250;
+		}
+		else {//down
+			rx = (Math.random()*(width+500))-250;
+			ry = height;
+		}
+
+		bz = ZombieFactory.createEnemy(type, rx, ry); //FACTORY 
+		eHandler.addEnemy(bz);
+		floor.getChildren().add(bz.getEnemy());
+		bz.spawn();
 	}
 }

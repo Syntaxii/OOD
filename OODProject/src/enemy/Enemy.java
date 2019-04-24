@@ -25,6 +25,7 @@ public abstract class Enemy{
 	public void move() {
 		rotate();
 		double radianangle = Math.toRadians(angle);
+		
 		if(Math.abs((playerX-160)-enemyX)>= 50) {
 			moveX = Math.cos(radianangle);
 			enemyX = enemyX + (moveX*eSpeed);
@@ -32,8 +33,8 @@ public abstract class Enemy{
 		if(Math.abs((playerY-150)-enemyY)>= 50) {
 			moveY = Math.sin(radianangle);
 			enemyY = enemyY + (moveY*eSpeed);
-			
 		}
+		
 		zomb.relocate(enemyX, enemyY);		
 	}
 

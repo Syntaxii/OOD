@@ -233,7 +233,7 @@ public class UI {
 				+ 				"---------------------------------------------\n"
 				+ 				"  WASD/Arrow Keys = Movement\n"
 				+ 				"           ESC = Close Game\n"
-				+ 				"            P = Spawn Zombie\n"
+				+ 				"        P/U/K = Spawn Zombie\n"
 				+ 				"             M = Debug Mode\n"
 				+ 				"           L = Pause/Unpause\n"
 				+ "\n\n\n"
