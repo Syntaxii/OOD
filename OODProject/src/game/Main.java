@@ -41,7 +41,7 @@ public class Main extends Application{
 	private UI uiElements;
 	private boolean started = false;
 	private int frameCount = 0;
-	private boolean isVulnerable = false;
+	private boolean isVulnerable = true;
 	private int invulnerableTime = 0;
 	private int weapon1CD = 0, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
 	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
@@ -150,30 +150,30 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 				//TODO FOR TESTING; CLEAN LATER
-				case P: bz = ZombieFactory.createEnemy(EnemyType.BASIC); //FACTORY 
+				case P: 
 				double rx = (double)(Math.random()*2000)-200;
 				double ry = (double)(Math.random()*1000)-200;
-				bz.setEnemy(rx, ry);
+				bz = ZombieFactory.createEnemy(EnemyType.BASIC, rx, ry); //FACTORY 
 
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
 				bz.spawn();
 				break;
 				
-				case U: bz = ZombieFactory.createEnemy(EnemyType.FAST); //FACTORY 
+				case U:
 				double rx2 = (double)(Math.random()*2000)-200;
 				double ry2 = (double)(Math.random()*1000)-200;
-				bz.setEnemy(rx2, ry2);
+				bz = ZombieFactory.createEnemy(EnemyType.FAST, rx2, ry2); //FACTORY 
 
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
 				bz.spawn();
 				break;
 				
-				case K: bz = ZombieFactory.createEnemy(EnemyType.LETHAL); //FACTORY 
+				case K:
 				double rx3 = (double)(Math.random()*2000)-200;
 				double ry3 = (double)(Math.random()*1000)-200;
-				bz.setEnemy(rx3, ry3);
+				bz = ZombieFactory.createEnemy(EnemyType.LETHAL, rx3, ry3); //FACTORY 
 
 				eHandler.addEnemy(bz);
 				floor.getChildren().add(bz.getEnemy());
@@ -242,9 +242,6 @@ public class Main extends Application{
 				if (player.isAlive() && started==true) {
 					rotatePlayer();
 				}
-
-
-
 			}
 		});
 		scene.setOnMouseReleased(new EventHandler<MouseEvent>() {
@@ -338,7 +335,11 @@ public class Main extends Application{
 					}
 
 
-					if(invulnerableTime<frameCount) isVulnerable = true;
+					if(invulnerableTime<frameCount) {
+						isVulnerable = true;
+						uiElements.showHurtScreen(false);
+					}
+					if(isVulnerable == false) uiElements.showHurtScreen(true);
 
 					weapon1CDRemaining = weapon1CD - frameCount;
 					if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
@@ -428,7 +429,7 @@ public class Main extends Application{
 					player.setHealth(player.getHealth()-10);
 					uiElements.ChangeHP(player.getHealth()*4);
 					System.out.println(player.getHealth());
-					invulnerableTime = frameCount + 10;
+					invulnerableTime = frameCount + 30;
 					isVulnerable=false;
 				}
 

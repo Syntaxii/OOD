@@ -1,23 +1,17 @@
 package enemy;
 
 public class ZombieFactory {
-	public static Enemy createEnemy(EnemyType type) {
+	public static Enemy createEnemy(EnemyType type, double enemyX, double enemyY) {
 		Enemy enemy = null;
         switch (type) {
             case BASIC:
-        		EnemyBehaviors move1 = new EnemyBehaviors(new Normal());
-                enemy = new BasicZombie(null);
-                enemy.setSpeed(move1.setMoveBehavior());
+                enemy = new BasicZombie(enemyX, enemyY);
                 break;
             case FAST:
-        		EnemyBehaviors move2 = new EnemyBehaviors(new Fast());
-                enemy = new FastZombie(null);
-                enemy.setSpeed(move2.setMoveBehavior());
+                enemy = new FastZombie(enemyX, enemyY);
                 break;
             case LETHAL:
-        		EnemyBehaviors move3 = new EnemyBehaviors(new Slow());
-                enemy = new LethalZombie(null);
-                enemy.setSpeed(move3.setMoveBehavior());
+                enemy = new LethalZombie(enemyX, enemyY);
                 break;
         }
         return enemy;

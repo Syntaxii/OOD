@@ -349,6 +349,10 @@ public class UI {
 		debuginfo3.setText("mouse x = " + Math.floor(MouseX));
 		debuginfo4.setText("mouse y = " + Math.floor(MouseY));
 	}
+	
+	public void showHurtScreen(boolean i) {
+		hurtScreen.setVisible(i);
+	}
 
 
 }
