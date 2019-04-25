@@ -448,7 +448,11 @@ public class Main extends Application{
 					,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/4)
 					,e.getEnemy().getBoundsInParent().getWidth()*1/2
 					,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
-					e.receiveDamage(p.getDamage());
+					if (!e.isInVulnerable()) {
+					int damage = p.getDamage();
+					e.receiveDamage(damage);
+					System.out.println("enemy receive " + damage);
+					}
 				}
 			}
 			if(pl.intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/8)
@@ -563,6 +567,8 @@ public class Main extends Application{
 	}
 
 	private void Reset() {
+		isVulnerable = true;
+		invulnerableTime = 0;
 		moveTo(width/2, height/2);
 		player.setHealth(100);
 		player.setAlive();

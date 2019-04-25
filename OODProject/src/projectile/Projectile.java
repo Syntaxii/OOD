@@ -8,7 +8,7 @@ public abstract class Projectile {
 	protected double VelX = 0, VelY = 0;
 	protected double speed = 20;
 	protected double angle = 0;
-	protected int damage = 10;
+	protected int damage;
 	protected int projectileTimeOutTicker = 0;
 	protected Circle sphere;
 
@@ -61,6 +61,8 @@ public abstract class Projectile {
 	}
 
 	public int getDamage() {
+		damage = damage - 10;
+		if (damage < 5) damage = 5;
 		return damage;
 	}
 }

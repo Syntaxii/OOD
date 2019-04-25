@@ -113,4 +113,8 @@ public abstract class Enemy{
 		return enemyType;
 	}
 	
+	public boolean isInVulnerable() {
+		return inVulnerable;
+	}
+	
 }

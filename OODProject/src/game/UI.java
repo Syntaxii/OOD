@@ -335,6 +335,8 @@ public class UI {
 		HealthWarning.relocate(x+179, y-63);
 		HealthBar.setWidth(400);
 		
+		showHurtScreen(false);
+		
 		scoreBox.relocate(x-100, y-950);
 		score.relocate(x-95, y-950);
 		timeBox.relocate(x+300, y-950);
