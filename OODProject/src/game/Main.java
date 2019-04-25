@@ -449,9 +449,7 @@ public class Main extends Application{
 					,e.getEnemy().getBoundsInParent().getWidth()*1/2
 					,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
 					if (!e.isInVulnerable()) {
-					int damage = p.getDamage();
-					e.receiveDamage(damage);
-					System.out.println("enemy receive " + damage);
+					e.receiveDamage(p.getDamage());
 					}
 				}
 			}
