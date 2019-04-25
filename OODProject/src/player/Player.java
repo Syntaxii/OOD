@@ -16,7 +16,8 @@ public class Player {
 	ColorAdjust faded;
 
 	private Player() throws IOException {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player_move.gif";
+		
+		String imgURL = this.getClass().getResource("/images/player_move.gif").toString();
 		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
 		faded = new ColorAdjust();

@@ -15,8 +15,8 @@ public class UI {
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
 	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox;
 	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction, score, time, surviveText;
-	static String weapon1URL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\gun.jpg";
-	private static ImageView weapon1Image = new ImageView(weapon1URL);
+	private String weapon1URL;
+	private ImageView weapon1Image;
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private boolean debugMode;
@@ -103,6 +103,9 @@ public class UI {
 
 	private void declareUI() {
 		UIParts = new ArrayList<Node>();
+		
+		weapon1URL = this.getClass().getResource("/images/gun.jpg").toString();
+		weapon1Image = new ImageView(weapon1URL);
 		
 		scoreBox = new Rectangle(200, 40);
 		scoreBox.setX(800);

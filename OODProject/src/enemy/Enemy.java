@@ -1,6 +1,5 @@
 package enemy;
 
-import java.io.File;
 import java.io.IOException;
 
 import javafx.scene.image.Image;
@@ -22,8 +21,8 @@ public abstract class Enemy{
 	boolean isDelete = false;
 	EnemyType enemyType = null;
 	
-	public Enemy(double enemyX, double enemyY, Image image, double size) throws IOException {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\zombie_move.gif";
+	public Enemy(double enemyX, double enemyY, Image ijasiodfn, double size) throws IOException {
+		String imgURL = this.getClass().getResource("/images/zombie_move.gif").toString();
 		this.image = new Image(imgURL);
 		zomb = new ImageView(image);
 		this.enemyX = enemyX;

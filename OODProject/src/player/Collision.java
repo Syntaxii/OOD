@@ -12,7 +12,7 @@ public class Collision {
 	
 	private ArrayList<ImageView> obstacles; 
 	public Collision() throws IOException {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\lava.png";
+		String imgURL = this.getClass().getResource("/images/lava.png").toString();
 		System.out.println(imgURL);
 		
 		Image lavapic = new Image(imgURL);

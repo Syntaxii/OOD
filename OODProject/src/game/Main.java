@@ -57,7 +57,7 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player_move.gif";
+		String imgURL = this.getClass().getResource("/images/player_move.gif").toString();
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();
@@ -280,7 +280,7 @@ public class Main extends Application{
 
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		String imgURL2 = "file:"+ System.getProperty("user.dir") + "\\src\\images\\Briefcase.png";
+		String imgURL2 = this.getClass().getResource("/images/Briefcase.png").toString();
 		stage.getIcons().add(new Image(imgURL2)); //we mean business :^)
 		stage.show();
 		stage.setFullScreenExitHint("");
