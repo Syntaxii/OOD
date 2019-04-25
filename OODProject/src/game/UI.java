@@ -15,7 +15,7 @@ public class UI {
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
 	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox;
 	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction, score, time, surviveText;
-	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
+	static String weapon1URL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\gun.jpg";
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;

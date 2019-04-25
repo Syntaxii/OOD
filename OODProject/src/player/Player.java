@@ -1,25 +1,31 @@
 package player;
+import java.io.File;
+import java.io.IOException;
+
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Player {
 	private volatile static ImageView playerpic;
-	static final String imgURL = "file:src/images/player.gif";
-	private static Image playerImage = new Image(imgURL);
+	
+	
+	
 	private static int Health = 100;
 	private static Player player;
 	private static boolean hpWarn = false;
 	private static boolean playerAlive = true;
 	ColorAdjust faded;
 
-	private Player() {
+	private Player() throws IOException {
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player.gif";
+		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
 		faded = new ColorAdjust();
 		faded.setSaturation(-.3);
 		faded.setBrightness(.3);
 	}
-	public static Player getInstance() {
+	public static Player getInstance() throws IOException {
 		if(player != null) {
 			System.out.println("Testing 2nd instantiation denied");
 		}

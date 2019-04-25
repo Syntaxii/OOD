@@ -1,5 +1,7 @@
 package game;
 
+import java.io.IOException;
+
 import javafx.scene.layout.BackgroundImage;
 
 public class FloorMaker {
@@ -9,10 +11,10 @@ public class FloorMaker {
 		brick = new Brick();
 		grass = new Grass();
 	}
-	public BackgroundImage setGrass() {
+	public BackgroundImage setGrass() throws IOException {
 		return grass.setFloor();
 	}
-	public BackgroundImage setBrick() {
+	public BackgroundImage setBrick() throws IOException {
 		return brick.setFloor();
 	}
 }

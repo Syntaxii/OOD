@@ -1,12 +1,14 @@
 package enemy;
 
+import java.io.IOException;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class BasicZombie extends Enemy{
 	
-	public BasicZombie(double enemyX, double enemyY) {
-		super(enemyX, enemyY, new Image("file:src/images/BasicZombie.png"), .4);
+	public BasicZombie(double enemyX, double enemyY) throws IOException {
+		super(enemyX, enemyY, null, .4);
 		setSpeed(1);
 		health = 100;
 		damage = 20;

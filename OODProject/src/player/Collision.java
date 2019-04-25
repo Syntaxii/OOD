@@ -1,4 +1,6 @@
 package player;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
@@ -7,14 +9,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Collision {
-	private ArrayList<ImageView> obstacles; 
-	private Image lavapic = new Image("file:src/images/lava.png");
-	private ImageView lava = new ImageView(lavapic);
-	private ImageView lava2 = new ImageView(lavapic);
-	private ImageView lava3 = new ImageView(lavapic);
-	private ImageView lava4 = new ImageView(lavapic);
 	
-	public Collision() {
+	private ArrayList<ImageView> obstacles; 
+	public Collision() throws IOException {
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\lava.png";
+		System.out.println(imgURL);
+		
+		Image lavapic = new Image(imgURL);
+		ImageView lava = new ImageView(lavapic);
+		ImageView lava2 = new ImageView(lavapic);
+		ImageView lava3 = new ImageView(lavapic);
+		ImageView lava4 = new ImageView(lavapic);
 		
 		lava.setFitWidth(225);
 		lava.setFitHeight(225);

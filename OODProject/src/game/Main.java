@@ -4,6 +4,8 @@ import player.*;
 import projectile.*;
 import enemy.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.stage.*;
 import javafx.animation.*;
@@ -24,7 +26,8 @@ public class Main extends Application{
 	static final double width = 1920, height = 1080;
 	//static final double width = 1650, height = 1050;
 	static final double newWidth = 750, newHeight = 750;
-	static final String imgURL = "file:src/images/player.gif";
+	static String path;
+	static String imgURL;
 	private Image playerImage;
 	private Player player;
 	protected Pane root;
@@ -54,7 +57,7 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage stage) throws Exception {
-
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player.gif";
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();
@@ -108,9 +111,9 @@ public class Main extends Application{
 
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.NONE);
-		
+
 		setBackGround(); //Facade floor
-		
+
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
@@ -147,15 +150,30 @@ public class Main extends Application{
 
 				//TODO FOR TESTING; CLEAN LATER
 				case J: 
-					spawnZombie(EnemyType.BASIC);
+					try {
+						spawnZombie(EnemyType.BASIC);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 
 				case K:
-					spawnZombie(EnemyType.FAST);
+					try {
+						spawnZombie(EnemyType.FAST);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 
 				case L:
-					spawnZombie(EnemyType.LETHAL);
+					try {
+						spawnZombie(EnemyType.LETHAL);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					break;
 
 				case DIGIT0:
@@ -262,7 +280,8 @@ public class Main extends Application{
 
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		stage.getIcons().add(new Image("file:src/images/Briefcase.png")); //we mean business :^)
+		String imgURL2 = "file:"+ System.getProperty("user.dir") + "\\src\\images\\Briefcase.png";
+		stage.getIcons().add(new Image(imgURL2)); //we mean business :^)
 		stage.show();
 		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);
@@ -307,9 +326,16 @@ public class Main extends Application{
 					pHandler.cycleProjectiles();
 					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
-					if(frameCount%120==0) tryZombieSpawn(); //spawn zombie every 2 seconds
-					if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
-					if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
+					
+						try {
+							if(frameCount%120==0) tryZombieSpawn();
+							if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
+							if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} //spawn zombie every 2 seconds
+					
 
 					if(!player.isAlive()) {
 						uiElements.deadHP(); //if no health, tells the player he is dead
@@ -381,7 +407,7 @@ public class Main extends Application{
 		//		
 		//
 	}
-	private void setBackGround() {
+	private void setBackGround() throws IOException {
 		FloorMaker floorMaker = new FloorMaker();
 		root.setBackground(new Background(floorMaker.setGrass()));
 	}
@@ -446,11 +472,11 @@ public class Main extends Application{
 		for (Enemy e : eHandler.getEnemies()) {
 			for (Projectile p : pHandler.getProjectiles()) {
 				if (p.getProjectile().getBoundsInParent().intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/4)
-					,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/4)
-					,e.getEnemy().getBoundsInParent().getWidth()*1/2
-					,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
+						,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/4)
+						,e.getEnemy().getBoundsInParent().getWidth()*1/2
+						,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
 					if (!e.isInVulnerable()) {
-					e.receiveDamage(p.getDamage());
+						e.receiveDamage(p.getDamage());
 					}
 				}
 			}
@@ -581,7 +607,7 @@ public class Main extends Application{
 		weapon1CD = frameCount;
 	}
 
-	private void tryZombieSpawn() {
+	private void tryZombieSpawn() throws IOException {
 		double  rngForZombieSpawn = Math.random();
 		if (rngForZombieSpawn <= .6) spawnZombie(EnemyType.BASIC);
 		else if (rngForZombieSpawn > .6 && rngForZombieSpawn <=.9)spawnZombie(EnemyType.FAST);
@@ -589,7 +615,7 @@ public class Main extends Application{
 
 	}
 
-	private void spawnZombie(EnemyType type) { //spawn offscreen
+	private void spawnZombie(EnemyType type) throws IOException { //spawn offscreen
 		double location = (Math.random());
 		double rx, ry;
 		if (location <.25) {//left
