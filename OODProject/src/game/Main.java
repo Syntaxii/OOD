@@ -27,7 +27,8 @@ public class Main extends Application{
 	static final String imgURL = "file:src/images/player.gif";
 	private Image playerImage;
 	private Player player;
-	private Pane root, floor, obstacles, projectiles;
+	protected Pane root;
+	private Pane floor, obstacles, projectiles;
 	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
@@ -107,12 +108,9 @@ public class Main extends Application{
 
 		Scene scene = new Scene(root, width, height);
 		scene.setCursor(Cursor.NONE);
-
-		BackgroundImage myBI= new BackgroundImage(new Image("file:src/images/grass.jpg",512,512,false,true),
-				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
-				BackgroundSize.DEFAULT);
-
-		root.setBackground(new Background(myBI));
+		
+		setBackGround(); //Facade floor
+		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
@@ -383,7 +381,10 @@ public class Main extends Application{
 		//		
 		//
 	}
-
+	private void setBackGround() {
+		FloorMaker floorMaker = new FloorMaker();
+		root.setBackground(new Background(floorMaker.setGrass()));
+	}
 	private void handleMovement() {
 		double[] offsetAmount = {0, 0};
 		double currentAngle = 0; //Proper diagonal movement
