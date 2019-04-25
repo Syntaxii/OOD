@@ -10,26 +10,35 @@ public class Collision {
 	private ArrayList<ImageView> obstacles; 
 	private Image lavapic = new Image("file:src/images/lava.png");
 	private ImageView lava = new ImageView(lavapic);
-	private Rectangle playerBox;
+	private ImageView lava2 = new ImageView(lavapic);
+	private ImageView lava3 = new ImageView(lavapic);
+	private ImageView lava4 = new ImageView(lavapic);
 	
 	public Collision() {
-		playerBox = new Rectangle(60,60);
-		playerBox.setX(150);
-		playerBox.setY(150);
-		playerBox.setFill(Color.rgb(150, 150, 150, 0.0));
 		
-		lava.setFitWidth(150);
-		lava.setFitHeight(150);
+		lava.setFitWidth(225);
+		lava.setFitHeight(225);
+		lava2.setFitWidth(175);
+		lava2.setFitHeight(175);
+		lava3.setFitWidth(150);
+		lava3.setFitHeight(150);
+		lava4.setFitWidth(200);
+		lava4.setFitHeight(200);
 		
 		obstacles = new ArrayList<ImageView>();
 		obstacles.add(lava);
+		obstacles.add(lava2);
+		obstacles.add(lava3);
+		obstacles.add(lava4);
 		
 		obstacles.get(0).setX(300);
 		obstacles.get(0).setY(325);
-		
-	}
-	public Rectangle getPlayercollision() {
-		return playerBox;
+		obstacles.get(1).setX(1400);
+		obstacles.get(1).setY(600);
+		obstacles.get(2).setX(900);
+		obstacles.get(2).setY(200);
+		obstacles.get(3).setX(500);
+		obstacles.get(3).setY(800);
 	}
 	public ArrayList<ImageView> getObstacles() {
 		return obstacles;

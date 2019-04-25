@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
+import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -28,7 +29,6 @@ public class Main extends Application{
 	private Image playerImage;
 	private Player player;
 	private Pane root, floor, obstacles, projectiles;
-	private Rectangle playerCollision;
 	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
@@ -90,7 +90,6 @@ public class Main extends Application{
 
 		//collisions
 		Collision col = new Collision();
-		playerCollision = col.getPlayercollision();
 		obstacleCollision = col.getObstacles();
 
 		root.getChildren().add(floor);
@@ -98,7 +97,6 @@ public class Main extends Application{
 		root.getChildren().addAll(uiElements.getUIElements());
 		root.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
 
-		floor.getChildren().add(playerCollision);
 		floor.getChildren().add(projectiles);
 
 
@@ -123,7 +121,7 @@ public class Main extends Application{
 
 				if (player.isAlive()) {
 					switch (event.getCode()) {
-					case L:			
+					case P:			
 						if (started == true) {
 							started = false;
 							uiElements.pauseChange();
@@ -151,17 +149,19 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 				//TODO FOR TESTING; CLEAN LATER
-				case P: 
+				case J: 
 					spawnZombie(EnemyType.BASIC);
 					break;
 
-				case U:
+				case K:
 					spawnZombie(EnemyType.FAST);
 					break;
 
-				case K:
+				case L:
 					spawnZombie(EnemyType.LETHAL);
 					break;
+					
+				
 
 				case M: uiElements.setDebug(); break;
 
@@ -248,7 +248,7 @@ public class Main extends Application{
 							setMouseColor(Color.SALMON);
 							cx = player.getPic().getLayoutX()+centerOffsetX;
 							cy = player.getPic().getLayoutY()+centerOffsetY;
-							System.out.println(mouseX + " MouseX\n " + mouseY + " MouseY\n " + cx + " cx\n " + cy + " cy\n");
+
 							createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
 							weapon1CD = frameCount + 15; //the "+15" is the cooldown
 						}
@@ -306,8 +306,9 @@ public class Main extends Application{
 					pHandler.cycleProjectiles();
 					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
-					if(frameCount%30==0) tryZombieSpawn(); //spawn zombie
-
+					if(frameCount%120==0) tryZombieSpawn(); //spawn zombie every 2 seconds
+					if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
+					if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
 
 					if(!player.isAlive()) {
 						uiElements.deadHP(); //if no health, tells the player he is dead
@@ -316,18 +317,27 @@ public class Main extends Application{
 						uiElements.warnHP(); ///if health is low, flash a warning for the player
 					}
 
+					if(player.isAlive() && frameCount%60==0) uiElements.updateTime(frameCount/60);
 
 
-
-					if(invulnerableTime<frameCount) {
-						isVulnerable = true;
+					if(invulnerableTime - frameCount <=45) {
 						uiElements.showHurtScreen(false);
+						if(invulnerableTime<frameCount) {
+							isVulnerable = true;
+						}
 					}
-					if(isVulnerable == false) uiElements.showHurtScreen(true);
+					else {
+						uiElements.showHurtScreen(true);
+					}
+
+					if(isVulnerable) player.setInvulnerable(false);
+					else player.setInvulnerable(true);
 
 					weapon1CDRemaining = weapon1CD - frameCount;
 					if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
 					uiElements.updateWeaponCD(1, weapon1CDRemaining);
+
+					if (eHandler.getScore() > uiElements.getScore()) uiElements.setScore(eHandler.getScore());
 
 					frameCount++;
 				}
@@ -410,22 +420,46 @@ public class Main extends Application{
 	}
 
 	private void checkCollision() {
-		for(int i = 0; i < obstacleCollision.size(); i++) {
-			if(playerCollision.getLayoutX() > 150 && playerCollision.getLayoutX() < 250 && playerCollision.getLayoutY() > 200 && playerCollision.getLayoutY() < 300) {
-				//				System.out.println("COLLISSION");
+		double pw = player.getPic().getBoundsInParent().getWidth();
+		double ph = player.getPic().getBoundsInParent().getHeight();
+		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*2/5);
+		double pminy = player.getPic().getBoundsInParent().getMinY()+(ph*2/5);
+		pw = pw*1/5;
+		ph = ph*1/5;
+		Rectangle pl = new Rectangle(pminx, pminy, pw, ph);
+		
+		for(ImageView i : obstacleCollision) {
+			if (pl.intersects(i.getBoundsInParent())){
 				if(isVulnerable==true) {
 					player.setHealth(player.getHealth()-10);
 					uiElements.ChangeHP(player.getHealth()*4);
-					System.out.println(player.getHealth());
-					invulnerableTime = frameCount + 30;
+					invulnerableTime = frameCount + 60;
 					isVulnerable=false;
 				}
-
-			} else {
-				//				System.out.println("No Collission");
 			}
 		} 
-	}
+
+		for (Enemy e : eHandler.getEnemies()) {
+			for (Projectile p : pHandler.getProjectiles()) {
+				if (e.getEnemy().getBoundsInParent().intersects(p.getProjectile().getBoundsInLocal())) {
+					e.receiveDamage(p.getDamage());
+				}
+			}
+//			if(pl.intersects(e.getEnemy().getBoundsInParent().getWidth()*1/5,
+//					 e.getEnemy().getBoundsInParent().getHeight()*1/5,
+//					 e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*2/5),
+//					 e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*2/5))) {
+			if(pl.intersects(e.getEnemy().getBoundsInParent())) {
+				if(isVulnerable==true) {
+					player.setHealth(player.getHealth()-e.getDamage());
+					uiElements.ChangeHP(player.getHealth()*4);
+					invulnerableTime = frameCount + 60;
+					isVulnerable=false;
+				}
+			}
+		}
+	} 
+
 
 	private void createMouseCursor() {
 		mouseCursor1 = new Rectangle(10, 5);
@@ -450,10 +484,10 @@ public class Main extends Application{
 	}
 
 	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane pane) {
-		Bullet pBullet = new Bullet(mouseX,mouseY,cx,cy);
+		pistolBullet pBullet = new pistolBullet(mouseX,mouseY,cx,cy);
 		pBullet.setVelocity(Math.atan2(mouseY - cy2, mouseX - cx2) * 180 / Math.PI); //sets angle to be (mouse - characterPos)
 		pHandler.addProjectile(pBullet);
-		pane.getChildren().add(pBullet.getBullet());
+		pane.getChildren().add(pBullet.getProjectile());
 
 	}
 
@@ -482,15 +516,6 @@ public class Main extends Application{
 				y - cy >= 0 && y + cy <= height) {
 			player.getPic().relocate(x - cx, y - cy);
 		}
-
-		//Have player's collision box repeat movements
-		double cx2 = playerCollision.getBoundsInLocal().getWidth() / 2;
-		double cy2 = playerCollision.getBoundsInLocal().getHeight() / 2;
-		if (x - cx2 >= 0 && x + cx2 <= width &&
-				y - cy2 >= 0 && y + cy2 <= height) {
-			playerCollision.relocate(x - cx2, y - cy2);
-		}
-		//	checkCollision();
 
 	}
 
@@ -535,8 +560,11 @@ public class Main extends Application{
 		player.setHealth(100);
 		player.setAlive();
 		uiElements.resetHP();
+		uiElements.setScore(0);
 		pHandler.clearProjectiles();
+		pHandler = new ProjectileHandling();
 		eHandler.clearEnemies();
+		eHandler = new EnemyHandling();
 		weapon1CD = frameCount;
 	}
 

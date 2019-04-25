@@ -13,14 +13,15 @@ public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
-	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen;
-	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction;
+	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox;
+	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction, score, time, surviveText;
 	static final String weapon1URL = ("http://chittagongit.com//images/icon-gun/icon-gun-26.jpg");
 	private static ImageView weapon1Image = new ImageView(weapon1URL);
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private boolean debugMode;
 	private double x, y; //coordinates that UI is based off of
+	private int totalKilled = 0, timeAlive = 0;;
 
 	private UI(){
 		declareUI();
@@ -59,6 +60,10 @@ public class UI {
 	public void changeUIPositions(double newx, double newy) {
 		x = newx;
 		y = newy;
+		scoreBox.relocate(x-100, y-950);
+		score.relocate(x-95, y-950);
+		timeBox.relocate(x+300, y-950);
+		time.relocate(x+305, y-950);
 		weaponsUI.relocate(x, y);
 		weapon1.relocate(x, y);
 		weapon1CDbox.relocate(x, y);
@@ -74,6 +79,7 @@ public class UI {
 		pauseScreen.relocate(x-50, y-850);
 		pauseScreenText.relocate(x+80, y-845);
 		instruction.relocate(x+50, y-750);
+		surviveText.relocate(x+68, y-455);
 	}
 
 	private void changeColorToNormal(Rectangle rec) {
@@ -97,6 +103,28 @@ public class UI {
 
 	private void declareUI() {
 		UIParts = new ArrayList<Node>();
+		
+		scoreBox = new Rectangle(200, 40);
+		scoreBox.setX(800);
+		scoreBox.setY(600);
+		scoreBox.setFill(Color.rgb(50, 50, 200, 0.7));
+		scoreBox.setStroke(Color.rgb(200, 200, 200, 0.8));
+		scoreBox.setStrokeWidth(3);
+		
+		score = new Label("Score: 0");
+		score.setTextFill(Color.YELLOW);
+		score.setFont(new Font("Arial", 36));
+		
+		timeBox = new Rectangle(350, 40);
+		timeBox.setX(800);
+		timeBox.setY(600);
+		timeBox.setFill(Color.rgb(50, 50, 200, 0.7));
+		timeBox.setStroke(Color.rgb(200, 200, 200, 0.8));
+		timeBox.setStrokeWidth(3);
+		
+		time = new Label("Seconds Lasted: 0");
+		time.setTextFill(Color.YELLOW);
+		time.setFont(new Font("Arial", 36));
 
 		weaponsUI = new Rectangle(400, 100);
 		weaponsUI.setX(175);
@@ -220,7 +248,7 @@ public class UI {
 		pauseScreen = new Rectangle(500, 750);
 		pauseScreen.setX(600);
 		pauseScreen.setY(300);
-		pauseScreen.setFill(Color.rgb(100, 100, 100, 0.8));
+		pauseScreen.setFill(Color.rgb(80, 80, 80, 0.9));
 		pauseScreen.setStroke(Color.rgb(200, 200, 200, 0.8));
 		pauseScreen.setStrokeWidth(3);
 		
@@ -229,20 +257,30 @@ public class UI {
 		pauseScreenText.setTextFill(Color.rgb(200, 200, 60));
 		pauseScreenText.relocate(x, y);
 		
+		surviveText = new Label("SURVIVE");
+		surviveText.setFont(new Font("Arial", 60));
+		surviveText.setTextFill(Color.rgb(255, 0, 0, 1));
+		
 		instruction = new Label("                    Controls\n"
 				+ 				"---------------------------------------------\n"
 				+ 				"  WASD/Arrow Keys = Movement\n"
+				+ 				"           P = Pause/Unpause\n"
 				+ 				"           ESC = Close Game\n"
-				+ 				"        P/U/K = Spawn Zombie\n"
+				+ 				"        J/K/L = Spawn Zombie\n"
 				+ 				"             M = Debug Mode\n"
-				+ 				"           L = Pause/Unpause\n"
 				+ "\n\n\n"
 				+ 				"                  Instructions\n"
 				+ 				"---------------------------------------------\n");
 		instruction.setFont(new Font("Arial", 20));
 		instruction.setTextFill(Color.rgb(200, 200, 60));
 		instruction.relocate(x, y);
-
+		
+		UIParts.add(scoreBox);
+		UIParts.add(score);
+		
+		UIParts.add(timeBox);
+		UIParts.add(time);
+		
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
 		UIParts.add(weapon1CDbox);
@@ -268,6 +306,7 @@ public class UI {
 		UIParts.add(pauseScreen);
 		UIParts.add(pauseScreenText);
 		UIParts.add(instruction);
+		UIParts.add(surviveText);
 	}
 
 	public void ChangeHP(int hp) {
@@ -283,6 +322,11 @@ public class UI {
 		HealthWarning.setVisible(true);
 		HealthWarning.setText("Dead!");
 		HealthWarning.relocate(x+135, y-63);
+		
+		scoreBox.relocate(x-100, y-400);
+		score.relocate(x-95, y-400);
+		timeBox.relocate(x+300, y-400);
+		time.relocate(x+305, y-400);
 	}
 	
 	public void resetHP() {
@@ -290,6 +334,14 @@ public class UI {
 		HealthWarning.setText("!!!");
 		HealthWarning.relocate(x+179, y-63);
 		HealthBar.setWidth(400);
+		
+		scoreBox.relocate(x-100, y-950);
+		score.relocate(x-95, y-950);
+		timeBox.relocate(x+300, y-950);
+		time.relocate(x+305, y-950);
+		
+		timeAlive = 0;
+		updateTime(timeAlive);
 	}
 	
 	public int getCurrentWeaponSelection() {
@@ -310,11 +362,13 @@ public class UI {
 			pauseScreen.setVisible(false);
 			pauseScreenText.setVisible(false);
 			instruction.setVisible(false);
+			surviveText.setVisible(false);
 		}
 		else {
 			pauseScreen.setVisible(true);
 			pauseScreenText.setVisible(true);
 			instruction.setVisible(true);
+			surviveText.setVisible(true);
 		}
 	}
 	
@@ -353,6 +407,21 @@ public class UI {
 	public void showHurtScreen(boolean i) {
 		hurtScreen.setVisible(i);
 	}
+	
+	public int getScore() {
+		return totalKilled;
+	}
+	
+	public void setScore(int i) {
+		totalKilled = i;
+		score.setText("Score: " + i);
+	}
+	
+	public void updateTime(int T) {
+		timeAlive = T;
+		time.setText("Seconds Lasted: " + timeAlive);
+	}
+	
 
 
 }

@@ -25,6 +25,10 @@ public class ProjectileHandling {
 		projectiles.add(e);
 	}
 	
+	public LinkedList<Projectile> getProjectiles(){
+		return projectiles;
+	}
+	
 	public void removeProjectile(Projectile d) {
 		projectiles.remove(d);
 	}

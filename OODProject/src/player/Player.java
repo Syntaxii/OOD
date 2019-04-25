@@ -1,4 +1,5 @@
 package player;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -10,9 +11,13 @@ public class Player {
 	private static Player player;
 	private static boolean hpWarn = false;
 	private static boolean playerAlive = true;
+	ColorAdjust faded;
 
 	private Player() {
 		playerpic = new ImageView(playerImage);
+		faded = new ColorAdjust();
+		faded.setSaturation(-.3);
+		faded.setBrightness(.3);
 	}
 	public static Player getInstance() {
 		if(player != null) {
@@ -62,5 +67,11 @@ public class Player {
 	}
 	public void setAlive() {
 		playerAlive = true;
+	}
+	public void setInvulnerable(boolean v) {
+		if(v==true) {
+			playerpic.setEffect(faded);
+		}
+		else playerpic.setEffect(null);
 	}
 }

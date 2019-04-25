@@ -9,10 +9,15 @@ public abstract class Enemy{
 	double eSpeed; //enemy Speed
 	double angle, moveX, moveY;
 	boolean alive = true;
-	int health;
+	int health = 100;
+	int damage;
 	boolean isAlive = false;
 	Image image;
 	ImageView zomb;
+	boolean inVulnerable = false;
+	int inVulnerableTime = 0;
+	boolean isDelete = false;
+	EnemyType enemyType = null;
 	
 	public Enemy(double enemyX, double enemyY, Image image, double size) {
 		this.image = image;
@@ -50,25 +55,34 @@ public abstract class Enemy{
 
 	}
 
-	public void receiveDamage() {
-
-	}
-
-	public void attack() {
-
+	public void receiveDamage(int d) {
+		if(inVulnerable==false) {
+		health = health - d;
+		inVulnerable = true;
+		inVulnerableTime = 20;
+		}
 	}
 
 	public void delete() {
 		zomb.setVisible(false);
 		isAlive = false;
+		zomb.setDisable(true);
+		zomb.relocate(-500, -500);
+		isDelete = true;
 	}
 
 	public void tick(double newPlayerX, double newPlayerY) { //requires player coordinates
+		if (health <=0) {
+			isAlive = false;
+			delete();
+		}
 		if (isAlive == true) {
 			playerX = newPlayerX;
 			playerY = newPlayerY;
 			move();
 		}
+		inVulnerableTime--;
+		if(inVulnerableTime <= 0) inVulnerable = false;
 	}
 	
 	public void instantiate(double size) {
@@ -85,6 +99,18 @@ public abstract class Enemy{
 	
 	public void setSpeed(double i) {
 		eSpeed = i;
+	}
+	
+	public boolean isDelete() {
+		return isDelete;
+	}
+	
+	public int getDamage() {
+		return damage;
+	}
+	
+	public EnemyType getEnemyType() {
+		return enemyType;
 	}
 	
 }
