@@ -261,7 +261,7 @@ public class Main extends Application{
 
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		stage.getIcons().add(new Image("https://cdn4.iconfinder.com/data/icons/pretty-office-part-2-simple-style/256/Briefcase.png")); //we mean business :^)
+		stage.getIcons().add(new Image("file:src/images/Briefcase.png")); //we mean business :^)
 		stage.show();
 		stage.setFullScreenExitHint("");
 		stage.setFullScreen(true);

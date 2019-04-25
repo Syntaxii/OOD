@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 
 public class Player {
 	private volatile static ImageView playerpic;
-	static final String imgURL = "https://i.imgur.com/7Ul9t7I.gif";
+	static final String imgURL = "file:src/images/player.gif";
 	private static Image playerImage = new Image(imgURL);
 	private static int Health = 100;
 	private static Player player;
