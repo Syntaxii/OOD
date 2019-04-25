@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
-import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -160,8 +159,12 @@ public class Main extends Application{
 				case L:
 					spawnZombie(EnemyType.LETHAL);
 					break;
-					
-				
+
+				case DIGIT0:
+					System.out.println("enemy bounds: " + eHandler.getEnemies().get(1).getEnemy().getBoundsInParent());
+					break;
+
+
 
 				case M: uiElements.setDebug(); break;
 
@@ -427,7 +430,7 @@ public class Main extends Application{
 		pw = pw*1/5;
 		ph = ph*1/5;
 		Rectangle pl = new Rectangle(pminx, pminy, pw, ph);
-		
+
 		for(ImageView i : obstacleCollision) {
 			if (pl.intersects(i.getBoundsInParent())){
 				if(isVulnerable==true) {
@@ -441,15 +444,19 @@ public class Main extends Application{
 
 		for (Enemy e : eHandler.getEnemies()) {
 			for (Projectile p : pHandler.getProjectiles()) {
-				if (e.getEnemy().getBoundsInParent().intersects(p.getProjectile().getBoundsInLocal())) {
+				if (p.getProjectile().getBoundsInParent().intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/4)
+					,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/4)
+					,e.getEnemy().getBoundsInParent().getWidth()*1/2
+					,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
 					e.receiveDamage(p.getDamage());
 				}
 			}
-//			if(pl.intersects(e.getEnemy().getBoundsInParent().getWidth()*1/5,
-//					 e.getEnemy().getBoundsInParent().getHeight()*1/5,
-//					 e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*2/5),
-//					 e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*2/5))) {
-			if(pl.intersects(e.getEnemy().getBoundsInParent())) {
+			if(pl.intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/8)
+					,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/8)
+					,e.getEnemy().getBoundsInParent().getWidth()*3/4
+					,e.getEnemy().getBoundsInParent().getHeight()*3/4)) {
+
+				//if(pl.intersects(e.getEnemy().getBoundsInParent())) {
 				if(isVulnerable==true) {
 					player.setHealth(player.getHealth()-e.getDamage());
 					uiElements.ChangeHP(player.getHealth()*4);
@@ -565,6 +572,7 @@ public class Main extends Application{
 		pHandler = new ProjectileHandling();
 		eHandler.clearEnemies();
 		eHandler = new EnemyHandling();
+		frameCount=0;
 		weapon1CD = frameCount;
 	}
 
