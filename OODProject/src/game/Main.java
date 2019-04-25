@@ -24,7 +24,7 @@ public class Main extends Application{
 	static final double width = 1920, height = 1080;
 	//static final double width = 1650, height = 1050;
 	static final double newWidth = 750, newHeight = 750;
-	static final String imgURL = "file:src/images/player.gif";
+	static final String imgURL = "file:src/images/player_move.gif";
 	private Image playerImage;
 	private Player player;
 	protected Pane root;
