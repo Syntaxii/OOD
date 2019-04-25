@@ -23,7 +23,7 @@ public abstract class Enemy{
 	EnemyType enemyType = null;
 	
 	public Enemy(double enemyX, double enemyY, Image image, double size) throws IOException {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\BasicZombie.png";
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\zombie_move.gif";
 		this.image = new Image(imgURL);
 		zomb = new ImageView(image);
 		this.enemyX = enemyX;

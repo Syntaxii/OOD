@@ -57,7 +57,7 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player.gif";
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player_move.gif";
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();

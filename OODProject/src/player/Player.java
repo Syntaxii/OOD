@@ -8,9 +8,7 @@ import javafx.scene.image.ImageView;
 
 public class Player {
 	private volatile static ImageView playerpic;
-	
-	
-	
+
 	private static int Health = 100;
 	private static Player player;
 	private static boolean hpWarn = false;
@@ -18,7 +16,7 @@ public class Player {
 	ColorAdjust faded;
 
 	private Player() throws IOException {
-		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player.gif";
+		String imgURL = "file:"+ System.getProperty("user.dir") + "\\src\\images\\player_move.gif";
 		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
 		faded = new ColorAdjust();
