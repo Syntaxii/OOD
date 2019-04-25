@@ -34,11 +34,11 @@ public abstract class Enemy{
 		rotate();
 		double radianangle = Math.toRadians(angle);
 		
-		if(Math.abs((playerX-160)-enemyX)>= 50) {
+		if(Math.abs((playerX-135)-enemyX)>= 50) {
 			moveX = Math.cos(radianangle);
 			enemyX = enemyX + (moveX*eSpeed);
 		}
-		if(Math.abs((playerY-150)-enemyY)>= 50) {
+		if(Math.abs((playerY-135)-enemyY)>= 50) {
 			moveY = Math.sin(radianangle);
 			enemyY = enemyY + (moveY*eSpeed);
 		}

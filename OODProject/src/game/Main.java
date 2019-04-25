@@ -452,10 +452,10 @@ public class Main extends Application{
 	private void checkCollision() {
 		double pw = player.getPic().getBoundsInParent().getWidth();
 		double ph = player.getPic().getBoundsInParent().getHeight();
-		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*2/5);
-		double pminy = player.getPic().getBoundsInParent().getMinY()+(ph*2/5);
-		pw = pw*1/5;
-		ph = ph*1/5;
+		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*1/4);
+		double pminy = player.getPic().getBoundsInParent().getMinY()+(ph*1/4);
+		pw = pw*1/2;
+		ph = ph*1/2;
 		Rectangle pl = new Rectangle(pminx, pminy, pw, ph);
 
 		for(ImageView i : obstacleCollision) {
