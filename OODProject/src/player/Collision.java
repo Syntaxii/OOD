@@ -1,19 +1,15 @@
 package player;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class Collision {
 	
 	private ArrayList<ImageView> obstacles; 
 	public Collision() throws IOException {
 		String imgURL = this.getClass().getResource("/images/lava.png").toString();
-		System.out.println(imgURL);
 		
 		Image lavapic = new Image(imgURL);
 		ImageView lava = new ImageView(lavapic);

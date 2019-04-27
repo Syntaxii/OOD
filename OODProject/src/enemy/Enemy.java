@@ -22,7 +22,7 @@ public abstract class Enemy{
 	EnemyType enemyType = null;
 	
 	public Enemy(double enemyX, double enemyY, Image ijasiodfn, double size) throws IOException {
-		String imgURL = this.getClass().getResource("/images/zombie_move.gif").toString();
+		String imgURL = this.getClass().getResource("/images/BasicZombie.png").toString();
 		this.image = new Image(imgURL);
 		zomb = new ImageView(image);
 		this.enemyX = enemyX;

@@ -6,6 +6,7 @@ import enemy.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javafx.stage.*;
 import javafx.animation.*;
@@ -36,7 +37,6 @@ public class Main extends Application{
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
-	private ZombieFactory zf;
 	private EnemyHandling eHandler;
 	private Enemy bz;
 	private double centerOffsetX, centerOffsetY, mouseX, mouseY, NewmouseX, NewmouseY;
@@ -47,11 +47,20 @@ public class Main extends Application{
 	private int frameCount = 0;
 	private boolean isVulnerable = true;
 	private int invulnerableTime = 0;
-	private int weapon1CD = 0, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
-	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
+	private int weapon1CD = 0;//, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
+	private int weapon1CDRemaining = 0;//, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
 	private int d = 10; //pixel gap between mouseCursor elements
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, URISyntaxException{
+		//increases memory allocation of game
+		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replace('/', File.separator.charAt(0)).substring(1);
+		String decodedPath = java.net.URLDecoder.decode(path, "UTF-8");
+		
+		if(args.length==0 && Runtime.getRuntime().maxMemory()/1024/1024<980) { //if memory is less than 2000mb, raise to 2048
+			Runtime.getRuntime().exec("java -jar -Xmx2048m "+decodedPath+" restart");
+			return;
+
+		}
 		launch(args);
 	}
 
@@ -326,16 +335,16 @@ public class Main extends Application{
 					pHandler.cycleProjectiles();
 					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
 
-					
-						try {
-							if(frameCount%120==0) tryZombieSpawn();
-							if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
-							if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} //spawn zombie every 2 seconds
-					
+
+					try {
+						if(frameCount%120==0) tryZombieSpawn();
+						if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
+						if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} //spawn zombie every 2 seconds
+
 
 					if(!player.isAlive()) {
 						uiElements.deadHP(); //if no health, tells the player he is dead

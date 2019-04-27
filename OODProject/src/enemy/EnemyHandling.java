@@ -24,6 +24,7 @@ public class EnemyHandling {
 	public void removeEnemy(Enemy d) {
 		enemies.remove(d);
 		deadEnemies.add(d);
+		
 	}
 
 	public LinkedList<Enemy> getEnemies(){

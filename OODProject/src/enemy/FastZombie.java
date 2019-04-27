@@ -2,8 +2,6 @@ package enemy;
 
 import java.io.IOException;
 
-import javafx.scene.image.Image;
-
 public class FastZombie extends Enemy{
 
 	public FastZombie(double enemyX, double enemyY) throws IOException {

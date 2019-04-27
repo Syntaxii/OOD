@@ -1,5 +1,4 @@
 package player;
-import java.io.File;
 import java.io.IOException;
 
 import javafx.scene.effect.ColorAdjust;
@@ -17,7 +16,7 @@ public class Player {
 
 	private Player() throws IOException {
 		
-		String imgURL = this.getClass().getResource("/images/player_move.gif").toString();
+		String imgURL = this.getClass().getResource("/images/player.gif").toString();
 		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
 		faded = new ColorAdjust();
