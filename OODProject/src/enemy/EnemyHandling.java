@@ -4,17 +4,17 @@ import java.util.LinkedList;
 public class EnemyHandling {
 
 	LinkedList<Enemy> enemies = new LinkedList<Enemy>();
-	LinkedList<Enemy> deadEnemies = new LinkedList<Enemy>();
+	int score = 0;
+	int basicDead = 0;
+	int fastDead = 0;
+	int lethalDead = 0;
 
 	public void cycleEnemies(double newPlayerX, double newPlayerY) {
 		for (int j = 0; j < enemies.size(); j++) {
 			if (enemies.get(j).isDelete()) removeEnemy(enemies.get(j));
 			else
 			enemies.get(j).tick(newPlayerX, newPlayerY);
-
-
 		}
-
 	}
 
 	public void addEnemy(Enemy e) {
@@ -23,8 +23,20 @@ public class EnemyHandling {
 
 	public void removeEnemy(Enemy d) {
 		enemies.remove(d);
-		deadEnemies.add(d);
 		
+		switch(d.getEnemyType()) {
+		case BASIC:
+			basicDead += 1;
+			break;
+			
+		case FAST:
+			fastDead += 1;
+			break;
+			
+		case LETHAL:
+			lethalDead += 1;
+			break; 
+		}
 	}
 
 	public LinkedList<Enemy> getEnemies(){
@@ -32,24 +44,22 @@ public class EnemyHandling {
 	}
 
 	public int getScore() {
-		int Score = 0;
-		for (int i = 0; i < deadEnemies.size(); i++) {
-			switch(deadEnemies.get(i).getEnemyType()) {
-			case BASIC: Score += 1;
-				break;
-			case FAST: Score += 2;
-				break;
-			case LETHAL: Score += 5;
-				break; 
-			}
-		}
-		return Score;
+		score = 1*basicDead + 2*fastDead + 5*lethalDead;
+		return score;
+	}
+	
+	public int getAmount() {
+		return enemies.size();
 	}
 
 	public void clearEnemies() {
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).delete();
 		}
+		basicDead = 0;
+		fastDead = 0;
+		lethalDead = 0;
+		score = 0;
 	}
 
 }

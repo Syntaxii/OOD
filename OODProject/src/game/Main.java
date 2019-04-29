@@ -4,7 +4,6 @@ import player.*;
 import projectile.*;
 import enemy.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -23,13 +22,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Main extends Application{
-	//TODO change aspect ratio for width and height
 	static final double width = 1920, height = 1080;
 	//static final double width = 1650, height = 1050;
 	static final double newWidth = 750, newHeight = 750;
 	static String path;
 	static String imgURL;
-	private Image playerImage;
 	private Player player;
 	protected Pane root;
 	private Pane floor, obstacles, projectiles;
@@ -39,7 +36,7 @@ public class Main extends Application{
 	private ProjectileHandling pHandler;
 	private EnemyHandling eHandler;
 	private Enemy bz;
-	private double centerOffsetX, centerOffsetY, mouseX, mouseY, NewmouseX, NewmouseY;
+	private double mouseX, mouseY, NewmouseX, NewmouseY;
 	private double weaponX, weaponY, angle;
 	private double cx, cy; //character coordinate x, character coordinate 
 	private UI uiElements;
@@ -47,46 +44,30 @@ public class Main extends Application{
 	private int frameCount = 0;
 	private boolean isVulnerable = true;
 	private int invulnerableTime = 0;
-	private int weapon1CD = 0;//, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
-	private int weapon1CDRemaining = 0;//, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
+	private int weapon1CD = 15;//, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
+	private int weapon1CDTime = 0; //, weapon2CDTime = 0, weapon3CDTime = 0; //current frameCount + weaponCD = weaponCDTime
+	private int weapon1CDRemaining = 0;//, weapon2CDRemaining = 0, weapon3CDRemaining = 0; 
 	private int d = 10; //pixel gap between mouseCursor elements
+	private int enemyLimit = 16; // amount of enemies allowed on screen
 
 	public static void main(String[] args) throws IOException, URISyntaxException{
-		//increases memory allocation of game
-		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replace('/', File.separator.charAt(0)).substring(1);
-		String decodedPath = java.net.URLDecoder.decode(path, "UTF-8");
-		
-		if(args.length==0 && Runtime.getRuntime().maxMemory()/1024/1024<980) { //if memory is less than 2000mb, raise to 2048
-			Runtime.getRuntime().exec("java -jar -Xmx2048m "+decodedPath+" restart");
-			return;
-
-		}
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		String imgURL = this.getClass().getResource("/images/player_move.gif").toString();
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();
 
-
 		mouseX = 0.0;
 		mouseY = 0.0;
-
-		playerImage = new Image(imgURL);
 
 		player = Player.getInstance(); //Singleton instantiation of player
 		player.getPic().setScaleX(.4);
 		player.getPic().setScaleY(.4);
 
-		//center of player
-		centerOffsetX = (playerImage.getWidth())/2;
-		centerOffsetY = (playerImage.getHeight())/2;
-
 		createMouseCursor();
-
 
 		root = new Pane();
 
@@ -94,8 +75,6 @@ public class Main extends Application{
 		obstacles = new Pane();
 		floor.getChildren().add(obstacles);
 		projectiles = new Pane();
-
-
 
 		uiElements = UI.getUI();
 		uiElements.changeUIPositions((width/2)-200, height-110);
@@ -111,8 +90,7 @@ public class Main extends Application{
 
 		floor.getChildren().add(projectiles);
 
-
-		uiElements.changeWeaponFocus(1);
+		uiElements.changeWeaponFocus(1); //Default
 
 		moveTo(width/2, height/2);
 
@@ -157,12 +135,11 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-				//TODO FOR TESTING; CLEAN LATER
+				//Spawn Zombies
 				case J: 
 					try {
 						spawnZombie(EnemyType.BASIC);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
@@ -171,7 +148,6 @@ public class Main extends Application{
 					try {
 						spawnZombie(EnemyType.FAST);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
@@ -180,7 +156,6 @@ public class Main extends Application{
 					try {
 						spawnZombie(EnemyType.LETHAL);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
@@ -202,7 +177,6 @@ public class Main extends Application{
 
 				case ESCAPE: 	System.exit(0); break;
 
-				//TODO fix boundaries and UI position for windowed mode; get rid of maximization when going windowed after first key press
 				case ENTER:                
 					stage.setHeight(newHeight);
 					stage.setWidth(newWidth);
@@ -270,16 +244,19 @@ public class Main extends Application{
 				if (player.isAlive() && started==true) {
 
 					//TODO change this to all weapons, and check ammo, etc.
-					if(uiElements.getCurrentWeaponSelection() == 1) {
+					int wep = uiElements.getCurrentWeaponSelection();
+					switch(wep) {
+					case 1:
 						if (weapon1CDRemaining == 0) {
 							setMouseCursorGap(8);
 							setMouseColor(Color.SALMON);
-							cx = player.getPic().getLayoutX()+centerOffsetX;
-							cy = player.getPic().getLayoutY()+centerOffsetY;
+							cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+							cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
 
-							createBullet(mouseX, mouseY, weaponX, weaponY, cx, cy, projectiles);
-							weapon1CD = frameCount + 15; //the "+15" is the cooldown
+							createBullet(mouseX, mouseY, cx, cy, projectiles);
+							weapon1CDTime = frameCount + weapon1CD;
 						}
+						break;
 					}
 				}
 				moveMouse();
@@ -325,25 +302,27 @@ public class Main extends Application{
 			@Override
 			public void handle(long now) {
 				if (started==true) {
+					
+					//handle projectiles and enemies
+					pHandler.cycleProjectiles();
+					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
+					
 					if (player.isAlive()) {
 						handleMovement();
 						rotatePlayer();
 						checkCollision();
 					}
 
-					//handle projectiles and enemies
-					pHandler.cycleProjectiles();
-					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
-
-
-					try {
-						if(frameCount%120==0) tryZombieSpawn();
-						if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
-						if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} //spawn zombie every 2 seconds
+					if (eHandler.getAmount() <= enemyLimit) { //Before spawning a new enemy, make sure the amount on screen is not higher than the limit
+						try {
+							if(frameCount%120==0) tryZombieSpawn(); //spawn zombie every 2 seconds
+							if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
+							if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
+						} catch (IOException e) {
+							e.printStackTrace();
+						} 
+					}
+					
 
 
 					if(!player.isAlive()) {
@@ -369,7 +348,7 @@ public class Main extends Application{
 					if(isVulnerable) player.setInvulnerable(false);
 					else player.setInvulnerable(true);
 
-					weapon1CDRemaining = weapon1CD - frameCount;
+					weapon1CDRemaining = weapon1CDTime - frameCount;
 					if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
 					uiElements.updateWeaponCD(1, weapon1CDRemaining);
 
@@ -420,7 +399,7 @@ public class Main extends Application{
 		FloorMaker floorMaker = new FloorMaker();
 		root.setBackground(new Background(floorMaker.setGrass()));
 	}
-	private void handleMovement() {
+	private void handleMovement() { 
 		double[] offsetAmount = {0, 0};
 		double currentAngle = 0; //Proper diagonal movement
 		boolean moving = false;
@@ -458,14 +437,15 @@ public class Main extends Application{
 		}
 	}
 
-	private void checkCollision() {
+	private void checkCollision() { //Check collision between player and obstacles, enemies and projectiles, enemies and player
+		
 		double pw = player.getPic().getBoundsInParent().getWidth();
 		double ph = player.getPic().getBoundsInParent().getHeight();
 		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*1/4);
 		double pminy = player.getPic().getBoundsInParent().getMinY()+(ph*1/4);
 		pw = pw*1/2;
 		ph = ph*1/2;
-		Rectangle pl = new Rectangle(pminx, pminy, pw, ph);
+		Rectangle pl = new Rectangle(pminx, pminy, pw, ph); //player hitbox; smaller than actual player hitbox, but used for collision detection
 
 		for(ImageView i : obstacleCollision) {
 			if (pl.intersects(i.getBoundsInParent())){
@@ -528,8 +508,9 @@ public class Main extends Application{
 		mouseCursor4.setStroke(Color.BLACK);
 	}
 
-	private void createBullet(double mouseX, double mouseY, double cx, double cy, double cx2, double cy2, Pane pane) {
-		pistolBullet pBullet = new pistolBullet(mouseX,mouseY,cx,cy);
+	private void createBullet(double mouseX, double mouseY, double cx2, double cy2, Pane pane) {
+		getWeaponXandY();
+		pistolBullet pBullet = new pistolBullet(mouseX,mouseY,weaponX,weaponY);
 		pBullet.setVelocity(Math.atan2(mouseY - cy2, mouseX - cx2) * 180 / Math.PI); //sets angle to be (mouse - characterPos)
 		pHandler.addProjectile(pBullet);
 		pane.getChildren().add(pBullet.getProjectile());
@@ -537,29 +518,31 @@ public class Main extends Application{
 	}
 
 	private void rotatePlayer() {
-		cx = player.getPic().getLayoutX()+centerOffsetX;
-		cy = player.getPic().getLayoutY()+centerOffsetY;
+		cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
 		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
 		player.getPic().setRotate(angle);
+	}
+	
+	private void getWeaponXandY() {
 		weaponX = cx + Math.cos(Math.toRadians(angle+40))*35;
 		weaponY = cy + Math.sin(Math.toRadians(angle+40))*35;
 	}
 
-	//TODO clean both methods up a bit
 	private void moveBy(double dx, double dy) {
-		cx = player.getPic().getBoundsInLocal().getWidth() / 2;
-		cy = player.getPic().getBoundsInLocal().getHeight() / 2;
-		double x = cx + player.getPic().getLayoutX() + dx;
-		double y = cy + player.getPic().getLayoutY() - dy;
+		cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+		double x = cx + dx;
+		double y = cy - dy;
 		moveTo(x, y);
 	}
 
 	private void moveTo(double x, double y) {
-		cx = player.getPic().getBoundsInLocal().getWidth() / 2;
-		cy = player.getPic().getBoundsInLocal().getHeight() / 2;
-		if (x - cx >= 0 && x + cx <= width &&
-				y - cy >= 0 && y + cy <= height) {
-			player.getPic().relocate(x - cx, y - cy);
+		double tempx = player.getPic().getBoundsInLocal().getWidth() / 2;
+		double tempy = player.getPic().getBoundsInLocal().getHeight() / 2;
+		if (x - tempx >= 0 && x + tempx <= width &&
+				y - tempy >= 0 && y + tempy <= height) {
+			player.getPic().relocate(x - tempx, y - tempy);
 		}
 
 	}
@@ -572,7 +555,6 @@ public class Main extends Application{
 	}
 
 	private void moveMouse() {
-		//TODO decide if the offset is worth it. Right now, the mouse position changes to get where the gun is aiming.
 		NewmouseX = mouseX + Math.cos(Math.toRadians(angle+40))*35;
 		NewmouseY = mouseY + Math.sin(Math.toRadians(angle+40))*35;
 

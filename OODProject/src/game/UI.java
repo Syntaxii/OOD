@@ -32,27 +32,30 @@ public class UI {
 
 	public void changeWeaponFocus(int i) {
 		
-		//TODO switch to switch statement lol
-		if (current == 1) {
+		switch (current){
+		case 1: 
 			changeColorToNormal(weapon1);
-		}
-		else if (current == 2) {
+			break;
+		case 2:
 			changeColorToNormal(weapon2);
-		}
-		else {
+			break;
+		case 3:
 			changeColorToNormal(weapon3);
+			break;
 		}
 
 		current = i;
-
-		if (i == 1) {
+		
+		switch (i){
+		case 1: 
 			changeColorToFocus(weapon1);
-		}
-		else if (i == 2) {
+			break;
+		case 2:
 			changeColorToFocus(weapon2);
-		}
-		else {
+			break;
+		case 3:
 			changeColorToFocus(weapon3);
+			break;
 		}
 	}
 
