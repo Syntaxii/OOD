@@ -10,7 +10,7 @@ import javafx.scene.layout.BackgroundSize;
 public class Brick extends Main implements Floor{
 	@Override
 	public BackgroundImage setFloor() throws IOException {
-		String imgURL = this.getClass().getResource("/images/brick.jpg").toString();
+		String imgURL = this.getClass().getResource("/images/images/brick.jpg").toString();
 		BackgroundImage myBI= new BackgroundImage(new Image(imgURL,512,512,false,true),
 				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
