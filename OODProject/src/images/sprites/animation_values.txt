@@ -1,0 +1,19 @@
+player_*_move = 50 ms (infinite)
+
+player_*_idle = 50 ms (infinite)
+
+player_handgun_shoot = 100 ms (1 repeat)
+
+player_rifle_shoot = 100 ms (1 repeat)
+
+player_shotgun_shoot_200ms = 200 ms (1 repeat) / player_shotgun_shoot250ms = 250 ms (1 repeat)
+
+regular_zombie_move = 75 ms (infinite)
+
+fast_zombie_move = 50 ms (infinite)
+
+lethal_zombie_move = 100 ms (infinite)
+
+zombie_attack_loop = 70 ms (infinite) / zombie_attack_no_loop = 70 ms (1 repeat)
+	Different attack speeds for regular/fast/lethal?
+
