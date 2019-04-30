@@ -29,16 +29,15 @@ public abstract class Enemy{
 		this.enemyY = enemyY;
 		instantiate(size);
 	}
-	
+
 	public void move() {
 		rotate();
 		double radianangle = Math.toRadians(angle);
-		
-		if(Math.abs((playerX-135)-enemyX)>= 50) {
+		double tempx = (playerX-159)-enemyX;
+		double tempy = (playerY-146)-enemyY;
+		if (Math.sqrt(Math.pow(tempx, 2) + Math.pow(tempy, 2)) >= 60) {
 			moveX = Math.cos(radianangle);
 			enemyX = enemyX + (moveX*eSpeed);
-		}
-		if(Math.abs((playerY-135)-enemyY)>= 50) {
 			moveY = Math.sin(radianangle);
 			enemyY = enemyY + (moveY*eSpeed);
 		}

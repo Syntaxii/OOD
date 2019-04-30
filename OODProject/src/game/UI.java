@@ -1,4 +1,6 @@
 package game;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 
 import javafx.scene.Node;
@@ -343,6 +345,12 @@ public class UI {
 		score.relocate(x-95, y-400);
 		timeBox.relocate(x+300, y-400);
 		time.relocate(x+305, y-400);
+		
+		//Connection con=DriverManager.getConnection(  
+		//		"jdbc:oracle:thin:@localhost:1521:xe","system","password");  
+		//SELECT TOP 5 initials, highscore
+		//FROM Highscores
+		//ORDER BY highscore DESC
 	}
 
 	public int getCurrentWeaponSelection() {
