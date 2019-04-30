@@ -1,3 +1,17 @@
+//TODO's
+//	1. Add other weapons
+//	2. Add other powerups
+//	3. Add Highscore (maybe link it up to database)
+//	4. 
+//
+//
+//
+//
+//
+//
+//
+//
+
 package game;
 
 import player.*;
@@ -54,6 +68,7 @@ public class Main extends Application{
 	private int weapon1CDRemaining = 0;//, weapon2CDRemaining = 0, weapon3CDRemaining = 0; 
 	private int d = 10; //pixel gap between mouseCursor elements
 	private int enemyLimit = 16; // amount of enemies allowed on screen
+	private boolean moving = false;
 
 	public static void main(String[] args) throws IOException, URISyntaxException{
 		launch(args);
@@ -154,6 +169,7 @@ public class Main extends Application{
 					spawnZombie(EnemyType.LETHAL);
 					break;
 
+				//Spawn Powerups
 				case U:
 					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
 					break;
@@ -161,12 +177,6 @@ public class Main extends Application{
 					break;
 				case O:
 					break;
-
-				case DIGIT0:
-					System.out.println("enemy bounds: " + eHandler.getEnemies().get(1).getEnemy().getBoundsInParent());
-					break;
-
-
 
 				case M: uiElements.setDebug(); break;
 
@@ -313,7 +323,6 @@ public class Main extends Application{
 					PlayerChecks();
 					WeaponChecks();
 					ScoreChecks();
-
 					frameCount++;
 				}
 				DebugInfo();
@@ -355,7 +364,7 @@ public class Main extends Application{
 		double enemyY = temp.getEnemyY()+85;
 		
 		//TODO implement other types of Powerups and fix this
-		if (Math.random() <= .05) {
+		if (Math.random() <= 1/15) {
 //			double tempChance = Math.random();
 //			if (tempChance <= .33)
 				spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
@@ -437,7 +446,7 @@ public class Main extends Application{
 	private void handleMovement() { 
 		double[] offsetAmount = {0, 0};
 		double currentAngle = 0; //Proper diagonal movement
-		boolean moving = false;
+		moving = false;
 		if (goUp) {
 			currentAngle = 90;
 			moving = true;
@@ -576,7 +585,7 @@ public class Main extends Application{
 		player.getPic().setRotate(angle);
 	}
 
-	private void getWeaponXandY() {
+	private void getWeaponXandY() { 
 		weaponX = cx + Math.cos(Math.toRadians(angle+40))*35;
 		weaponY = cy + Math.sin(Math.toRadians(angle+40))*35;
 	}
