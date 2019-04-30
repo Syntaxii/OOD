@@ -10,7 +10,7 @@ public class MaxDamagePowerup extends Powerup{
 	}
 	
 	public static Image getimg() {
-		String imgURL = MaxDamagePowerup.class.getClass().getResource("/images/maxdamage.png").toString();
+		String imgURL = MaxDamagePowerup.class.getClass().getResource("/images/images/maxdamage.png").toString();
 		return new Image(imgURL);
 	}
 

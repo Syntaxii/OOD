@@ -1,6 +1,5 @@
 package player;
 import java.io.IOException;
-import java.net.URLClassLoader;
 
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -23,9 +22,7 @@ public class Player {
 
 	private Player() throws IOException {
 		
-		URLClassLoader ul = (URLClassLoader)this.getClass().getClassLoader();
-		String imgURL = ul.findResource("/images/images/player.gif").toString();
-		System.out.println("blah" + imgURL);
+		String imgURL = this.getClass().getResource("/images/images/player.gif").toString();
 		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
 		faded = new ColorAdjust();

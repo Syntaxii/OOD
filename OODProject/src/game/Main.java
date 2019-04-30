@@ -69,6 +69,9 @@ public class Main extends Application{
 	private int d = 10; //pixel gap between mouseCursor elements
 	private int enemyLimit = 16; // amount of enemies allowed on screen
 	private boolean moving = false;
+	private boolean leaderboardIsShowing = false;
+	private int currentInitialsAmount = 0;
+	private boolean submitted = false;
 
 	public static void main(String[] args) throws IOException, URISyntaxException{
 		launch(args);
@@ -154,49 +157,82 @@ public class Main extends Application{
 						break;
 					}
 				}
+				else if(leaderboardIsShowing == true && submitted != true) {
+					if (currentInitialsAmount<3) {
+						if (event.getCode().isLetterKey()) {
+							switch(currentInitialsAmount) {
+							case 0: 
+								uiElements.addInitial1(event.getText());
+								currentInitialsAmount++;
+								break;
+							case 1:	
+								uiElements.addInitial2(event.getText());
+								currentInitialsAmount++;
+								break;
+							case 2:	
+								uiElements.addInitial3(event.getText());
+								currentInitialsAmount++;
+								break;
+							}
+
+						}
+					}
+					else if (event.getCode() == KeyCode.ENTER) {
+						uiElements.submitScore();
+						submitted = true;
+						uiElements.connectLeaderboards();
+					}
+					
+					if (event.getCode() == KeyCode.BACK_SPACE) {
+						uiElements.addInitial1("_");
+						uiElements.addInitial2("_");
+						uiElements.addInitial3("_");
+						currentInitialsAmount = 0;
+					}
+				}
 				switch (event.getCode()) {
 
 				//Spawn Zombies
-				case J: 
+				case NUMPAD1: 
 					spawnZombie(EnemyType.BASIC);
 					break;
 
-				case K:
+				case NUMPAD2:
 					spawnZombie(EnemyType.FAST);
 					break;
 
-				case L:
+				case NUMPAD3:
 					spawnZombie(EnemyType.LETHAL);
 					break;
 
-				//Spawn Powerups
-				case U:
+					//Spawn Powerups
+				case NUMPAD4:
 					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
 					break;
-				case I:
+				case NUMPAD5:
 					break;
-				case O:
+				case NUMPAD6:
 					break;
 
-				case M: uiElements.setDebug(); break;
+				case NUMPAD7: uiElements.setDebug(); break;
 
-				case BACK_SPACE: Reset(); break;
+				case NUMPAD0: Reset(); break;
 
-				case MINUS: 	stage.setFullScreen(true); 
-				uiElements.changeUIPositions((width/2)-200, height-110);
-				stage.setFullScreenExitHint("");
-				break;
+				//				case MINUS: 	stage.setFullScreen(true); 
+				//				uiElements.changeUIPositions((width/2)-200, height-110);
+				//				stage.setFullScreenExitHint("");
+				//				break;
 
 				case ESCAPE: 	System.exit(0); break;
 
-				case ENTER:                
-					stage.setHeight(newHeight);
-					stage.setWidth(newWidth);
-					stage.setFullScreen(false);
-					stage.setMaximized(false);
-					moveTo(newWidth/2, newHeight/2);
-					uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
-					break;
+				//				case ENTER:                
+				//					stage.setHeight(newHeight);
+				//					stage.setWidth(newWidth);
+				//					stage.setFullScreen(false);
+				//					stage.setMaximized(false);
+				//					moveTo(newWidth/2, newHeight/2);
+				//					uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
+				//					break;
 				default:
 					break;
 
@@ -278,7 +314,7 @@ public class Main extends Application{
 
 		stage.setScene(scene);
 		stage.setTitle("ZombiLand");
-		String imgURL2 = this.getClass().getResource("/images/Briefcase.png").toString();
+		String imgURL2 = this.getClass().getResource("/images/images/Briefcase.png").toString();
 		stage.getIcons().add(new Image(imgURL2)); //we mean business :^)
 		stage.show();
 		stage.setFullScreenExitHint("");
@@ -360,15 +396,15 @@ public class Main extends Application{
 	private void PowerupSpawn(){
 		Enemy temp = eHandler.getLastKilled();
 		if(temp != null) {
-		double enemyX = temp.getEnemyX()+95;
-		double enemyY = temp.getEnemyY()+85;
-		
-		//TODO implement other types of Powerups and fix this
-		if (Math.random() <= 1/15) {
-//			double tempChance = Math.random();
-//			if (tempChance <= .33)
+			double enemyX = temp.getEnemyX()+95;
+			double enemyY = temp.getEnemyY()+85;
+
+			//TODO implement other types of Powerups and fix this
+			if (Math.random() <= 1/15) {
+				//			double tempChance = Math.random();
+				//			if (tempChance <= .33)
 				spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
-		}
+			}
 		}
 	}
 
@@ -403,11 +439,16 @@ public class Main extends Application{
 			rotatePlayer();
 			checkCollision();
 		}
+
 		if(player.getFlashStatusMaxDamage() && frameCount % 15 ==0) uiElements.Flash(PowerupType.MAXDAMAGE);
 		else if(!player.getStatusMaxDamage()) uiElements.setStatus(PowerupType.MAXDAMAGE, false);
 
 		if(!player.isAlive()) {
 			uiElements.deadHP(); //if no health, tells the player he is dead
+			if (leaderboardIsShowing == false) {
+				uiElements.showLeaderboards();
+				leaderboardIsShowing = true;
+			}
 		}
 		else if (player.checkHPWarn() && frameCount%10==0) {
 			uiElements.warnHP(); ///if health is low, flash a warning for the player
@@ -515,10 +556,10 @@ public class Main extends Application{
 						else {
 							e.receiveDamage(p.getDamage());
 						}
-						
+
 					}
-					
-					
+
+
 				}
 			}
 			if(pl.intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/8)
@@ -654,6 +695,10 @@ public class Main extends Application{
 		powerupHandler.clearPowerups();
 		frameCount=0;
 		weapon1CDTime = frameCount;
+		leaderboardIsShowing = false;
+		uiElements.hideLeaderboards();
+		currentInitialsAmount = 0;
+		submitted = false;
 	}
 
 	private void tryZombieSpawn() throws IOException {
@@ -699,8 +744,8 @@ public class Main extends Application{
 		double locationX;
 		double locationY;
 		if (xx == 0 && yy == 0) {
-		locationX = (Math.random()*(width-400))+150;
-		locationY = (Math.random()*(height-400))+130;
+			locationX = (Math.random()*(width-400))+150;
+			locationY = (Math.random()*(height-400))+130;
 		}
 		else {
 			locationX = xx;

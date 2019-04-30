@@ -9,7 +9,7 @@ public class Collision {
 	
 	private ArrayList<ImageView> obstacles; 
 	public Collision() throws IOException {
-		String imgURL = this.getClass().getResource("/images/lava.png").toString();
+		String imgURL = this.getClass().getResource("/images/images/lava.png").toString();
 		
 		Image lavapic = new Image(imgURL);
 		ImageView lava = new ImageView(lavapic);
