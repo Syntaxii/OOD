@@ -32,7 +32,7 @@ public class Main extends Application{
 	static String path;
 	static String imgURL;
 	private Player player;
-	protected Pane root;
+	private Pane root;
 	private Pane floor, obstacles, projectiles;
 	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
