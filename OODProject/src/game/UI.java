@@ -1,6 +1,9 @@
 package game;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javafx.scene.Node;
@@ -346,8 +349,21 @@ public class UI {
 		timeBox.relocate(x+300, y-400);
 		time.relocate(x+305, y-400);
 		
-		//Connection con=DriverManager.getConnection(  
-		//		"jdbc:oracle:thin:@localhost:1521:xe","system","password");  
+		try {
+			Connection con=DriverManager.getConnection("jdbc:sqlserver://databasesystemsproject.cy9rjwfchpnj.us-east-1.rds.amazonaws.com,1433/"
+					+ "Database=OOD"
+					+ "?user=admin"
+					+ "&password=mypassword;");
+			Statement statement = con.createStatement();
+			String sqlstatement = "SELECT TOP 5 initials, highscore FROM Highscores ORDER BY highscore DESC";
+			ResultSet resultSet = statement.executeQuery(sqlstatement);
+			while (resultSet.next()) {
+				System.out.println(resultSet.getString(1) + " " + resultSet.getString(2));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
 		//SELECT TOP 5 initials, highscore
 		//FROM Highscores
 		//ORDER BY highscore DESC
