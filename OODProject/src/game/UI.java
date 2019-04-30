@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import powerups.PowerupType;
 
 public class UI {
 	private static UI theUI = null;
@@ -16,6 +17,8 @@ public class UI {
 	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4, debugLabel, pauseScreenText, instruction, score, time, surviveText;
 	private String weapon1URL;
 	private ImageView weapon1Image;
+	private String maxDamageIconURL;
+	private ImageView maxDamageIcon;
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private boolean debugMode;
@@ -31,7 +34,7 @@ public class UI {
 	}
 
 	public void changeWeaponFocus(int i) {
-		
+
 		switch (current){
 		case 1: 
 			changeColorToNormal(weapon1);
@@ -45,7 +48,7 @@ public class UI {
 		}
 
 		current = i;
-		
+
 		switch (i){
 		case 1: 
 			changeColorToFocus(weapon1);
@@ -66,6 +69,7 @@ public class UI {
 		score.relocate(x-95, y-950);
 		timeBox.relocate(x+300, y-950);
 		time.relocate(x+305, y-950);
+		maxDamageIcon.relocate(x+25, y-150);
 		weaponsUI.relocate(x, y);
 		weapon1.relocate(x, y);
 		weapon1CDbox.relocate(x, y);
@@ -105,28 +109,33 @@ public class UI {
 
 	private void declareUI() {
 		UIParts = new ArrayList<Node>();
-		
+
 		weapon1URL = this.getClass().getResource("/images/gun.jpg").toString();
 		weapon1Image = new ImageView(weapon1URL);
-		
+
+		maxDamageIconURL = this.getClass().getResource("/images/maxDamageIcon.png").toString();
+		maxDamageIcon = new ImageView(maxDamageIconURL);
+		maxDamageIcon.setVisible(false);
+
+
 		scoreBox = new Rectangle(200, 40);
 		scoreBox.setX(800);
 		scoreBox.setY(600);
 		scoreBox.setFill(Color.rgb(50, 50, 200, 0.7));
 		scoreBox.setStroke(Color.rgb(200, 200, 200, 0.8));
 		scoreBox.setStrokeWidth(3);
-		
+
 		score = new Label("Score: 0");
 		score.setTextFill(Color.YELLOW);
 		score.setFont(new Font("Arial", 36));
-		
+
 		timeBox = new Rectangle(350, 40);
 		timeBox.setX(800);
 		timeBox.setY(600);
 		timeBox.setFill(Color.rgb(50, 50, 200, 0.7));
 		timeBox.setStroke(Color.rgb(200, 200, 200, 0.8));
 		timeBox.setStrokeWidth(3);
-		
+
 		time = new Label("Seconds Lasted: 0");
 		time.setTextFill(Color.YELLOW);
 		time.setFont(new Font("Arial", 36));
@@ -144,7 +153,7 @@ public class UI {
 		weapon1.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon1.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon1.setStrokeWidth(2);
-		
+
 		weapon1CDbox = new Rectangle(133.33, 100);
 		weapon1CDbox.setX(175);
 		weapon1CDbox.setY(600);
@@ -152,12 +161,12 @@ public class UI {
 		weapon1CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon1CDbox.setStrokeWidth(2);
 		weapon1CDbox.setHeight(100);
-		
+
 		weapon1Image.setX(180);
 		weapon1Image.setY(650);
 		weapon1Image.setScaleX(-0.4);
 		weapon1Image.setScaleY(.4);
-		
+
 		weapon1ammo = new Label("\u221e");
 		weapon1ammo.setTextFill(Color.DARKRED);
 		weapon1ammo.setFont(new Font("Arial", 72));
@@ -168,7 +177,7 @@ public class UI {
 		weapon2.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStrokeWidth(2);
-		
+
 		weapon2CDbox = new Rectangle(133.33, 100);
 		weapon2CDbox.setX(175+spaceDifference);
 		weapon2CDbox.setY(600);
@@ -183,7 +192,7 @@ public class UI {
 		weapon3.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStrokeWidth(2);
-		
+
 		weapon3CDbox = new Rectangle(133.33, 100);
 		weapon3CDbox.setX(175+spaceDifference*2);
 		weapon3CDbox.setY(600);
@@ -196,13 +205,13 @@ public class UI {
 		HealthBar.setX(175);
 		HealthBar.setY(540);
 		HealthBar.setFill(Color.rgb(250, 15, 15, 0.9));
-		
+
 		hurtScreen = new Rectangle(3000, 3000);
 		hurtScreen.setFill(Color.rgb(230, 50, 50, 0.2));
 		hurtScreen.setVisible(false);
 		hurtScreen.setX(-400);
 		hurtScreen.setY(-400);
-		
+
 		HealthWarning = new Label("!!!");
 		HealthWarning.setFont(new Font("Arial", 50));
 		HealthWarning.setTextFill(Color.DARKRED);
@@ -214,7 +223,7 @@ public class UI {
 		HealthBarBG.setFill(Color.rgb(250, 15, 15, 0.2));
 		HealthBarBG.setStroke(Color.rgb(250, 250, 250, 1));
 		HealthBarBG.setStrokeWidth(3);
-		
+
 		//debug stuff
 		debugLabel = new Label("   Debug Mode");
 		debugLabel.setVisible(false);
@@ -248,7 +257,7 @@ public class UI {
 		debugBox.setFill(Color.rgb(50, 50, 50, 0.8));
 		debugBox.setStroke(Color.rgb(200, 200, 200, 0.8));
 		debugBox.setStrokeWidth(4);
-		
+
 		//pause screen
 		pauseScreen = new Rectangle(500, 750);
 		pauseScreen.setX(600);
@@ -256,16 +265,16 @@ public class UI {
 		pauseScreen.setFill(Color.rgb(80, 80, 80, 0.9));
 		pauseScreen.setStroke(Color.rgb(200, 200, 200, 0.8));
 		pauseScreen.setStrokeWidth(3);
-		
+
 		pauseScreenText = new Label("PAUSED");
 		pauseScreenText.setFont(new Font("Arial", 60));
 		pauseScreenText.setTextFill(Color.rgb(200, 200, 60));
 		pauseScreenText.relocate(x, y);
-		
+
 		surviveText = new Label("SURVIVE");
 		surviveText.setFont(new Font("Arial", 60));
 		surviveText.setTextFill(Color.rgb(255, 0, 0, 1));
-		
+
 		instruction = new Label("                    Controls\n"
 				+ 				"---------------------------------------------\n"
 				+ 				"  WASD/Arrow Keys = Movement\n"
@@ -279,13 +288,15 @@ public class UI {
 		instruction.setFont(new Font("Arial", 20));
 		instruction.setTextFill(Color.rgb(200, 200, 60));
 		instruction.relocate(x, y);
-		
+
 		UIParts.add(scoreBox);
 		UIParts.add(score);
-		
+
 		UIParts.add(timeBox);
 		UIParts.add(time);
 		
+		UIParts.add(maxDamageIcon);
+
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
 		UIParts.add(weapon1CDbox);
@@ -298,16 +309,16 @@ public class UI {
 		UIParts.add(HealthBar);
 		UIParts.add(HealthWarning);
 		UIParts.add(HealthBarBG);
-		
+
 		UIParts.add(debugBox);
 		UIParts.add(debuginfo1);
 		UIParts.add(debuginfo2);
 		UIParts.add(debuginfo3);
 		UIParts.add(debuginfo4);
 		UIParts.add(debugLabel);
-		
+
 		UIParts.add(hurtScreen);
-		
+
 		UIParts.add(pauseScreen);
 		UIParts.add(pauseScreenText);
 		UIParts.add(instruction);
@@ -317,53 +328,36 @@ public class UI {
 	public void ChangeHP(int hp) {
 		HealthBar.setWidth(hp);
 	}
-	
+
 	public void warnHP() {
 		if (HealthWarning.isVisible() == true) HealthWarning.setVisible(false);
 		else HealthWarning.setVisible(true);
 	}
-	
+
 	public void deadHP() {
 		HealthWarning.setVisible(true);
 		HealthWarning.setText("Dead!");
 		HealthWarning.relocate(x+135, y-63);
-		
+
 		scoreBox.relocate(x-100, y-400);
 		score.relocate(x-95, y-400);
 		timeBox.relocate(x+300, y-400);
 		time.relocate(x+305, y-400);
 	}
-	
-	public void resetHP() {
-		HealthWarning.setVisible(false);
-		HealthWarning.setText("!!!");
-		HealthWarning.relocate(x+179, y-63);
-		HealthBar.setWidth(400);
-		
-		showHurtScreen(false);
-		
-		scoreBox.relocate(x-100, y-950);
-		score.relocate(x-95, y-950);
-		timeBox.relocate(x+300, y-950);
-		time.relocate(x+305, y-950);
-		
-		timeAlive = 0;
-		updateTime(timeAlive);
-	}
-	
+
 	public int getCurrentWeaponSelection() {
 		return current;
 	}
-	
+
 	public void updateWeaponCD(int weapon, int cooldown) {
 		switch(weapon) {
 		case 1:	weapon1CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon
 		case 2: weapon2CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
 		case 3: weapon3CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
-			default: break;
+		default: break;
 		}
 	}
-	
+
 	public void pauseChange() {
 		if (pauseScreen.isVisible()) {
 			pauseScreen.setVisible(false);
@@ -378,7 +372,7 @@ public class UI {
 			surviveText.setVisible(true);
 		}
 	}
-	
+
 	public void setDebug() {
 		if(debugMode == false) {
 			debugMode = true;
@@ -399,36 +393,78 @@ public class UI {
 			debugLabel.setVisible(false);
 		}
 	}
-	
+
 	public boolean isDebug() {
 		return debugMode;
 	}
-	
+
 	public void showInfo(double playerX, double playerY, double MouseX, double MouseY) {
 		debuginfo1.setText("player x = " + Math.floor(playerX));
 		debuginfo2.setText("player y = " + Math.floor(playerY));
 		debuginfo3.setText("mouse x = " + Math.floor(MouseX));
 		debuginfo4.setText("mouse y = " + Math.floor(MouseY));
 	}
-	
+
 	public void showHurtScreen(boolean i) {
 		hurtScreen.setVisible(i);
 	}
-	
+
 	public int getScore() {
 		return totalKilled;
 	}
-	
+
 	public void setScore(int i) {
 		totalKilled = i;
 		score.setText("Score: " + i);
 	}
-	
+
 	public void updateTime(int T) {
 		timeAlive = T;
 		time.setText("Seconds Lasted: " + timeAlive);
 	}
-	
+
+	public void setStatus(PowerupType type, boolean bool) {
+		switch(type) {
+		case MAXDAMAGE:
+			if(bool == true) {
+				maxDamageIcon.setVisible(true);
+			}
+			else maxDamageIcon.setVisible(false);
+
+		}
+	}
+
+	public void reset() {
+		HealthWarning.setVisible(false);
+		HealthWarning.setText("!!!");
+		HealthWarning.relocate(x+179, y-63);
+		HealthBar.setWidth(400);
+
+		showHurtScreen(false);
+
+		scoreBox.relocate(x-100, y-950);
+		score.relocate(x-95, y-950);
+		timeBox.relocate(x+300, y-950);
+		time.relocate(x+305, y-950);
+
+		timeAlive = 0;
+		updateTime(timeAlive);
+		
+		setScore(0);
+		maxDamageIcon.setVisible(false);
+	}
+
+	public void Flash(PowerupType type) {
+		switch(type) {
+		case MAXDAMAGE:
+			if(maxDamageIcon.isVisible()) {
+				maxDamageIcon.setVisible(false);
+			}
+			else maxDamageIcon.setVisible(true);
+
+		}
+	}
+
 
 
 }

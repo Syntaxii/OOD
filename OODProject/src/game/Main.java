@@ -1,6 +1,10 @@
 package game;
 
 import player.*;
+import powerups.Powerup;
+import powerups.PowerupFactory;
+import powerups.PowerupHandling;
+import powerups.PowerupType;
 import projectile.*;
 import enemy.*;
 
@@ -35,6 +39,7 @@ public class Main extends Application{
 	boolean goUp, goDown, goRight, goLeft;
 	private ProjectileHandling pHandler;
 	private EnemyHandling eHandler;
+	private PowerupHandling powerupHandler;
 	private Enemy bz;
 	private double mouseX, mouseY, NewmouseX, NewmouseY;
 	private double weaponX, weaponY, angle;
@@ -59,6 +64,7 @@ public class Main extends Application{
 		//handle bullets, etc.
 		pHandler = new ProjectileHandling();
 		eHandler = new EnemyHandling();
+		powerupHandler = new PowerupHandling();
 
 		mouseX = 0.0;
 		mouseY = 0.0;
@@ -137,27 +143,23 @@ public class Main extends Application{
 
 				//Spawn Zombies
 				case J: 
-					try {
-						spawnZombie(EnemyType.BASIC);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					spawnZombie(EnemyType.BASIC);
 					break;
 
 				case K:
-					try {
-						spawnZombie(EnemyType.FAST);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					spawnZombie(EnemyType.FAST);
 					break;
 
 				case L:
-					try {
-						spawnZombie(EnemyType.LETHAL);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					spawnZombie(EnemyType.LETHAL);
+					break;
+
+				case U:
+					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+					break;
+				case I:
+					break;
+				case O:
 					break;
 
 				case DIGIT0:
@@ -301,71 +303,21 @@ public class Main extends Application{
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if (started==true) {
-					
-					//handle projectiles and enemies
+				if (started==true) { //if unpaused
 					pHandler.cycleProjectiles();
 					eHandler.cycleEnemies(cx, cy); //passes player coordinates as arguments
-					
-					if (player.isAlive()) {
-						handleMovement();
-						rotatePlayer();
-						checkCollision();
-					}
-
-					if (eHandler.getAmount() <= enemyLimit) { //Before spawning a new enemy, make sure the amount on screen is not higher than the limit
-						try {
-							if(frameCount%120==0) tryZombieSpawn(); //spawn zombie every 2 seconds
-							if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
-							if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
-						} catch (IOException e) {
-							e.printStackTrace();
-						} 
-					}
-					
-
-
-					if(!player.isAlive()) {
-						uiElements.deadHP(); //if no health, tells the player he is dead
-					}
-					else if (player.checkHPWarn() && frameCount%10==0) {
-						uiElements.warnHP(); ///if health is low, flash a warning for the player
-					}
-
-					if(player.isAlive() && frameCount%60==0) uiElements.updateTime(frameCount/60);
-
-
-					if(invulnerableTime - frameCount <=45) {
-						uiElements.showHurtScreen(false);
-						if(invulnerableTime<frameCount) {
-							isVulnerable = true;
-						}
-					}
-					else {
-						uiElements.showHurtScreen(true);
-					}
-
-					if(isVulnerable) player.setInvulnerable(false);
-					else player.setInvulnerable(true);
-
-					weapon1CDRemaining = weapon1CDTime - frameCount;
-					if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
-					uiElements.updateWeaponCD(1, weapon1CDRemaining);
-
-					if (eHandler.getScore() > uiElements.getScore()) uiElements.setScore(eHandler.getScore());
+					powerupHandler.cyclePowerups();
+					player.cycleStatuses();
+					ZombieSpawn();
+					PowerupSpawn();
+					PlayerChecks();
+					WeaponChecks();
+					ScoreChecks();
 
 					frameCount++;
 				}
-
-				if(uiElements.isDebug()) {
-					uiElements.showInfo(cx, cy, mouseX, mouseY);
-				}
-				try { //very janky way of setting a framerate limit
-					Thread.sleep(1000/60);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
+				DebugInfo();
+				NextFrame();
 			}
 		};
 		timer.start();
@@ -395,6 +347,89 @@ public class Main extends Application{
 		//		
 		//
 	}
+
+	private void PowerupSpawn(){
+		Enemy temp = eHandler.getLastKilled();
+		if(temp != null) {
+		double enemyX = temp.getEnemyX()+95;
+		double enemyY = temp.getEnemyY()+85;
+		
+		//TODO implement other types of Powerups and fix this
+		if (Math.random() <= .05) {
+//			double tempChance = Math.random();
+//			if (tempChance <= .33)
+				spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
+		}
+		}
+	}
+
+	private void NextFrame() {
+		try { //very janky way of setting a framerate limit
+			Thread.sleep(1000/60);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	private void DebugInfo() {
+		if(uiElements.isDebug()) {
+			uiElements.showInfo(cx, cy, mouseX, mouseY);
+		}
+	}
+
+	private void ZombieSpawn() {
+		if (eHandler.getAmount() <= enemyLimit) { //Before spawning a new enemy, make sure the amount on screen is not higher than the limit
+			try {
+				if(frameCount%120==0) tryZombieSpawn(); //spawn zombie every 2 seconds
+				if(frameCount>=1800 && frameCount%120==0) tryZombieSpawn(); //after 30 seconds, spawns 2 at a time
+				if(frameCount>=3600 && frameCount%60==0) tryZombieSpawn(); //after 60 seconds, spawns 4 at a time
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
+	}
+
+	private void PlayerChecks() {
+		if (player.isAlive()) {
+			handleMovement();
+			rotatePlayer();
+			checkCollision();
+		}
+		if(player.getFlashStatusMaxDamage() && frameCount % 15 ==0) uiElements.Flash(PowerupType.MAXDAMAGE);
+		else if(!player.getStatusMaxDamage()) uiElements.setStatus(PowerupType.MAXDAMAGE, false);
+
+		if(!player.isAlive()) {
+			uiElements.deadHP(); //if no health, tells the player he is dead
+		}
+		else if (player.checkHPWarn() && frameCount%10==0) {
+			uiElements.warnHP(); ///if health is low, flash a warning for the player
+		}
+
+		if(player.isAlive() && frameCount%60==0) uiElements.updateTime(frameCount/60);
+
+		if(invulnerableTime - frameCount <=45) {
+			uiElements.showHurtScreen(false);
+			if(invulnerableTime<frameCount) {
+				isVulnerable = true;
+			}
+		}
+		else {
+			uiElements.showHurtScreen(true);
+		}
+
+		if(isVulnerable) player.setInvulnerable(false);
+		else player.setInvulnerable(true);
+	}
+
+	private void WeaponChecks() {
+		weapon1CDRemaining = weapon1CDTime - frameCount;
+		if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
+		uiElements.updateWeaponCD(1, weapon1CDRemaining);
+	}
+
+	private void ScoreChecks() {
+		if (eHandler.getScore() > uiElements.getScore()) uiElements.setScore(eHandler.getScore());
+	}
+
 	private void setBackGround() throws IOException {
 		FloorMaker floorMaker = new FloorMaker();
 		root.setBackground(new Background(floorMaker.setGrass()));
@@ -438,7 +473,7 @@ public class Main extends Application{
 	}
 
 	private void checkCollision() { //Check collision between player and obstacles, enemies and projectiles, enemies and player
-		
+
 		double pw = player.getPic().getBoundsInParent().getWidth();
 		double ph = player.getPic().getBoundsInParent().getHeight();
 		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*1/4);
@@ -465,8 +500,16 @@ public class Main extends Application{
 						,e.getEnemy().getBoundsInParent().getWidth()*1/2
 						,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
 					if (!e.isInVulnerable()) {
-						e.receiveDamage(p.getDamage());
+						if (player.getStatusMaxDamage()) {
+							e.receiveDamage(100000);
+						}
+						else {
+							e.receiveDamage(p.getDamage());
+						}
+						
 					}
+					
+					
 				}
 			}
 			if(pl.intersects(e.getEnemy().getBoundsInParent().getMinX()+(e.getEnemy().getBoundsInParent().getWidth()*1/8)
@@ -474,13 +517,22 @@ public class Main extends Application{
 					,e.getEnemy().getBoundsInParent().getWidth()*3/4
 					,e.getEnemy().getBoundsInParent().getHeight()*3/4)) {
 
-				//if(pl.intersects(e.getEnemy().getBoundsInParent())) {
 				if(isVulnerable==true) {
 					player.setHealth(player.getHealth()-e.getDamage());
 					uiElements.ChangeHP(player.getHealth()*4);
 					invulnerableTime = frameCount + 60;
 					isVulnerable=false;
 				}
+			}
+		}
+
+		for (Powerup po : powerupHandler.getPowerups()) {
+			if (po.getPup().getBoundsInParent().intersects(pl.getBoundsInParent())){
+				player.setStatus(po.getType());
+				uiElements.setStatus(po.getType(), true);
+				po.delete();
+				powerupHandler.removePowerup(po);
+				break;
 			}
 		}
 	} 
@@ -523,7 +575,7 @@ public class Main extends Application{
 		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
 		player.getPic().setRotate(angle);
 	}
-	
+
 	private void getWeaponXandY() {
 		weaponX = cx + Math.cos(Math.toRadians(angle+40))*35;
 		weaponY = cy + Math.sin(Math.toRadians(angle+40))*35;
@@ -586,16 +638,13 @@ public class Main extends Application{
 		isVulnerable = true;
 		invulnerableTime = 0;
 		moveTo(width/2, height/2);
-		player.setHealth(100);
-		player.setAlive();
-		uiElements.resetHP();
-		uiElements.setScore(0);
+		player.reset();
+		uiElements.reset();
 		pHandler.clearProjectiles();
-		pHandler = new ProjectileHandling();
 		eHandler.clearEnemies();
-		eHandler = new EnemyHandling();
+		powerupHandler.clearPowerups();
 		frameCount=0;
-		weapon1CD = frameCount;
+		weapon1CDTime = frameCount;
 	}
 
 	private void tryZombieSpawn() throws IOException {
@@ -606,7 +655,7 @@ public class Main extends Application{
 
 	}
 
-	private void spawnZombie(EnemyType type) throws IOException { //spawn offscreen
+	private void spawnZombie(EnemyType type) { //spawn offscreen
 		double location = (Math.random());
 		double rx, ry;
 		if (location <.25) {//left
@@ -626,9 +675,37 @@ public class Main extends Application{
 			ry = height;
 		}
 
-		bz = ZombieFactory.createEnemy(type, rx, ry); //FACTORY 
+		try {
+			bz = ZombieFactory.createEnemy(type, rx, ry);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} //FACTORY 
 		eHandler.addEnemy(bz);
 		floor.getChildren().add(bz.getEnemy());
 		bz.spawn();
+	}
+
+	private void spawnPowerup(PowerupType type, double xx, double yy) { //spawn within bounds
+		double locationX;
+		double locationY;
+		if (xx == 0 && yy == 0) {
+		locationX = (Math.random()*(width-400))+150;
+		locationY = (Math.random()*(height-400))+130;
+		}
+		else {
+			locationX = xx;
+			locationY = yy;
+		}
+		try {
+			Powerup pu = PowerupFactory.createPowerup(type, locationX, locationY);
+			powerupHandler.addPowerup(pu);
+			floor.getChildren().addAll(pu.getPupBackground());
+			floor.getChildren().add(pu.getPup());
+			pu.spawn();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} //FACTORY 
+
 	}
 }

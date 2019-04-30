@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import powerups.PowerupType;
 
 public class Player {
 	private volatile static ImageView playerpic;
@@ -12,7 +13,12 @@ public class Player {
 	private static Player player;
 	private static boolean hpWarn = false;
 	private static boolean playerAlive = true;
+	private boolean isMAXDAMAGE = false;
+	private boolean MAXDAMAGEflash = false;
+	private int maxDamageTime = 15*60; //set length
+	private int maxDamageTimeRemaining = 0; //length remaining
 	ColorAdjust faded;
+
 
 	private Player() throws IOException {
 		
@@ -77,5 +83,41 @@ public class Player {
 			playerpic.setEffect(faded);
 		}
 		else playerpic.setEffect(null);
+	}
+	public void setStatus(PowerupType type) {
+		switch(type) {
+		case MAXDAMAGE:
+			isMAXDAMAGE = true;
+			maxDamageTimeRemaining = maxDamageTime;
+			break;
+		}
+	}
+	public boolean getStatusMaxDamage() {
+		return isMAXDAMAGE;
+	}
+	
+	public boolean getFlashStatusMaxDamage() {
+		return MAXDAMAGEflash;
+	}
+	
+	public void cycleStatuses() {
+		if (isMAXDAMAGE == true) {
+			maxDamageTimeRemaining -= 1;
+			if (maxDamageTimeRemaining == 0) {
+				isMAXDAMAGE = false;
+				MAXDAMAGEflash = false;
+			}
+			else if(maxDamageTimeRemaining == 3*60) {
+				MAXDAMAGEflash = true;
+			}
+		}
+	}
+	
+	public void reset() {
+		setHealth(100);
+		setAlive();
+		
+		maxDamageTimeRemaining = 0;
+		isMAXDAMAGE = false;
 	}
 }

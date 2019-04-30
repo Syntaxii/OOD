@@ -4,6 +4,7 @@ import java.util.LinkedList;
 public class EnemyHandling {
 
 	LinkedList<Enemy> enemies = new LinkedList<Enemy>();
+	Enemy lastKilled = null;
 	int score = 0;
 	int basicDead = 0;
 	int fastDead = 0;
@@ -11,10 +12,23 @@ public class EnemyHandling {
 
 	public void cycleEnemies(double newPlayerX, double newPlayerY) {
 		for (int j = 0; j < enemies.size(); j++) {
-			if (enemies.get(j).isDelete()) removeEnemy(enemies.get(j));
+			if (enemies.get(j).isDelete()) {
+				setLastKilled(enemies.get(j));
+				removeEnemy(enemies.get(j));
+			}
 			else
 			enemies.get(j).tick(newPlayerX, newPlayerY);
 		}
+	}
+	
+	public void setLastKilled(Enemy e) {
+		lastKilled = e;
+	}
+	
+	public Enemy getLastKilled() {
+		Enemy temp = lastKilled;
+		lastKilled = null;
+		return temp;
 	}
 
 	public void addEnemy(Enemy e) {
@@ -56,6 +70,8 @@ public class EnemyHandling {
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).delete();
 		}
+		enemies.removeAll(enemies);
+		
 		basicDead = 0;
 		fastDead = 0;
 		lethalDead = 0;

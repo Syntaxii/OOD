@@ -19,9 +19,9 @@ public abstract class Enemy{
 	boolean inVulnerable = false;
 	int inVulnerableTime = 0;
 	boolean isDelete = false;
-	EnemyType enemyType = null;
+	EnemyType enemyType;
 	
-	public Enemy(double enemyX, double enemyY, Image ijasiodfn, double size) throws IOException {
+	public Enemy(double enemyX, double enemyY, Image temporary, double size) throws IOException {
 		String imgURL = this.getClass().getResource("/images/BasicZombie.png").toString();
 		this.image = new Image(imgURL);
 		zomb = new ImageView(image);
@@ -44,6 +44,14 @@ public abstract class Enemy{
 		}
 		
 		zomb.relocate(enemyX, enemyY);		
+	}
+	
+	public double getEnemyX() {
+		return enemyX;
+	}
+	
+	public double getEnemyY() {
+		return enemyY;
 	}
 
 
