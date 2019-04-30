@@ -193,28 +193,28 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 				//Spawn Zombies
-				case NUMPAD1: 
-					spawnZombie(EnemyType.BASIC);
-					break;
-
-				case NUMPAD2:
-					spawnZombie(EnemyType.FAST);
-					break;
-
-				case NUMPAD3:
-					spawnZombie(EnemyType.LETHAL);
-					break;
+//				case NUMPAD1: 
+//					spawnZombie(EnemyType.BASIC);
+//					break;
+//
+//				case NUMPAD2:
+//					spawnZombie(EnemyType.FAST);
+//					break;
+//
+//				case NUMPAD3:
+//					spawnZombie(EnemyType.LETHAL);
+//					break;
 
 					//Spawn Powerups
-				case NUMPAD4:
-					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-					break;
-				case NUMPAD5:
-					break;
-				case NUMPAD6:
-					break;
+//				case NUMPAD4:
+//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+//					break;
+//				case NUMPAD5:
+//					break;
+//				case NUMPAD6:
+//					break;
 
-				case NUMPAD7: uiElements.setDebug(); break;
+//				case NUMPAD7: uiElements.setDebug(); break;
 
 				case NUMPAD0: Reset(); break;
 

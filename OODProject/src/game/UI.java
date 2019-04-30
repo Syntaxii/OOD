@@ -293,10 +293,7 @@ public class UI {
 				+ 				"  WASD/Arrow Keys = Movement\n"
 				+ 				"           P = Pause/Unpause\n"
 				+ 				"           ESC = Close Game\n"
-				+ 				"        1/2/3 = Spawn Zombie\n"
-				+ 				"        4/5/6 = Spawn Powerup\n"
-				+ 				"             7 = Debug Mode\n"
-				+ "\n\n"
+				+ "\n\n\n\n"
 				+ 				"                  Instructions\n"
 				+ 				"---------------------------------------------\n");
 		instruction.setFont(new Font("Arial", 20));
