@@ -292,8 +292,9 @@ public class UI {
 				+ 				"---------------------------------------------\n"
 				+ 				"  WASD/Arrow Keys = Movement\n"
 				+ 				"           P = Pause/Unpause\n"
-				+ 				"           ESC = Close Game\n"
-				+ "\n\n\n\n"
+				+ 				"            ESC = Close Game\n"
+				+ 				"       Numpad 0 = Reset Game\n"
+				+ "\n\n\n"
 				+ 				"                  Instructions\n"
 				+ 				"---------------------------------------------\n");
 		instruction.setFont(new Font("Arial", 20));
