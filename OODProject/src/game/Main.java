@@ -191,38 +191,38 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-//				//Spawn Zombies
-//				case NUMPAD1: 
-//					spawnZombie(EnemyType.BASIC);
-//					break;
-//
-//				case NUMPAD2:
-//					spawnZombie(EnemyType.FAST);
-//					break;
-//
-//				case NUMPAD3:
-//					spawnZombie(EnemyType.LETHAL);
-//					break;
-//
-//					//Spawn Powerups
-//				case NUMPAD4:
-//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-//					break;
-//				case NUMPAD5:
-//					spawnPowerup(PowerupType.REGENERATION, 0, 0);
-//					break;
-//
-//				case NUMPAD6:
-//					spawnPowerup(PowerupType.AMMO2, 0, 0);
-//					break;
-//				case NUMPAD7:
-//					spawnPowerup(PowerupType.AMMO3, 0, 0);
-//					break;
+				//Spawn Zombies
+				case NUMPAD1: case J:
+					spawnZombie(EnemyType.BASIC);
+					break;
+
+				case NUMPAD2: case K:
+					spawnZombie(EnemyType.FAST);
+					break;
+
+				case NUMPAD3: case L:
+					spawnZombie(EnemyType.LETHAL);
+					break;
+
+					//Spawn Powerups
+				case NUMPAD4:
+					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+					break;
+				case NUMPAD5:
+					spawnPowerup(PowerupType.REGENERATION, 0, 0);
+					break;
+
+				case NUMPAD6:
+					spawnPowerup(PowerupType.AMMO2, 0, 0);
+					break;
+				case NUMPAD7:
+					spawnPowerup(PowerupType.AMMO3, 0, 0);
+					break;
 
 
 				case NUMPAD8: uiElements.setDebug(); break;
 
-				case NUMPAD0: Reset(); break;
+				case NUMPAD0: case DELETE: Reset(); break;
 
 				case MINUS: 	stage.setFullScreen(true); 
 				uiElements.changeUIPositions((width/2)-200, height-110);

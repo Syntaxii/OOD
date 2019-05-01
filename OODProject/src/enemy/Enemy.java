@@ -53,6 +53,26 @@ public abstract class Enemy{
 
 
 	public void spawn() {
+		String imgURL = "";
+		Image zombieImage;	
+		switch(this.enemyType) {
+		case BASIC: // default 
+			imgURL = this.getClass().getResource("/images/sprites/sprite_animation/zombie_animation/regular_zombie_move.gif").toString();
+			zombieImage = new Image(imgURL);
+			zomb.setImage(zombieImage);
+			break;
+		case FAST: 
+			imgURL = this.getClass().getResource("/images/sprites/sprite_animation/zombie_animation/fast_zombie_move.gif").toString();
+			zombieImage = new Image(imgURL);
+			zomb.setImage(zombieImage);
+			break;
+		case LETHAL: 
+			imgURL = this.getClass().getResource("/images/sprites/sprite_animation/zombie_animation/lethal_zombie_move.gif").toString();
+			zombieImage = new Image(imgURL);
+			zomb.setImage(zombieImage);
+			break;
+		}
+		
 		zomb.setVisible(true);
 	}
 
