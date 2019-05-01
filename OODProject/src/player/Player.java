@@ -29,13 +29,14 @@ public class Player {
 
 	private Player() throws IOException {
 
-		String imgURL1 = this.getClass().getResource("/images/images/player.gif").toString();
+		String imgURL1 = this.getClass().getResource("/images/sprites/sprite_animation/player_animation/player_handgun/player_handgun_move.gif").toString();
 		Image playerImage1 = new Image(imgURL1);
 
-		String imgURL2 = this.getClass().getResource("/images/sprites/player_source_files/shotgun/idle/survivor-idle_shotgun_0.png").toString();
+		
+		String imgURL2 = this.getClass().getResource("/images/sprites/sprite_animation/player_animation/player_shotgun/player_shotgun_move.gif").toString();
 		Image playerImage2 = new Image(imgURL2);
 		
-		String imgURL3 = this.getClass().getResource("/images/sprites/player_source_files/rifle/move/survivor-move_rifle_0.png").toString();
+		String imgURL3 = this.getClass().getResource("/images/sprites/sprite_animation/player_animation/player_rifle/player_rifle_move.gif").toString();
 		Image playerImage3 = new Image(imgURL3);
 
 		playerpic1 = new ImageView(playerImage1);
