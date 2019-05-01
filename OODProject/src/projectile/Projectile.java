@@ -3,6 +3,11 @@ package projectile;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import enemy.Enemy;
+
 public abstract class Projectile {
 	protected double x, y, mouseX, mouseY;
 	protected double VelX = 0, VelY = 0;
@@ -11,10 +16,14 @@ public abstract class Projectile {
 	protected int damage;
 	protected int projectileTimeOutTicker = 0;
 	protected Circle sphere;
+	protected Set<Enemy> hitEnemies = new HashSet<Enemy>();
+	
 
-	public Projectile(double x, double y, double mouseX, double mouseY) {
+	public Projectile(double x, double y, double newmouseX, double newmouseY) {
 		this.x = x;
 		this.y = y;
+		mouseX = newmouseX;
+		mouseY = newmouseY;
 		angle = Math.atan2(mouseY - y, mouseX - x) * 180 / Math.PI;
 		setVelocity(angle);
 		createProjectile();
@@ -64,5 +73,13 @@ public abstract class Projectile {
 		damage = damage - 10;
 		if (damage < 5) damage = 5;
 		return damage;
+	}
+	
+	public void addHitEnemy(Enemy e) {
+		hitEnemies.add(e);
+	}
+	
+	public Set<Enemy> getHitEnemies(){
+		return hitEnemies;
 	}
 }

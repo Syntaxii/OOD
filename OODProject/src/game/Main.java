@@ -1,17 +1,3 @@
-//TODO's
-//	1. Add other weapons
-//	2. Add other powerups
-//	3. Add Highscore (maybe link it up to database)
-//	4. 
-//
-//
-//
-//
-//
-//
-//
-//
-
 package game;
 
 import player.*;
@@ -63,15 +49,16 @@ public class Main extends Application{
 	private int frameCount = 0;
 	private boolean isVulnerable = true;
 	private int invulnerableTime = 0;
-	private int weapon1CD = 15;//, weapon2CD = 0, weapon3CD = 0; //weapon cooldown (firerate)
-	private int weapon1CDTime = 0; //, weapon2CDTime = 0, weapon3CDTime = 0; //current frameCount + weaponCD = weaponCDTime
-	private int weapon1CDRemaining = 0;//, weapon2CDRemaining = 0, weapon3CDRemaining = 0; 
+	private int weapon1CD = 15, weapon2CD = 45, weapon3CD = 6; //weapon cooldown (firerate). This number is over 60 to find rate
+	private int weapon1CDTime = 0, weapon2CDTime = 0, weapon3CDTime = 0;  //current frameCount + weaponCD = weaponCDTime
+	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
 	private int d = 10; //pixel gap between mouseCursor elements
 	private int enemyLimit = 16; // amount of enemies allowed on screen
 	private boolean moving = false;
 	private boolean leaderboardIsShowing = false;
 	private int currentInitialsAmount = 0;
 	private boolean submitted = false;
+	private boolean firing = false;
 
 	public static void main(String[] args) throws IOException, URISyntaxException{
 		launch(args);
@@ -281,6 +268,7 @@ public class Main extends Application{
 			public void handle(MouseEvent e) {
 				setMouseColor(Color.FLORALWHITE);
 				setMouseCursorGap(10);
+				firing = false;
 				moveMouse();
 			}
 		});
@@ -288,27 +276,8 @@ public class Main extends Application{
 			public void handle(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
-
-				if (player.isAlive() && started==true) {
-
-					//TODO change this to all weapons, and check ammo, etc.
-					int wep = uiElements.getCurrentWeaponSelection();
-					switch(wep) {
-					case 1:
-						if (weapon1CDRemaining == 0) {
-							setMouseCursorGap(8);
-							setMouseColor(Color.SALMON);
-							cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-							cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
-
-							createBullet(mouseX, mouseY, cx, cy, projectiles);
-							weapon1CDTime = frameCount + weapon1CD;
-						}
-						break;
-					}
-				}
+				firing = true;
 				moveMouse();
-
 			}
 		});
 
@@ -399,8 +368,9 @@ public class Main extends Application{
 			double enemyX = temp.getEnemyX()+95;
 			double enemyY = temp.getEnemyY()+85;
 
-			//TODO implement other types of Powerups and fix this
-			if (Math.random() <= 1/15) {
+			double chance = 0.066;
+			if (player.getStatusMaxDamage()) chance = 0.033;
+			if (Math.random() <= chance) {
 				//			double tempChance = Math.random();
 				//			if (tempChance <= .33)
 				spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
@@ -473,7 +443,54 @@ public class Main extends Application{
 	private void WeaponChecks() {
 		weapon1CDRemaining = weapon1CDTime - frameCount;
 		if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
-		uiElements.updateWeaponCD(1, weapon1CDRemaining);
+		uiElements.updateWeaponCD(1, weapon1CDRemaining, weapon1CD);
+		
+		weapon2CDRemaining = weapon2CDTime - frameCount;
+		if (weapon2CDRemaining <0) weapon2CDRemaining = 0;
+		uiElements.updateWeaponCD(2, weapon2CDRemaining, weapon2CD);
+		
+		weapon3CDRemaining = weapon3CDTime - frameCount;
+		if (weapon3CDRemaining <0) weapon3CDRemaining = 0;
+		uiElements.updateWeaponCD(3, weapon3CDRemaining, weapon3CD);
+		
+		if (player.isAlive() && started==true && firing == true) {
+			int wep = uiElements.getCurrentWeaponSelection();
+			switch(wep) {
+			case 1:
+				if (weapon1CDRemaining == 0) {
+					setMouseCursorGap(8);
+					setMouseColor(Color.SALMON);
+					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+
+					createBullet(mouseX, mouseY, cx, cy, projectiles);
+					weapon1CDTime = frameCount + weapon1CD;
+				}
+				break;
+			case 2:
+				//TODO add weapon spread and ammo
+				if (weapon2CDRemaining == 0) {
+					setMouseCursorGap(8);
+					setMouseColor(Color.SALMON);
+					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+					createBullet(mouseX-10, mouseY-10, cx, cy, projectiles);
+					createBullet(mouseX, mouseY, cx, cy, projectiles);
+					createBullet(mouseX+10, mouseY+10, cx, cy, projectiles);
+					weapon2CDTime = frameCount + weapon2CD;
+				}
+				break;
+			case 3: 
+				if (weapon3CDRemaining == 0) {
+					setMouseCursorGap(8);
+					setMouseColor(Color.SALMON);
+					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+					createBullet(mouseX, mouseY, cx, cy, projectiles);
+					weapon3CDTime = frameCount + weapon3CD;
+				}
+			}
+		}
 	}
 
 	private void ScoreChecks() {
@@ -549,12 +566,14 @@ public class Main extends Application{
 						,e.getEnemy().getBoundsInParent().getMinY()+(e.getEnemy().getBoundsInParent().getHeight()*1/4)
 						,e.getEnemy().getBoundsInParent().getWidth()*1/2
 						,e.getEnemy().getBoundsInParent().getHeight()*1/2)) {
-					if (!e.isInVulnerable()) {
+					if (!p.getHitEnemies().contains(e)) {
 						if (player.getStatusMaxDamage()) {
 							e.receiveDamage(100000);
+							p.addHitEnemy(e);
 						}
 						else {
 							e.receiveDamage(p.getDamage());
+							p.addHitEnemy(e);
 						}
 
 					}
@@ -732,7 +751,6 @@ public class Main extends Application{
 		try {
 			bz = ZombieFactory.createEnemy(type, rx, ry);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} //FACTORY 
 		eHandler.addEnemy(bz);

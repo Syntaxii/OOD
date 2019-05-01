@@ -1,5 +1,5 @@
 package powerups;
 
 public enum PowerupType {
-	MAXDAMAGE
+	MAXDAMAGE, REGENERATION, AMMO2, AMMO3
 }

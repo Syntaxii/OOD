@@ -7,19 +7,17 @@ import javafx.scene.image.ImageView;
 
 
 public abstract class Enemy{
-	double enemyX, enemyY, playerX, playerY;
-	double eSpeed; //enemy Speed
-	double angle, moveX, moveY;
-	boolean alive = true;
-	int health = 100;
-	int damage;
-	boolean isAlive = false;
-	Image image;
-	ImageView zomb;
-	boolean inVulnerable = false;
-	int inVulnerableTime = 0;
-	boolean isDelete = false;
-	EnemyType enemyType;
+	protected double enemyX, enemyY, playerX, playerY;
+	protected double eSpeed; //enemy Speed
+	protected double angle, moveX, moveY;
+	protected boolean alive = true;
+	protected int health = 100;
+	protected int damage;
+	protected boolean isAlive = false;
+	protected Image image;
+	protected ImageView zomb;
+	protected boolean isDelete = false;
+	protected EnemyType enemyType;
 	
 	public Enemy(double enemyX, double enemyY, Image temporary, double size) throws IOException {
 		String imgURL = this.getClass().getResource("/images/images/BasicZombie.png").toString();
@@ -66,11 +64,7 @@ public abstract class Enemy{
 	}
 
 	public void receiveDamage(int d) {
-		if(inVulnerable==false) {
 		health = health - d;
-		inVulnerable = true;
-		inVulnerableTime = 20;
-		}
 	}
 
 	public void delete() {
@@ -91,8 +85,6 @@ public abstract class Enemy{
 			playerY = newPlayerY;
 			move();
 		}
-		inVulnerableTime--;
-		if(inVulnerableTime <= 0) inVulnerable = false;
 	}
 	
 	public void instantiate(double size) {
@@ -121,10 +113,6 @@ public abstract class Enemy{
 	
 	public EnemyType getEnemyType() {
 		return enemyType;
-	}
-	
-	public boolean isInVulnerable() {
-		return inVulnerable;
 	}
 	
 }

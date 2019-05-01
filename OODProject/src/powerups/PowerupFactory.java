@@ -11,9 +11,18 @@ public class PowerupFactory {
 			    case MAXDAMAGE:
 			        powerup = new MaxDamagePowerup(powerupX, powerupY);
 			        break;
+			    case REGENERATION:
+			    	//powerup = new Regeneration(powerupX, powerupY);
+			    	break;
+			    case AMMO2:
+			    	//powerup = new Ammo2(powerupX, powerupY);
+			    	break;
+			    case AMMO3:
+			    	//powerup = new Ammo3(powerupX, powerupY);
+			    	break;
 			}
 		} catch (Exception e) {
-			System.out.println("stuff boke");
+			System.out.println("stuff broke");
 			e.printStackTrace();
 		}
         return powerup;

@@ -19,12 +19,12 @@ public class UI {
 	private ArrayList<Node> UIParts;
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
 		HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox, leaderboardsBox;
-	private Label weapon1ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4,
+	private Label weapon1ammo, weapon2ammo, weapon3ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4,
 		debugLabel, pauseScreenText, instruction, score, time, surviveText, leaderboards;
-	private String weapon1URL;
-	private ImageView weapon1Image;
-	private String maxDamageIconURL;
-	private ImageView maxDamageIcon;
+	private String weapon1URL, weapon2URL, weapon3URL;
+	private ImageView weapon1Image, weapon2Image, weapon3Image;
+	private String maxDamageIconURL;//, RegenerationIconURL, AmmoIconURL;
+	private ImageView maxDamageIcon;//, RegenerationIcon, AmmoIcon;
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private boolean debugMode;
@@ -86,8 +86,12 @@ public class UI {
 		weapon1ammo.relocate(x+78, y+40);
 		weapon2.relocate(x+spaceDifference, y);
 		weapon2CDbox.relocate(x+spaceDifference, y);
+		weapon2Image.relocate(x+2, y+5);
+		weapon2ammo.relocate(x+216, y+57);
 		weapon3.relocate(x+spaceDifference*2, y);
 		weapon3CDbox.relocate(x+spaceDifference*2, y);
+		weapon3Image.relocate(x-1227, y-517);
+		weapon3ammo.relocate(x+349, y+57);
 		HealthBar.relocate(x, y-60);
 		HealthWarning.relocate(x+179, y-63);
 		HealthBarBG.relocate(x, y-60);
@@ -125,10 +129,19 @@ public class UI {
 
 		weapon1URL = this.getClass().getResource("/images/images/gun.jpg").toString();
 		weapon1Image = new ImageView(weapon1URL);
+		
+		weapon2URL = this.getClass().getResource("/images/images/shotgun.png").toString();
+		weapon2Image = new ImageView(weapon2URL);
+		
+		weapon3URL = this.getClass().getResource("/images/images/rifle.png").toString();
+		weapon3Image = new ImageView(weapon3URL);
+
 
 		maxDamageIconURL = this.getClass().getResource("/images/images/maxDamageIcon.png").toString();
 		maxDamageIcon = new ImageView(maxDamageIconURL);
 		maxDamageIcon.setVisible(false);
+		
+		
 
 
 		scoreBox = new Rectangle(200, 40);
@@ -179,6 +192,7 @@ public class UI {
 		weapon1Image.setY(650);
 		weapon1Image.setScaleX(-0.4);
 		weapon1Image.setScaleY(.4);
+		weapon1Image.setRotate(335);
 
 		weapon1ammo = new Label("\u221e");
 		weapon1ammo.setTextFill(Color.DARKRED);
@@ -190,14 +204,22 @@ public class UI {
 		weapon2.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStrokeWidth(2);
+		
+		weapon2ammo = new Label("00");
+		weapon2ammo.setTextFill(Color.DARKRED);
+		weapon2ammo.setFont(new Font("Arial", 40));
 
 		weapon2CDbox = new Rectangle(133.33, 100);
 		weapon2CDbox.setX(175+spaceDifference);
 		weapon2CDbox.setY(600);
-		weapon2CDbox.setFill(Color.rgb(100, 200, 200, 0.5));
+		weapon2CDbox.setFill(Color.rgb(50, 50, 200, 0.5));
 		weapon2CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2CDbox.setStrokeWidth(2);
-		weapon2CDbox.setHeight(0);
+		weapon2CDbox.setHeight(100);
+		
+		weapon2Image.setScaleX(.34);
+		weapon2Image.setScaleY(.34);
+		weapon2Image.setRotate(335);
 
 		weapon3 = new Rectangle(133.33, 100);
 		weapon3.setX(175+spaceDifference*2);
@@ -205,14 +227,22 @@ public class UI {
 		weapon3.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStrokeWidth(2);
+		
+		weapon3ammo = new Label("00");
+		weapon3ammo.setTextFill(Color.DARKRED);
+		weapon3ammo.setFont(new Font("Arial", 40));
 
 		weapon3CDbox = new Rectangle(133.33, 100);
 		weapon3CDbox.setX(175+spaceDifference*2);
 		weapon3CDbox.setY(600);
-		weapon3CDbox.setFill(Color.rgb(100, 200, 200, 0.5));
+		weapon3CDbox.setFill(Color.rgb(50, 50, 200, 0.5));
 		weapon3CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3CDbox.setStrokeWidth(2);
-		weapon3CDbox.setHeight(0);
+		weapon3CDbox.setHeight(100);
+		
+		weapon3Image.setScaleX(.042);
+		weapon3Image.setScaleY(.042);
+		weapon3Image.setRotate(340);
 
 		HealthBar = new Rectangle(400, 50);
 		HealthBar.setX(175);
@@ -341,8 +371,12 @@ public class UI {
 		UIParts.add(weapon1ammo);
 		UIParts.add(weapon2);
 		UIParts.add(weapon2CDbox);
+		UIParts.add(weapon2Image);
+		UIParts.add(weapon2ammo);
 		UIParts.add(weapon3);
 		UIParts.add(weapon3CDbox);
+		UIParts.add(weapon3Image);
+		UIParts.add(weapon3ammo);
 		UIParts.add(HealthBar);
 		UIParts.add(HealthWarning);
 		UIParts.add(HealthBarBG);
@@ -444,11 +478,11 @@ public class UI {
 		return current;
 	}
 
-	public void updateWeaponCD(int weapon, int cooldown) {
+	public void updateWeaponCD(int weapon, int timeLeft, int cooldown) {
 		switch(weapon) {
-		case 1:	weapon1CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon
-		case 2: weapon2CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
-		case 3: weapon3CDbox.setHeight(100-(cooldown%15)*6.6666666); break; //15 is cd of weapon;
+		case 1:	weapon1CDbox.setHeight(100-(timeLeft%cooldown)*(100/cooldown)); break;
+		case 2: weapon2CDbox.setHeight(100-(timeLeft%cooldown)*(100/cooldown)); break;
+		case 3: weapon3CDbox.setHeight(100-(timeLeft%cooldown)*(100/cooldown)); break;
 		default: break;
 		}
 	}
@@ -525,6 +559,14 @@ public class UI {
 				maxDamageIcon.setVisible(true);
 			}
 			else maxDamageIcon.setVisible(false);
+		case AMMO2:
+			break;
+		case AMMO3:
+			break;
+		case REGENERATION:
+			break;
+		default:
+			break;
 
 		}
 	}
@@ -561,6 +603,14 @@ public class UI {
 				maxDamageIcon.setVisible(false);
 			}
 			else maxDamageIcon.setVisible(true);
+		case AMMO2:
+			break;
+		case AMMO3:
+			break;
+		case REGENERATION:
+			break;
+		default:
+			break;
 
 		}
 	}
