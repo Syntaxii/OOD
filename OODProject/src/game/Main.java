@@ -169,7 +169,7 @@ public class Main extends Application{
 						submitted = true;
 						uiElements.connectLeaderboards();
 					}
-					
+
 					if (event.getCode() == KeyCode.BACK_SPACE) {
 						uiElements.addInitial1("_");
 						uiElements.addInitial2("_");
@@ -180,28 +180,31 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 				//Spawn Zombies
-//				case NUMPAD1: 
-//					spawnZombie(EnemyType.BASIC);
-//					break;
-//
-//				case NUMPAD2:
-//					spawnZombie(EnemyType.FAST);
-//					break;
-//
-//				case NUMPAD3:
-//					spawnZombie(EnemyType.LETHAL);
-//					break;
+				//				case NUMPAD1: 
+				//					spawnZombie(EnemyType.BASIC);
+				//					break;
+				//
+				//				case NUMPAD2:
+				//					spawnZombie(EnemyType.FAST);
+				//					break;
+				//
+				//				case NUMPAD3:
+				//					spawnZombie(EnemyType.LETHAL);
+				//					break;
 
-					//Spawn Powerups
-//				case NUMPAD4:
-//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-//					break;
-//				case NUMPAD5:
-//					break;
-//				case NUMPAD6:
-//					break;
+				//Spawn Powerups
+				//				case NUMPAD4:
+				//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+				//					break;
+				//					
+				//				case NUMPAD5:
+				//					spawnPowerup(PowerupType.AMMO2, 0, 0);
+				//					break;
+				//				case NUMPAD6:
+				//					spawnPowerup(PowerupType.AMMO3, 0, 0);
+				//					break;
 
-//				case NUMPAD7: uiElements.setDebug(); break;
+				//				case NUMPAD7: uiElements.setDebug(); break;
 
 				case NUMPAD0: Reset(); break;
 
@@ -368,12 +371,14 @@ public class Main extends Application{
 			double enemyX = temp.getEnemyX()+95;
 			double enemyY = temp.getEnemyY()+85;
 
-			double chance = 0.066;
-			if (player.getStatusMaxDamage()) chance = 0.033;
+			double chance = 0.1333;
 			if (Math.random() <= chance) {
-				//			double tempChance = Math.random();
-				//			if (tempChance <= .33)
-				spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
+				double eachPowerup = Math.random();
+				if (eachPowerup <= .1)
+					spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
+				else if (eachPowerup <= .55)
+					spawnPowerup(PowerupType.AMMO2, enemyX, enemyY);
+					else spawnPowerup(PowerupType.AMMO3, enemyX, enemyY);
 			}
 		}
 	}
@@ -444,15 +449,15 @@ public class Main extends Application{
 		weapon1CDRemaining = weapon1CDTime - frameCount;
 		if (weapon1CDRemaining <0) weapon1CDRemaining = 0;
 		uiElements.updateWeaponCD(1, weapon1CDRemaining, weapon1CD);
-		
+
 		weapon2CDRemaining = weapon2CDTime - frameCount;
 		if (weapon2CDRemaining <0) weapon2CDRemaining = 0;
 		uiElements.updateWeaponCD(2, weapon2CDRemaining, weapon2CD);
-		
+
 		weapon3CDRemaining = weapon3CDTime - frameCount;
 		if (weapon3CDRemaining <0) weapon3CDRemaining = 0;
 		uiElements.updateWeaponCD(3, weapon3CDRemaining, weapon3CD);
-		
+
 		if (player.isAlive() && started==true && firing == true) {
 			int wep = uiElements.getCurrentWeaponSelection();
 			switch(wep) {
@@ -468,8 +473,8 @@ public class Main extends Application{
 				}
 				break;
 			case 2:
-				//TODO add weapon spread and ammo
-				if (weapon2CDRemaining == 0) {
+				//TODO add weapon spread
+				if (weapon2CDRemaining == 0 && player.getAmmo(PowerupType.AMMO2) > 0) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
 					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
@@ -478,19 +483,24 @@ public class Main extends Application{
 					createBullet(mouseX, mouseY, cx, cy, projectiles);
 					createBullet(mouseX+10, mouseY+10, cx, cy, projectiles);
 					weapon2CDTime = frameCount + weapon2CD;
+					player.decreaseAmmo(PowerupType.AMMO2);
 				}
 				break;
 			case 3: 
-				if (weapon3CDRemaining == 0) {
+				if (weapon3CDRemaining == 0 && player.getAmmo(PowerupType.AMMO3) > 0) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
 					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
 					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
 					createBullet(mouseX, mouseY, cx, cy, projectiles);
 					weapon3CDTime = frameCount + weapon3CD;
+					player.decreaseAmmo(PowerupType.AMMO3);
 				}
 			}
 		}
+
+		uiElements.setAmmo(PowerupType.AMMO2, player.getAmmo(PowerupType.AMMO2));
+		uiElements.setAmmo(PowerupType.AMMO3, player.getAmmo(PowerupType.AMMO3));
 	}
 
 	private void ScoreChecks() {
@@ -597,8 +607,18 @@ public class Main extends Application{
 
 		for (Powerup po : powerupHandler.getPowerups()) {
 			if (po.getPup().getBoundsInParent().intersects(pl.getBoundsInParent())){
-				player.setStatus(po.getType());
-				uiElements.setStatus(po.getType(), true);
+				if (po.getType() == PowerupType.MAXDAMAGE || po.getType() == PowerupType.REGENERATION) {
+					player.setStatus(po.getType());
+					uiElements.setStatus(po.getType(), true);
+				}
+				else if (po.getType() == PowerupType.AMMO2) {
+					int amount = (int)((Math.random()*10)+5);
+					player.increaseAmmo(po.getType(), amount);
+				}
+				else {
+					int amount = (int)((Math.random()*15)+15);
+					player.increaseAmmo(po.getType(), amount);
+				}
 				po.delete();
 				powerupHandler.removePowerup(po);
 				break;

@@ -18,9 +18,9 @@ public class UI {
 	private static UI theUI = null;
 	private ArrayList<Node> UIParts;
 	private Rectangle weaponsUI, weapon1, weapon1CDbox, weapon2, weapon2CDbox, weapon3, weapon3CDbox,
-		HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox, leaderboardsBox;
+	HealthBar, hurtScreen, HealthBarBG, debugBox, pauseScreen, scoreBox, timeBox, leaderboardsBox;
 	private Label weapon1ammo, weapon2ammo, weapon3ammo, HealthWarning, debuginfo1, debuginfo2, debuginfo3, debuginfo4,
-		debugLabel, pauseScreenText, instruction, score, time, surviveText, leaderboards;
+	debugLabel, pauseScreenText, instruction, score, time, surviveText, leaderboards;
 	private String weapon1URL, weapon2URL, weapon3URL;
 	private ImageView weapon1Image, weapon2Image, weapon3Image;
 	private String maxDamageIconURL;//, RegenerationIconURL, AmmoIconURL;
@@ -129,10 +129,10 @@ public class UI {
 
 		weapon1URL = this.getClass().getResource("/images/images/gun.jpg").toString();
 		weapon1Image = new ImageView(weapon1URL);
-		
+
 		weapon2URL = this.getClass().getResource("/images/images/shotgun.png").toString();
 		weapon2Image = new ImageView(weapon2URL);
-		
+
 		weapon3URL = this.getClass().getResource("/images/images/rifle.png").toString();
 		weapon3Image = new ImageView(weapon3URL);
 
@@ -140,8 +140,8 @@ public class UI {
 		maxDamageIconURL = this.getClass().getResource("/images/images/maxDamageIcon.png").toString();
 		maxDamageIcon = new ImageView(maxDamageIconURL);
 		maxDamageIcon.setVisible(false);
-		
-		
+
+
 
 
 		scoreBox = new Rectangle(200, 40);
@@ -204,7 +204,7 @@ public class UI {
 		weapon2.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2.setStrokeWidth(2);
-		
+
 		weapon2ammo = new Label("00");
 		weapon2ammo.setTextFill(Color.DARKRED);
 		weapon2ammo.setFont(new Font("Arial", 40));
@@ -216,7 +216,7 @@ public class UI {
 		weapon2CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon2CDbox.setStrokeWidth(2);
 		weapon2CDbox.setHeight(100);
-		
+
 		weapon2Image.setScaleX(.34);
 		weapon2Image.setScaleY(.34);
 		weapon2Image.setRotate(335);
@@ -227,7 +227,7 @@ public class UI {
 		weapon3.setFill(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3.setStrokeWidth(2);
-		
+
 		weapon3ammo = new Label("00");
 		weapon3ammo.setTextFill(Color.DARKRED);
 		weapon3ammo.setFont(new Font("Arial", 40));
@@ -239,7 +239,7 @@ public class UI {
 		weapon3CDbox.setStroke(Color.rgb(200, 200, 200, 0.5));
 		weapon3CDbox.setStrokeWidth(2);
 		weapon3CDbox.setHeight(100);
-		
+
 		weapon3Image.setScaleX(.042);
 		weapon3Image.setScaleY(.042);
 		weapon3Image.setRotate(340);
@@ -330,37 +330,37 @@ public class UI {
 		instruction.setFont(new Font("Arial", 20));
 		instruction.setTextFill(Color.rgb(200, 200, 60));
 		instruction.relocate(x, y);
-		
+
 		//leaderboards
 		leaderboards = new Label("  #\t\tInitials\t\tScore\n"
-							   + "------------------------------------------------------\n"
-							   + "  Loading........");
+				+ "------------------------------------------------------\n"
+				+ "  Loading........");
 		leaderboards.setFont(new Font("Arial", 20));
 		leaderboards.setTextFill(Color.rgb(200, 200, 60));
 		leaderboards.relocate(x, y);
-		
+
 		leaderboardsTitle = new Label("Leaderboards");
 		leaderboardsTitle.setFont(new Font("Arial", 64));
 		leaderboardsTitle.setTextFill(Color.rgb(200, 200, 60));
 		leaderboardsTitle.relocate(x, y);
-		
+
 		leaderboardsBox = new Rectangle(500, 550);
 		leaderboardsBox.setX(600);
 		leaderboardsBox.setY(300);
 		leaderboardsBox.setFill(Color.rgb(80, 80, 80, 0.9));
 		leaderboardsBox.setStroke(Color.rgb(200, 200, 200, 0.8));
 		leaderboardsBox.setStrokeWidth(3);
-		
+
 		initials = new Label("  Enter Initials: "+initial1+" "+initial2+" "+initial3 + "\nPress Enter to Submit");
 		initials.setFont(new Font("Arial", 30));
 		initials.setTextFill(Color.rgb(200, 200, 60));
 		initials.relocate(x, y);
-		
+
 		leaderboards.setVisible(false);
 		leaderboardsBox.setVisible(false);
 		leaderboardsTitle.setVisible(false);
 		initials.setVisible(false);
-		
+
 		//add everything to UIParts
 		UIParts.add(maxDamageIcon);
 
@@ -399,7 +399,7 @@ public class UI {
 		UIParts.add(leaderboards);
 		UIParts.add(leaderboardsTitle);
 		UIParts.add(initials);
-		
+
 		UIParts.add(scoreBox);
 		UIParts.add(score);
 
@@ -428,16 +428,16 @@ public class UI {
 	}
 
 	public void showLeaderboards() {
-		
+
 		leaderboards.setVisible(true);	
 		leaderboardsBox.setVisible(true);
 		leaderboardsTitle.setVisible(true);
 		initials.setVisible(true);
-		
-		
+
+
 		connectLeaderboards();
 	}
-	
+
 	public void connectLeaderboards() {
 		String connectionURL = "jdbc:sqlserver://databasesystemsproject.cy9rjwfchpnj.us-east-1.rds.amazonaws.com:1433;databaseName=OOD;user=admin;password=mypassword";
 
@@ -447,31 +447,31 @@ public class UI {
 			String sqlstatement = "SELECT TOP 5 initials, highscore FROM Highscores ORDER BY highscore DESC";
 			ResultSet resultSet = statement.executeQuery(sqlstatement);
 			String results = "  #\t\tInitials\t\tScore\n"
-					   + "------------------------------------------------------\n";
+					+ "------------------------------------------------------\n";
 			int k = 1;
 			while (resultSet.next()) {
-				 results += "   "+ k + "\t\t" + resultSet.getString(1) + "     \t\t" + resultSet.getString(2) +"\n";
-				 k++;
+				results += "   "+ k + "\t\t" + resultSet.getString(1) + "     \t\t" + resultSet.getString(2) +"\n";
+				k++;
 			}
-			
+
 			leaderboards.setText(results);
-			
-			
+
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  
 	}
-	
+
 	public void hideLeaderboards() {
 		leaderboards.setVisible(false);	
 		leaderboardsBox.setVisible(false);
 		leaderboardsTitle.setVisible(false);
 		initials.setVisible(false);
-		
+
 		leaderboards.setText("  #\t\tInitials\t\tScore\n"
-				   + "------------------------------------------------------\n"
-				   + "  Loading........");
+				+ "------------------------------------------------------\n"
+				+ "  Loading........");
 	}
 
 	public int getCurrentWeaponSelection() {
@@ -559,15 +559,26 @@ public class UI {
 				maxDamageIcon.setVisible(true);
 			}
 			else maxDamageIcon.setVisible(false);
-		case AMMO2:
-			break;
-		case AMMO3:
-			break;
 		case REGENERATION:
 			break;
 		default:
 			break;
-
+		}
+	}
+	public void setAmmo(PowerupType type, int value) {
+		switch (type) {
+		case AMMO2:
+			if(value < 10)
+				weapon2ammo.setText("0"+value);
+			else weapon2ammo.setText(""+value);
+			break;
+		case AMMO3:
+			if(value < 10)
+				weapon3ammo.setText("0"+value);
+			else weapon3ammo.setText(""+value);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -583,7 +594,7 @@ public class UI {
 		score.relocate(x-95, y-950);
 		timeBox.relocate(x+300, y-950);
 		time.relocate(x+305, y-950);
-		
+
 		initial1 = "_";
 		initial2 = "_";
 		initial3 = "_";
@@ -614,7 +625,7 @@ public class UI {
 
 		}
 	}
-	
+
 	public void refreshInitials() {
 		initials.setText("  Enter Initials: "+initial1+" "+initial2+" "+initial3 + "\nPress Enter to Submit");
 	}
@@ -642,7 +653,7 @@ public class UI {
 			String sqlstatement = "INSERT INTO Highscores (initials, highscore) VALUES ('" + initial1 + initial2 + initial3 +"', '" + getScore() + "');";
 			statement.executeUpdate(sqlstatement);
 			initials.setVisible(false);
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  

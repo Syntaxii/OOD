@@ -1,37 +1,41 @@
 package powerups;
 
 import java.util.ArrayList;
-
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public abstract class Powerup {
 	double powerupX, powerupY;
-	Image image;
-	ImageView pup;
+	ImageView pup; //Powerup
 	PowerupType type;
-	ArrayList<Rectangle> pupbacks;
+	ArrayList<Rectangle> pupbacks; //Powerup backgrounds
 
-	public Powerup(double powerupX, double powerupY, Image newImage) {
+	public Powerup(double powerupX, double powerupY, ImageView newImage) {
 		this.powerupX = powerupX;
 		this.powerupY = powerupY;
-		this.image = newImage;
-		this.pup = new ImageView(image);
+		this.pup = newImage;
 		pupbacks = new ArrayList<Rectangle>();
 
-		pup.setVisible(false);
-		pup.setScaleX(.4);
-		pup.setScaleY(.4);
-		
 		for (int i = 0; i < 20; i++) {
 			pupbacks.add(new Rectangle(100, 15));
-			pupbacks.get(i).setFill(Color.rgb(100, 250, 50, .4));
 			pupbacks.get(i).setRotate(18*i);
 			pupbacks.get(i).setVisible(false);
 		}
 
+	}
+	
+	public void setColor(Color color) {
+		for (int i = 0; i < 20; i++) {
+			pupbacks.get(i).setFill(color);
+		}
+	}
+	
+	public void setSize(double width, double height) {
+		for (int i = 0; i < 20; i++) {
+			pupbacks.get(i).setWidth(width);
+			pupbacks.get(i).setHeight(height);
+		}
 	}
 
 	public void tick() {

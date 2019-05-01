@@ -15,10 +15,10 @@ public class PowerupFactory {
 			    	//powerup = new Regeneration(powerupX, powerupY);
 			    	break;
 			    case AMMO2:
-			    	//powerup = new Ammo2(powerupX, powerupY);
+			    	powerup = new Ammo2Powerup(powerupX, powerupY);
 			    	break;
 			    case AMMO3:
-			    	//powerup = new Ammo3(powerupX, powerupY);
+			    	powerup = new Ammo3Powerup(powerupX, powerupY);
 			    	break;
 			}
 		} catch (Exception e) {

@@ -15,13 +15,15 @@ public class Player {
 	private static boolean playerAlive = true;
 	private boolean isMAXDAMAGE = false;
 	private boolean MAXDAMAGEflash = false;
-	private int maxDamageTime = 15*60; //set length
+	private int maxDamageTime = 10*60; //set length
 	private int maxDamageTimeRemaining = 0; //length remaining
+	private int weapon2ammo = 0;
+	private int weapon3ammo = 0;
 	ColorAdjust faded;
 
 
 	private Player() throws IOException {
-		
+
 		String imgURL = this.getClass().getResource("/images/images/player.gif").toString();
 		Image playerImage = new Image(imgURL);
 		playerpic = new ImageView(playerImage);
@@ -90,16 +92,44 @@ public class Player {
 			isMAXDAMAGE = true;
 			maxDamageTimeRemaining = maxDamageTime;
 			break;
+		case REGENERATION:
+			//TODO add this
+			break;
+		default:
+			break;
 		}
 	}
+
+	public void increaseAmmo(PowerupType type, int amount) {
+		if (type == PowerupType.AMMO2) {
+			if (getAmmo(type) + weapon2ammo >= 99) weapon2ammo = 99;
+			else weapon2ammo += amount;
+		}
+		else {
+			if (getAmmo(type) + weapon3ammo >= 99) weapon3ammo = 99;
+			else weapon3ammo += amount;
+		}
+	}
+
+	public void decreaseAmmo(PowerupType type) {
+		if (type == PowerupType.AMMO2)weapon2ammo--;
+		else weapon3ammo--;
+	}
+
+	public int getAmmo(PowerupType type) {
+		if (type == PowerupType.AMMO2) return weapon2ammo;
+		else return weapon3ammo;
+
+	}
+
 	public boolean getStatusMaxDamage() {
 		return isMAXDAMAGE;
 	}
-	
+
 	public boolean getFlashStatusMaxDamage() {
 		return MAXDAMAGEflash;
 	}
-	
+
 	public void cycleStatuses() {
 		if (isMAXDAMAGE == true) {
 			maxDamageTimeRemaining -= 1;
@@ -112,11 +142,11 @@ public class Player {
 			}
 		}
 	}
-	
+
 	public void reset() {
 		setHealth(100);
 		setAlive();
-		
+
 		maxDamageTimeRemaining = 0;
 		isMAXDAMAGE = false;
 	}
