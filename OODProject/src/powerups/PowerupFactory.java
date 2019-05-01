@@ -12,7 +12,7 @@ public class PowerupFactory {
 			        powerup = new MaxDamagePowerup(powerupX, powerupY);
 			        break;
 			    case REGENERATION:
-			    	//powerup = new Regeneration(powerupX, powerupY);
+			    	powerup = new RegenerationPowerup(powerupX, powerupY);
 			    	break;
 			    case AMMO2:
 			    	powerup = new Ammo2Powerup(powerupX, powerupY);

@@ -23,8 +23,8 @@ public class UI {
 	debugLabel, pauseScreenText, instruction, score, time, surviveText, leaderboards;
 	private String weapon1URL, weapon2URL, weapon3URL;
 	private ImageView weapon1Image, weapon2Image, weapon3Image;
-	private String maxDamageIconURL;//, RegenerationIconURL, AmmoIconURL;
-	private ImageView maxDamageIcon;//, RegenerationIcon, AmmoIcon;
+	private String maxDamageIconURL, RegenerationIconURL;
+	private ImageView maxDamageIcon, RegenerationIcon;
 	private int current; //current weapon selection
 	private double spaceDifference = 133.33;
 	private boolean debugMode;
@@ -78,7 +78,8 @@ public class UI {
 		score.relocate(x-95, y-950);
 		timeBox.relocate(x+300, y-950);
 		time.relocate(x+305, y-950);
-		maxDamageIcon.relocate(x+25, y-150);
+		maxDamageIcon.relocate(x+91, y-143);
+		RegenerationIcon.relocate(x+12, y-360);
 		weaponsUI.relocate(x, y);
 		weapon1.relocate(x, y);
 		weapon1CDbox.relocate(x, y);
@@ -136,12 +137,15 @@ public class UI {
 		weapon3URL = this.getClass().getResource("/images/images/rifle.png").toString();
 		weapon3Image = new ImageView(weapon3URL);
 
-
 		maxDamageIconURL = this.getClass().getResource("/images/images/maxDamageIcon.png").toString();
 		maxDamageIcon = new ImageView(maxDamageIconURL);
 		maxDamageIcon.setVisible(false);
 
-
+		RegenerationIconURL = this.getClass().getResource("/images/images/RegenerationIcon.png").toString();
+		RegenerationIcon = new ImageView(RegenerationIconURL);
+		RegenerationIcon.setVisible(false);
+		RegenerationIcon.setScaleX(.15);
+		RegenerationIcon.setScaleY(.15);
 
 
 		scoreBox = new Rectangle(200, 40);
@@ -363,6 +367,7 @@ public class UI {
 
 		//add everything to UIParts
 		UIParts.add(maxDamageIcon);
+		UIParts.add(RegenerationIcon);
 
 		UIParts.add(weaponsUI);
 		UIParts.add(weapon1);
@@ -407,8 +412,8 @@ public class UI {
 		UIParts.add(time);
 	}
 
-	public void ChangeHP(int hp) {
-		HealthBar.setWidth(hp);
+	public void ChangeHP(double d) {
+		HealthBar.setWidth(d);
 	}
 
 	public void warnHP() {
@@ -559,7 +564,12 @@ public class UI {
 				maxDamageIcon.setVisible(true);
 			}
 			else maxDamageIcon.setVisible(false);
+			break;
 		case REGENERATION:
+			if(bool == true) {
+				RegenerationIcon.setVisible(true);
+			}
+			else RegenerationIcon.setVisible(false);
 			break;
 		default:
 			break;
@@ -605,6 +615,7 @@ public class UI {
 
 		setScore(0);
 		maxDamageIcon.setVisible(false);
+		RegenerationIcon.setVisible(false);
 	}
 
 	public void Flash(PowerupType type) {
@@ -614,11 +625,12 @@ public class UI {
 				maxDamageIcon.setVisible(false);
 			}
 			else maxDamageIcon.setVisible(true);
-		case AMMO2:
-			break;
-		case AMMO3:
 			break;
 		case REGENERATION:
+			if(RegenerationIcon.isVisible()) {
+				RegenerationIcon.setVisible(false);
+			}
+			else RegenerationIcon.setVisible(true);
 			break;
 		default:
 			break;

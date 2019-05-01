@@ -7,9 +7,9 @@ import javafx.scene.image.ImageView;
 import powerups.PowerupType;
 
 public class Player {
-	private volatile static ImageView playerpic;
 
-	private static int Health = 100;
+	private static ImageView playerpic1, playerpic2, playerpic3;
+	private static double Health = 100;
 	private static Player player;
 	private static boolean hpWarn = false;
 	private static boolean playerAlive = true;
@@ -17,16 +17,37 @@ public class Player {
 	private boolean MAXDAMAGEflash = false;
 	private int maxDamageTime = 10*60; //set length
 	private int maxDamageTimeRemaining = 0; //length remaining
+	private boolean isREGENERATION = false;
+	private boolean REGENERATIONflash = false;
+	private int regenerationTime = 10*60; //set length
+	private int regenerationTimeRemaining = 0; //length remaining
 	private int weapon2ammo = 0;
 	private int weapon3ammo = 0;
+	private ImageView [] playerpics;
 	ColorAdjust faded;
 
 
 	private Player() throws IOException {
 
-		String imgURL = this.getClass().getResource("/images/images/player.gif").toString();
-		Image playerImage = new Image(imgURL);
-		playerpic = new ImageView(playerImage);
+		String imgURL1 = this.getClass().getResource("/images/images/player.gif").toString();
+		Image playerImage1 = new Image(imgURL1);
+
+		String imgURL2 = this.getClass().getResource("/images/sprites/player_source_files/shotgun/idle/survivor-idle_shotgun_0.png").toString();
+		Image playerImage2 = new Image(imgURL2);
+		
+		String imgURL3 = this.getClass().getResource("/images/sprites/player_source_files/rifle/move/survivor-move_rifle_0.png").toString();
+		Image playerImage3 = new Image(imgURL3);
+
+		playerpic1 = new ImageView(playerImage1);
+		playerpic2 = new ImageView(playerImage2);
+		playerpic2.setVisible(false);
+		playerpic3 = new ImageView(playerImage3);
+		playerpic3.setVisible(false);
+		playerpics = new ImageView[3];
+		playerpics[0] = playerpic1;
+		playerpics[1] = playerpic2;
+		playerpics[2] = playerpic3;
+		
 		faded = new ColorAdjust();
 		faded.setSaturation(-.3);
 		faded.setBrightness(.3);
@@ -45,15 +66,16 @@ public class Player {
 		return player;
 	}
 
-	public ImageView getPic() {
-		return playerpic;
+	public ImageView[] getPic() {
+		return playerpics;
 	}
 
-	public int getHealth() {
+	public double getHealth() {
 		return Health;
 	}
 
-	public void setHealth(int hp) {
+	public void setHealth(double hp) {
+		if (hp >= 100) hp = 100;
 		Health = hp;
 		if (hp < 40) {
 			hpWarn = true;
@@ -80,20 +102,24 @@ public class Player {
 	public void setAlive() {
 		playerAlive = true;
 	}
-	public void setInvulnerable(boolean v) {
-		if(v==true) {
-			playerpic.setEffect(faded);
+	public void setInvulnerable(boolean g) {
+		for (ImageView v : playerpics)
+		if(g==true) {
+			v.setEffect(faded);
 		}
-		else playerpic.setEffect(null);
+		else v.setEffect(null);
 	}
 	public void setStatus(PowerupType type) {
 		switch(type) {
 		case MAXDAMAGE:
 			isMAXDAMAGE = true;
+			MAXDAMAGEflash = false;
 			maxDamageTimeRemaining = maxDamageTime;
 			break;
 		case REGENERATION:
-			//TODO add this
+			isREGENERATION = true;
+			REGENERATIONflash = false;
+			regenerationTimeRemaining = regenerationTime; 
 			break;
 		default:
 			break;
@@ -130,15 +156,34 @@ public class Player {
 		return MAXDAMAGEflash;
 	}
 
+	public boolean getStatusRegeneration() {
+		return isREGENERATION;
+	}
+
+	public boolean getFlashStatusRegeneration() {
+		return REGENERATIONflash;
+	}
+
 	public void cycleStatuses() {
-		if (isMAXDAMAGE == true) {
-			maxDamageTimeRemaining -= 1;
+		if (isMAXDAMAGE) {
+			maxDamageTimeRemaining--;
 			if (maxDamageTimeRemaining == 0) {
 				isMAXDAMAGE = false;
 				MAXDAMAGEflash = false;
 			}
 			else if(maxDamageTimeRemaining == 3*60) {
 				MAXDAMAGEflash = true;
+			}
+		}
+
+		if (isREGENERATION) {
+			regenerationTimeRemaining--;
+			if (regenerationTimeRemaining == 0) {
+				isREGENERATION = false;
+				REGENERATIONflash = false;
+			}
+			else if(regenerationTimeRemaining == 3*60) {
+				REGENERATIONflash = true;
 			}
 		}
 	}
@@ -149,5 +194,36 @@ public class Player {
 
 		maxDamageTimeRemaining = 0;
 		isMAXDAMAGE = false;
+		MAXDAMAGEflash = false;
+
+		regenerationTimeRemaining = 0;
+		isREGENERATION = false;
+		REGENERATIONflash = false;
+		
+		weapon2ammo = 0;
+		weapon3ammo = 0;
+
+	}
+	public void changePic(int i) {
+		switch(i) {
+		case 1:
+			playerpic1.setVisible(true);
+			playerpic2.setVisible(false);
+			playerpic3.setVisible(false);
+			break;
+		case 2:
+			playerpic1.setVisible(false);
+			playerpic2.setVisible(true);
+			playerpic3.setVisible(false);
+			break;
+		case 3:
+			playerpic1.setVisible(false);
+			playerpic2.setVisible(false);
+			playerpic3.setVisible(true);
+			break;
+		default:
+			break;
+		}
+
 	}
 }

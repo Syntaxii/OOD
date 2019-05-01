@@ -49,7 +49,7 @@ public class Main extends Application{
 	private int frameCount = 0;
 	private boolean isVulnerable = true;
 	private int invulnerableTime = 0;
-	private int weapon1CD = 15, weapon2CD = 45, weapon3CD = 6; //weapon cooldown (firerate). This number is over 60 to find rate
+	private int weapon1CD = 25, weapon2CD = 45, weapon3CD = 6; //weapon cooldown (firerate). This number is over 60 to find rate
 	private int weapon1CDTime = 0, weapon2CDTime = 0, weapon3CDTime = 0;  //current frameCount + weaponCD = weaponCDTime
 	private int weapon1CDRemaining = 0, weapon2CDRemaining = 0, weapon3CDRemaining = 0;
 	private int d = 10; //pixel gap between mouseCursor elements
@@ -75,8 +75,11 @@ public class Main extends Application{
 		mouseY = 0.0;
 
 		player = Player.getInstance(); //Singleton instantiation of player
-		player.getPic().setScaleX(.4);
-		player.getPic().setScaleY(.4);
+		for (ImageView p : player.getPic()) {
+			p.setScaleX(.4);
+			p.setScaleY(.4);
+		}
+
 
 		createMouseCursor();
 
@@ -95,7 +98,7 @@ public class Main extends Application{
 		obstacleCollision = col.getObstacles();
 
 		root.getChildren().add(floor);
-		root.getChildren().add(player.getPic()); //collision boxes WIP
+		root.getChildren().addAll(player.getPic()); //collision boxes WIP
 		root.getChildren().addAll(uiElements.getUIElements());
 		root.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
 
@@ -137,9 +140,18 @@ public class Main extends Application{
 					case DOWN:  	goDown = true; break;
 					case LEFT:  	goLeft = true; break;
 					case RIGHT: 	goRight = true; break;
-					case DIGIT1: 	uiElements.changeWeaponFocus(1); break;
-					case DIGIT2: 	uiElements.changeWeaponFocus(2); break;
-					case DIGIT3: 	uiElements.changeWeaponFocus(3); break;
+					case DIGIT1:
+						uiElements.changeWeaponFocus(1);
+						player.changePic(1);
+						break;
+					case DIGIT2:
+						uiElements.changeWeaponFocus(2);
+						player.changePic(2);
+						break;
+					case DIGIT3:
+						uiElements.changeWeaponFocus(3);
+						player.changePic(3);
+						break;
 					default:
 						break;
 					}
@@ -179,50 +191,54 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-				//Spawn Zombies
-				//				case NUMPAD1: 
-				//					spawnZombie(EnemyType.BASIC);
-				//					break;
-				//
-				//				case NUMPAD2:
-				//					spawnZombie(EnemyType.FAST);
-				//					break;
-				//
-				//				case NUMPAD3:
-				//					spawnZombie(EnemyType.LETHAL);
-				//					break;
+//				//Spawn Zombies
+//				case NUMPAD1: 
+//					spawnZombie(EnemyType.BASIC);
+//					break;
+//
+//				case NUMPAD2:
+//					spawnZombie(EnemyType.FAST);
+//					break;
+//
+//				case NUMPAD3:
+//					spawnZombie(EnemyType.LETHAL);
+//					break;
+//
+//					//Spawn Powerups
+//				case NUMPAD4:
+//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+//					break;
+//				case NUMPAD5:
+//					spawnPowerup(PowerupType.REGENERATION, 0, 0);
+//					break;
+//
+//				case NUMPAD6:
+//					spawnPowerup(PowerupType.AMMO2, 0, 0);
+//					break;
+//				case NUMPAD7:
+//					spawnPowerup(PowerupType.AMMO3, 0, 0);
+//					break;
 
-				//Spawn Powerups
-				//				case NUMPAD4:
-				//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-				//					break;
-				//					
-				//				case NUMPAD5:
-				//					spawnPowerup(PowerupType.AMMO2, 0, 0);
-				//					break;
-				//				case NUMPAD6:
-				//					spawnPowerup(PowerupType.AMMO3, 0, 0);
-				//					break;
 
-				//				case NUMPAD7: uiElements.setDebug(); break;
+				case NUMPAD8: uiElements.setDebug(); break;
 
 				case NUMPAD0: Reset(); break;
 
-				//				case MINUS: 	stage.setFullScreen(true); 
-				//				uiElements.changeUIPositions((width/2)-200, height-110);
-				//				stage.setFullScreenExitHint("");
-				//				break;
+				case MINUS: 	stage.setFullScreen(true); 
+				uiElements.changeUIPositions((width/2)-200, height-110);
+				stage.setFullScreenExitHint("");
+				break;
 
 				case ESCAPE: 	System.exit(0); break;
 
-				//				case ENTER:                
-				//					stage.setHeight(newHeight);
-				//					stage.setWidth(newWidth);
-				//					stage.setFullScreen(false);
-				//					stage.setMaximized(false);
-				//					moveTo(newWidth/2, newHeight/2);
-				//					uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
-				//					break;
+				case ENTER:                
+					stage.setHeight(newHeight);
+					stage.setWidth(newWidth);
+					stage.setFullScreen(false);
+					stage.setMaximized(false);
+					moveTo(newWidth/2, newHeight/2);
+					uiElements.changeUIPositions((newWidth/2)-200, newHeight-110);
+					break;
 				default:
 					break;
 
@@ -376,9 +392,11 @@ public class Main extends Application{
 				double eachPowerup = Math.random();
 				if (eachPowerup <= .1)
 					spawnPowerup(PowerupType.MAXDAMAGE, enemyX, enemyY);
-				else if (eachPowerup <= .55)
+				else if (eachPowerup <= .2)
+					spawnPowerup(PowerupType.REGENERATION, enemyX, enemyY);
+				else if (eachPowerup <= .6)
 					spawnPowerup(PowerupType.AMMO2, enemyX, enemyY);
-					else spawnPowerup(PowerupType.AMMO3, enemyX, enemyY);
+				else spawnPowerup(PowerupType.AMMO3, enemyX, enemyY);
 			}
 		}
 	}
@@ -410,13 +428,21 @@ public class Main extends Application{
 
 	private void PlayerChecks() {
 		if (player.isAlive()) {
+			
 			handleMovement();
 			rotatePlayer();
 			checkCollision();
+			if (player.getStatusRegeneration()) {
+				player.setHealth(player.getHealth()+.2);
+			}
+			uiElements.ChangeHP(player.getHealth()*4);
 		}
 
 		if(player.getFlashStatusMaxDamage() && frameCount % 15 ==0) uiElements.Flash(PowerupType.MAXDAMAGE);
 		else if(!player.getStatusMaxDamage()) uiElements.setStatus(PowerupType.MAXDAMAGE, false);
+
+		if(player.getFlashStatusRegeneration() && frameCount % 15 ==0) uiElements.Flash(PowerupType.REGENERATION);
+		else if(!player.getStatusRegeneration()) uiElements.setStatus(PowerupType.REGENERATION, false);
 
 		if(!player.isAlive()) {
 			uiElements.deadHP(); //if no health, tells the player he is dead
@@ -465,23 +491,26 @@ public class Main extends Application{
 				if (weapon1CDRemaining == 0) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
-					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 
-					createBullet(mouseX, mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(.1)+mouseX, calculateWeaponSpread(.1)+mouseY, cx, cy, projectiles);
 					weapon1CDTime = frameCount + weapon1CD;
 				}
 				break;
 			case 2:
-				//TODO add weapon spread
 				if (weapon2CDRemaining == 0 && player.getAmmo(PowerupType.AMMO2) > 0) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
-					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
-					createBullet(mouseX-10, mouseY-10, cx, cy, projectiles);
-					createBullet(mouseX, mouseY, cx, cy, projectiles);
-					createBullet(mouseX+10, mouseY+10, cx, cy, projectiles);
+					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
+					
+					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
+					createBullet(calculateWeaponSpread(.1)+mouseX, calculateWeaponSpread(.1)+mouseY, cx, cy, projectiles);
 					weapon2CDTime = frameCount + weapon2CD;
 					player.decreaseAmmo(PowerupType.AMMO2);
 				}
@@ -490,9 +519,9 @@ public class Main extends Application{
 				if (weapon3CDRemaining == 0 && player.getAmmo(PowerupType.AMMO3) > 0) {
 					setMouseCursorGap(8);
 					setMouseColor(Color.SALMON);
-					cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-					cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
-					createBullet(mouseX, mouseY, cx, cy, projectiles);
+					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
+					createBullet(calculateWeaponSpread(.2)+mouseX, calculateWeaponSpread(.2)+mouseY, cx, cy, projectiles);
 					weapon3CDTime = frameCount + weapon3CD;
 					player.decreaseAmmo(PowerupType.AMMO3);
 				}
@@ -551,10 +580,10 @@ public class Main extends Application{
 
 	private void checkCollision() { //Check collision between player and obstacles, enemies and projectiles, enemies and player
 
-		double pw = player.getPic().getBoundsInParent().getWidth();
-		double ph = player.getPic().getBoundsInParent().getHeight();
-		double pminx = player.getPic().getBoundsInParent().getMinX()+(pw*1/4);
-		double pminy = player.getPic().getBoundsInParent().getMinY()+(ph*1/4);
+		double pw = player.getPic()[0].getBoundsInParent().getWidth();
+		double ph = player.getPic()[0].getBoundsInParent().getHeight();
+		double pminx = player.getPic()[0].getBoundsInParent().getMinX()+(pw*1/4);
+		double pminy = player.getPic()[0].getBoundsInParent().getMinY()+(ph*1/4);
 		pw = pw*1/2;
 		ph = ph*1/2;
 		Rectangle pl = new Rectangle(pminx, pminy, pw, ph); //player hitbox; smaller than actual player hitbox, but used for collision detection
@@ -563,7 +592,6 @@ public class Main extends Application{
 			if (pl.intersects(i.getBoundsInParent())){
 				if(isVulnerable==true) {
 					player.setHealth(player.getHealth()-10);
-					uiElements.ChangeHP(player.getHealth()*4);
 					invulnerableTime = frameCount + 60;
 					isVulnerable=false;
 				}
@@ -598,7 +626,6 @@ public class Main extends Application{
 
 				if(isVulnerable==true) {
 					player.setHealth(player.getHealth()-e.getDamage());
-					uiElements.ChangeHP(player.getHealth()*4);
 					invulnerableTime = frameCount + 60;
 					isVulnerable=false;
 				}
@@ -659,31 +686,34 @@ public class Main extends Application{
 	}
 
 	private void rotatePlayer() {
-		cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-		cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+		cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
-		player.getPic().setRotate(angle);
+		for (ImageView p : player.getPic())
+		p.setRotate(angle);
 	}
 
 	private void getWeaponXandY() { 
-		weaponX = cx + Math.cos(Math.toRadians(angle+40))*35;
-		weaponY = cy + Math.sin(Math.toRadians(angle+40))*35;
+		weaponX = cx + Math.cos(Math.toRadians(angle+16))*70;
+		weaponY = cy + Math.sin(Math.toRadians(angle+16))*70;
 	}
 
 	private void moveBy(double dx, double dy) {
-		cx = player.getPic().getLayoutX() + player.getPic().getBoundsInLocal().getWidth() / 2;
-		cy = player.getPic().getLayoutY() + player.getPic().getBoundsInLocal().getHeight() / 2;
+		cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+		cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		double x = cx + dx;
 		double y = cy - dy;
 		moveTo(x, y);
 	}
 
 	private void moveTo(double x, double y) {
-		double tempx = player.getPic().getBoundsInLocal().getWidth() / 2;
-		double tempy = player.getPic().getBoundsInLocal().getHeight() / 2;
+		double tempx = player.getPic()[0].getBoundsInLocal().getWidth() / 2;
+		double tempy = player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		if (x - tempx >= 0 && x + tempx <= width &&
 				y - tempy >= 0 && y + tempy <= height) {
-			player.getPic().relocate(x - tempx, y - tempy);
+			 player.getPic()[0].relocate(x - tempx, y - tempy);
+			 player.getPic()[1].relocate(x - tempx-34, y - tempy-3);
+			 player.getPic()[2].relocate(x - tempx-34+.2, y - tempy-3+.4);
 		}
 
 	}
@@ -696,8 +726,8 @@ public class Main extends Application{
 	}
 
 	private void moveMouse() {
-		NewmouseX = mouseX + Math.cos(Math.toRadians(angle+40))*35;
-		NewmouseY = mouseY + Math.sin(Math.toRadians(angle+40))*35;
+		NewmouseX = mouseX + Math.cos(Math.toRadians(angle+16))*70;
+		NewmouseY = mouseY + Math.sin(Math.toRadians(angle+16))*70;
 
 		mouseCursor1.setX(NewmouseX+d-5);
 		mouseCursor1.setY(NewmouseY+d-2);
@@ -734,6 +764,8 @@ public class Main extends Application{
 		powerupHandler.clearPowerups();
 		frameCount=0;
 		weapon1CDTime = frameCount;
+		weapon2CDTime = frameCount;
+		weapon3CDTime = frameCount;
 		leaderboardIsShowing = false;
 		uiElements.hideLeaderboards();
 		currentInitialsAmount = 0;
@@ -799,5 +831,13 @@ public class Main extends Application{
 			e.printStackTrace();
 		} //FACTORY 
 
+	}
+	
+	private double calculateWeaponSpread(double amount) {
+		double tempx = cx-mouseX;
+		double tempy = cy-mouseY;
+		double weaponSpread = Math.sqrt(Math.pow(tempx, 2) + Math.pow(tempy, 2));
+		
+		return (Math.random()-.5)*(amount*weaponSpread);
 	}
 }

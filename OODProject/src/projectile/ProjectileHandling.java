@@ -5,7 +5,7 @@ public class ProjectileHandling {
 	
 	LinkedList<Projectile> projectiles = new LinkedList<Projectile>();
 
-	int projectileLifeSpan = 300;
+	private int projectileLifeSpan = 300;
 	
 	public void cycleProjectiles() {
 		for (int j = 0; j < projectiles.size(); j++) {
@@ -37,6 +37,8 @@ public class ProjectileHandling {
 		for (int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).timeoutProjectile();
 		}
+		
+		projectiles.removeAll(projectiles);
 	}
 
 }
