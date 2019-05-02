@@ -14,15 +14,14 @@ import java.util.ArrayList;
 import javafx.stage.*;
 import javafx.animation.*;
 import javafx.application.*;
-import javafx.collections.ObservableList;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -437,18 +436,29 @@ public class Main extends Application{
 		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
 			temp.add(eHandler.getEnemies().get(i).getEnemy());
 		}
+		
+		System.out.println("temp size, enemies: " + temp.size());
+		System.out.println("enemies size, enemies: " + enemies.getChildren().size());
 		enemies.getChildren().retainAll(temp);
+		System.out.println("enemies size, after: " + enemies.getChildren().size());
 		temp.clear();
-		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
-			temp.add(eHandler.getEnemies().get(i).getEnemy());
+		for (int i = 0; i < powerupHandler.getPowerups().size(); i++) {
+			temp.add(powerupHandler.getPowerups().get(i).getPup());
 		}
-		powerups.getChildren();
+		System.out.println("temp size, powerups: " + temp.size());
+		System.out.println("powerups size, powerups: " + powerups.getChildren().size());
+		powerups.getChildren().retainAll(temp);
+		System.out.println("powerups size, after: " + powerups.getChildren().size());
 		temp.clear();
-		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
-			temp.add(eHandler.getEnemies().get(i).getEnemy());
+		ArrayList<Circle> temp2 = new ArrayList<Circle>();
+		for (int i = 0; i < pHandler.getProjectiles().size(); i++) {
+			temp2.add(pHandler.getProjectiles().get(i).getProjectile());
 		}
-		projectiles.getChildren();
-		temp.clear();
+		System.out.println("temp size, projectiles: " + temp2.size());
+		System.out.println("projectiles size, projectiles: " + projectiles.getChildren().size());
+		projectiles.getChildren().retainAll(temp2);
+		System.out.println("projectiles size, after: " + projectiles.getChildren().size());
+		temp2.clear();
 	}
 
 	private void NextFrame() {
