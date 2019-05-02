@@ -1,9 +1,9 @@
 package projectile;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class ProjectileHandling {
 	
-	LinkedList<Projectile> projectiles = new LinkedList<Projectile>();
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
 	private int projectileLifeSpan = 300;
 	
@@ -25,7 +25,7 @@ public class ProjectileHandling {
 		projectiles.add(e);
 	}
 	
-	public LinkedList<Projectile> getProjectiles(){
+	public ArrayList<Projectile> getProjectiles(){
 		return projectiles;
 	}
 	

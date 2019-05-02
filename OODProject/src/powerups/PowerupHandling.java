@@ -1,11 +1,11 @@
 package powerups;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 
 public class PowerupHandling {
 
-	LinkedList<Powerup> powerups = new LinkedList<Powerup>();
+	ArrayList<Powerup> powerups = new ArrayList<Powerup>();
 
 	private int PowerupLifespan = 60*10;
 
@@ -34,7 +34,7 @@ public class PowerupHandling {
 		powerups.remove(d);
 	}
 
-	public LinkedList<Powerup> getPowerups(){
+	public ArrayList<Powerup> getPowerups(){
 		return powerups;
 	}
 

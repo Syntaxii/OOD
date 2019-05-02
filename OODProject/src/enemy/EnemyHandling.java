@@ -1,9 +1,9 @@
 package enemy;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class EnemyHandling {
 
-	LinkedList<Enemy> enemies = new LinkedList<Enemy>();
+	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	Enemy lastKilled = null;
 	int score = 0;
 	int basicDead = 0;
@@ -53,7 +53,7 @@ public class EnemyHandling {
 		}
 	}
 
-	public LinkedList<Enemy> getEnemies(){
+	public ArrayList<Enemy> getEnemies(){
 		return enemies;
 	}
 
