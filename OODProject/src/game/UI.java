@@ -424,6 +424,14 @@ public class UI {
 		if (HealthWarning.isVisible() == true) HealthWarning.setVisible(false);
 		else HealthWarning.setVisible(true);
 	}
+	
+	public boolean checkwarnHP() {
+		return HealthWarning.isVisible();
+	}
+	
+	public void turnOffwarnHP() {
+		HealthWarning.setVisible(false);
+	}
 
 	public void deadHP() {
 		HealthWarning.setVisible(true);

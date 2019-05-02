@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javafx.stage.*;
 import javafx.animation.*;
 import javafx.application.*;
+import javafx.collections.ObservableList;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -21,6 +22,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.event.*;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -214,39 +216,39 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-				//Spawn Zombies
-				case NUMPAD1:
-					spawnZombie(EnemyType.BASIC);
-					break;
-
-				case NUMPAD2:
-					spawnZombie(EnemyType.FAST);
-					break;
-
-				case NUMPAD3:
-					spawnZombie(EnemyType.LETHAL);
-					break;
-
-					//Spawn Powerups
-				case NUMPAD4:
-					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-					break;
-				case NUMPAD5:
-					spawnPowerup(PowerupType.REGENERATION, 0, 0);
-					break;
-
-				case NUMPAD6:
-					spawnPowerup(PowerupType.AMMO2, 0, 0);
-					break;
-				case NUMPAD7:
-					spawnPowerup(PowerupType.AMMO3, 0, 0);
-					break;
+//				//Spawn Zombies
+//				case NUMPAD1:
+//					spawnZombie(EnemyType.BASIC);
+//					break;
+//
+//				case NUMPAD2:
+//					spawnZombie(EnemyType.FAST);
+//					break;
+//
+//				case NUMPAD3:
+//					spawnZombie(EnemyType.LETHAL);
+//					break;
+//
+//					//Spawn Powerups
+//				case NUMPAD4:
+//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+//					break;
+//				case NUMPAD5:
+//					spawnPowerup(PowerupType.REGENERATION, 0, 0);
+//					break;
+//
+//				case NUMPAD6:
+//					spawnPowerup(PowerupType.AMMO2, 0, 0);
+//					break;
+//				case NUMPAD7:
+//					spawnPowerup(PowerupType.AMMO3, 0, 0);
+//					break;
 
 
 				case NUMPAD8: uiElements.setDebug(); break;
 				
-				case NUMPAD9: player.setHealth(0);
-				break;
+//				case NUMPAD9: player.setHealth(0);
+//				break;
 
 				case NUMPAD0: Reset(); break;
 
@@ -375,11 +377,11 @@ public class Main extends Application{
 					PlayerChecks();
 					WeaponChecks();
 					ScoreChecks();
-					cleanUp();
 					frameCount++;
 				}
 				DebugInfo();
 				NextFrame();
+				cleanUp();
 			}
 		};
 		timer.start();
@@ -431,9 +433,22 @@ public class Main extends Application{
 	}
 	
 	private void cleanUp(){
-		enemies.getChildren().retainAll(eHandler.getEnemies());
-		powerups.getChildren().retainAll(powerupHandler.getPowerups());
-		projectiles.getChildren().retainAll(pHandler.getProjectiles());
+		ArrayList<ImageView> temp = new ArrayList<ImageView>();
+		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
+			temp.add(eHandler.getEnemies().get(i).getEnemy());
+		}
+		enemies.getChildren().retainAll(temp);
+		temp.clear();
+		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
+			temp.add(eHandler.getEnemies().get(i).getEnemy());
+		}
+		powerups.getChildren();
+		temp.clear();
+		for (int i = 0; i < eHandler.getEnemies().size(); i++) {
+			temp.add(eHandler.getEnemies().get(i).getEnemy());
+		}
+		projectiles.getChildren();
+		temp.clear();
 	}
 
 	private void NextFrame() {
@@ -488,6 +503,10 @@ public class Main extends Application{
 		}
 		else if (player.checkHPWarn() && frameCount%10==0) {
 			uiElements.warnHP(); ///if health is low, flash a warning for the player
+		}
+		
+		else if (!player.checkHPWarn() && uiElements.checkwarnHP()) {
+			uiElements.turnOffwarnHP();
 		}
 
 		if(player.isAlive() && frameCount%60==0) uiElements.updateTime(frameCount/60);
@@ -791,6 +810,9 @@ public class Main extends Application{
 		pHandler.clearProjectiles();
 		eHandler.clearEnemies();
 		powerupHandler.clearPowerups();
+		enemies.getChildren().clear();
+		powerups.getChildren().clear();
+		projectiles.getChildren().clear();
 		frameCount=0;
 		weapon1CDTime = frameCount;
 		weapon2CDTime = frameCount;
