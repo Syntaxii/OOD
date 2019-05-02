@@ -33,7 +33,7 @@ public class Main extends Application{
 	static String imgURL;
 	private Player player;
 	private Pane root;
-	private Pane floor, obstacles, projectiles;
+	private Pane floor, obstacles, projectiles, enemies, powerups;
 	private ArrayList<ImageView> obstacleCollision;
 	private Rectangle mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4;
 	boolean goUp, goDown, goRight, goLeft;
@@ -89,7 +89,9 @@ public class Main extends Application{
 		obstacles = new Pane();
 		floor.getChildren().add(obstacles);
 		projectiles = new Pane();
-
+		enemies = new Pane();
+		powerups = new Pane();
+		
 		uiElements = UI.getUI();
 		uiElements.changeUIPositions((width/2)-200, height-110);
 
@@ -102,7 +104,10 @@ public class Main extends Application{
 		root.getChildren().addAll(uiElements.getUIElements());
 		root.getChildren().addAll(mouseCursor1, mouseCursor2, mouseCursor3, mouseCursor4);
 
+		floor.getChildren().add(powerups);
 		floor.getChildren().add(projectiles);
+		floor.getChildren().add(enemies);
+
 
 		uiElements.changeWeaponFocus(1); //Default
 
@@ -314,6 +319,8 @@ public class Main extends Application{
 		});
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
+				setMouseCursorGap(8);
+				setMouseColor(Color.SALMON);
 				mouseX = e.getX();
 				mouseY = e.getY();
 				firing = true;
@@ -368,6 +375,7 @@ public class Main extends Application{
 					PlayerChecks();
 					WeaponChecks();
 					ScoreChecks();
+					cleanUp();
 					frameCount++;
 				}
 				DebugInfo();
@@ -420,6 +428,12 @@ public class Main extends Application{
 				else spawnPowerup(PowerupType.AMMO3, enemyX, enemyY);
 			}
 		}
+	}
+	
+	private void cleanUp(){
+		enemies.getChildren().retainAll(eHandler.getEnemies());
+		powerups.getChildren().retainAll(powerupHandler.getPowerups());
+		projectiles.getChildren().retainAll(pHandler.getProjectiles());
 	}
 
 	private void NextFrame() {
@@ -510,8 +524,6 @@ public class Main extends Application{
 			switch(wep) {
 			case 1:
 				if (weapon1CDRemaining == 0) {
-					setMouseCursorGap(8);
-					setMouseColor(Color.SALMON);
 					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
 					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 
@@ -521,8 +533,6 @@ public class Main extends Application{
 				break;
 			case 2:
 				if (weapon2CDRemaining == 0 && player.getAmmo(PowerupType.AMMO2) > 0) {
-					setMouseCursorGap(8);
-					setMouseColor(Color.SALMON);
 					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
 					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 
@@ -538,8 +548,6 @@ public class Main extends Application{
 				break;
 			case 3: 
 				if (weapon3CDRemaining == 0 && player.getAmmo(PowerupType.AMMO3) > 0) {
-					setMouseCursorGap(8);
-					setMouseColor(Color.SALMON);
 					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
 					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 					createBullet(calculateWeaponSpread(.2)+mouseX, calculateWeaponSpread(.2)+mouseY, cx, cy, projectiles);
@@ -798,7 +806,6 @@ public class Main extends Application{
 		if (rngForZombieSpawn <= .6) spawnZombie(EnemyType.BASIC);
 		else if (rngForZombieSpawn > .6 && rngForZombieSpawn <=.9)spawnZombie(EnemyType.FAST);
 		else spawnZombie(EnemyType.LETHAL);
-
 	}
 
 	private void spawnZombie(EnemyType type) { //spawn offscreen
@@ -827,7 +834,7 @@ public class Main extends Application{
 			e.printStackTrace();
 		} //FACTORY 
 		eHandler.addEnemy(bz);
-		floor.getChildren().add(bz.getEnemy());
+		enemies.getChildren().add(bz.getEnemy());
 		bz.spawn();
 	}
 
@@ -845,8 +852,8 @@ public class Main extends Application{
 		try {
 			Powerup pu = PowerupFactory.createPowerup(type, locationX, locationY);
 			powerupHandler.addPowerup(pu);
-			floor.getChildren().addAll(pu.getPupBackground());
-			floor.getChildren().add(pu.getPup());
+			powerups.getChildren().addAll(pu.getPupBackground());
+			powerups.getChildren().add(pu.getPup());
 			pu.spawn();
 		} catch (IOException e) {
 			e.printStackTrace();
