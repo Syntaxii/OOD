@@ -241,7 +241,7 @@ public class Main extends Application{
 					break;
 				default:
 					break;
-
+					
 				}
 			}
 		});
@@ -690,7 +690,7 @@ public class Main extends Application{
 		cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
 		for (ImageView p : player.getPic())
-		p.setRotate(angle);
+		p.setRotate(angle-3);
 	}
 
 	private void getWeaponXandY() { 
@@ -712,8 +712,8 @@ public class Main extends Application{
 		if (x - tempx >= 0 && x + tempx <= width &&
 				y - tempy >= 0 && y + tempy <= height) {
 			 player.getPic()[0].relocate(x - tempx, y - tempy);
-			 player.getPic()[1].relocate(x - tempx-34, y - tempy-3);
-			 player.getPic()[2].relocate(x - tempx-34+.2, y - tempy-3+.4);
+			 player.getPic()[1].relocate(x - tempx-7, y - tempy+2);
+			 player.getPic()[2].relocate(x - tempx-7, y - tempy+2);
 		}
 
 	}

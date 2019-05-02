@@ -32,7 +32,6 @@ public class Player {
 		String imgURL1 = this.getClass().getResource("/images/sprites/sprite_animation/player_animation/player_handgun/player_handgun_move.gif").toString();
 		Image playerImage1 = new Image(imgURL1);
 
-		
 		String imgURL2 = this.getClass().getResource("/images/sprites/sprite_animation/player_animation/player_shotgun/player_shotgun_move.gif").toString();
 		Image playerImage2 = new Image(imgURL2);
 		

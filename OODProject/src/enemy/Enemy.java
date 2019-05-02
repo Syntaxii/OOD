@@ -31,8 +31,8 @@ public abstract class Enemy{
 	public void move() {
 		rotate();
 		double radianangle = Math.toRadians(angle);
-		double tempx = (playerX-159)-enemyX;
-		double tempy = (playerY-146)-enemyY;
+		double tempx = (playerX-145)-enemyX;
+		double tempy = (playerY-137)-enemyY;
 		if (Math.sqrt(Math.pow(tempx, 2) + Math.pow(tempy, 2)) >= 60) {
 			moveX = Math.cos(radianangle);
 			enemyX = enemyX + (moveX*eSpeed);
