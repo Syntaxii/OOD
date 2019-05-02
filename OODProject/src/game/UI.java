@@ -33,6 +33,8 @@ public class UI {
 	private Label initials;
 	private Label leaderboardsTitle;
 	private String initial1 = "_", initial2 = "_", initial3 = "_";
+	private int leaderboardStart = 1;
+	private ArrayList<String[]> leaderboardsStrings; 
 
 	private UI(){
 		declareUI();
@@ -74,10 +76,10 @@ public class UI {
 	public void changeUIPositions(double newx, double newy) {
 		x = newx;
 		y = newy;
-		scoreBox.relocate(x-100, y-950);
-		score.relocate(x-95, y-950);
-		timeBox.relocate(x+300, y-950);
-		time.relocate(x+305, y-950);
+		scoreBox.relocate(x-100, y-930);
+		score.relocate(x-95, y-930);
+		timeBox.relocate(x+300, y-930);
+		time.relocate(x+305, y-930);
 		maxDamageIcon.relocate(x+91, y-143);
 		RegenerationIcon.relocate(x+12, y-360);
 		weaponsUI.relocate(x, y);
@@ -103,7 +105,7 @@ public class UI {
 		leaderboardsBox.relocate(x-50,  y-700);
 		leaderboardsTitle.relocate(x+6, y-675);
 		leaderboards.relocate(x+30, y-580);
-		initials.relocate(x+60, y-400);
+		initials.relocate(x+60, y-370);
 	}
 
 	private void changeColorToNormal(Rectangle rec) {
@@ -337,8 +339,10 @@ public class UI {
 
 		//leaderboards
 		leaderboards = new Label("  #\t\tInitials\t\tScore\n"
-				+ "------------------------------------------------------\n"
-				+ "  Loading........");
+				+ "---------------------------------------------------\n"
+				+ "  Loading........\n\n\n\n\n"
+				+ "---------------------------------------------------\n"
+				+"    \u2191 PG_UP    \u21BB TAB    \u2193 PG_DOWN    \n");
 		leaderboards.setFont(new Font("Arial", 20));
 		leaderboards.setTextFill(Color.rgb(200, 200, 60));
 		leaderboards.relocate(x, y);
@@ -356,7 +360,7 @@ public class UI {
 		leaderboardsBox.setStrokeWidth(3);
 
 		initials = new Label("  Enter Initials: "+initial1+" "+initial2+" "+initial3 + "\nPress Enter to Submit");
-		initials.setFont(new Font("Arial", 30));
+		initials.setFont(new Font("Arial", 26));
 		initials.setTextFill(Color.rgb(200, 200, 60));
 		initials.relocate(x, y);
 
@@ -426,8 +430,8 @@ public class UI {
 		HealthWarning.setText("Dead!");
 		HealthWarning.relocate(x+135, y-63);
 
-		scoreBox.relocate(x, y-325);
-		score.relocate(x+5, y-325);
+		scoreBox.relocate(x, y-300);
+		score.relocate(x+5, y-300);
 		timeBox.relocate(x, y-250);
 		time.relocate(x+5, y-250);
 	}
@@ -444,28 +448,72 @@ public class UI {
 	}
 
 	public void connectLeaderboards() {
+
+		leaderboards.setText("  #\t\tInitials\t\tScore\n"
+				+ "---------------------------------------------------\n"
+				+ "  Loading........\n\n\n\n\n"
+				+ "---------------------------------------------------\n"
+				+"    \u2191 PG_UP    \u21BB TAB    \u2193 PG_DOWN    \n");
+
 		String connectionURL = "jdbc:sqlserver://databasesystemsproject.cy9rjwfchpnj.us-east-1.rds.amazonaws.com:1433;databaseName=OOD;user=admin;password=mypassword";
 
 		try {
 			Connection con=DriverManager.getConnection(connectionURL);
 			Statement statement = con.createStatement();
-			String sqlstatement = "SELECT TOP 5 initials, highscore FROM Highscores ORDER BY highscore DESC";
+			String sqlstatement = "SELECT initials, highscore FROM highscores ORDER BY highscore DESC";
+			//			String sqlstatement = "SELECT TOP 5 initials, highscore\r\n" + 
+			//					"FROM highscores\r\n" + 
+			//					"WHERE highscore_id NOT IN\r\n" + 
+			//					"	(SELECT TOP "+(leaderboardStart-1)+" highscore_id\r\n" + 
+			//					"		FROM highscores\r\n" + 
+			//					"		ORDER BY highscore DESC)\r\n" + 
+			//					"ORDER BY highscore DESC";
 			ResultSet resultSet = statement.executeQuery(sqlstatement);
-			String results = "  #\t\tInitials\t\tScore\n"
-					+ "------------------------------------------------------\n";
-			int k = 1;
+			leaderboardsStrings = new ArrayList<String[]>();
+
+			int index = 0;
 			while (resultSet.next()) {
-				results += "   "+ k + "\t\t" + resultSet.getString(1) + "     \t\t" + resultSet.getString(2) +"\n";
-				k++;
+				leaderboardsStrings.add(new String[3]);
+				leaderboardsStrings.get(index)[0] = ""+(index+1);
+				leaderboardsStrings.get(index)[1] = resultSet.getString(1);
+				leaderboardsStrings.get(index)[2] = resultSet.getString(2);
+				index++;
 			}
-
-			leaderboards.setText(results);
-
-
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  
+		
+		changeleaderboardView();
+	}
+
+	public void changeLeaderboardPosition(int k) {
+		if (leaderboardStart + k < 1) leaderboardStart = 1;
+		else if (k == 0) leaderboardStart = 1;
+		else leaderboardStart += k;
+		changeleaderboardView();
+	}
+
+	private void changeleaderboardView() {
+		String results = "  #\t\tInitials\t\tScore\n"
+				+ "------------------------------------------------------\n";
+		int currentindex = leaderboardStart;
+			while (currentindex < leaderboardStart+5) {
+				if (currentindex > leaderboardsStrings.size()) {
+					results += "   "+ currentindex + "\t\t...     \t\t.\n";
+				}
+				else {
+					results += "   "+ leaderboardsStrings.get(currentindex-1)[0] + "\t\t" + leaderboardsStrings.get(currentindex-1)[1] + "     \t\t" + leaderboardsStrings.get(currentindex-1)[2] +"\n";
+				}
+				
+				currentindex++;
+			}
+			
+			
+
+		results += "------------------------------------------------------\n"
+				+"    \u2191 PG_UP    \u21BB TAB    \u2193 PG_DOWN    \n";
+
+		leaderboards.setText(results);
 	}
 
 	public void hideLeaderboards() {
@@ -475,6 +523,7 @@ public class UI {
 		initials.setVisible(false);
 
 		leaderboards.setText("  #\t\tInitials\t\tScore\n"
+				+ "       \u2191 PG_UP                 \u2193 PG_DOWN    \n"
 				+ "------------------------------------------------------\n"
 				+ "  Loading........");
 	}
@@ -600,10 +649,7 @@ public class UI {
 
 		showHurtScreen(false);
 
-		scoreBox.relocate(x-100, y-950);
-		score.relocate(x-95, y-950);
-		timeBox.relocate(x+300, y-950);
-		time.relocate(x+305, y-950);
+		changeUIPositions(x, y);
 
 		initial1 = "_";
 		initial2 = "_";

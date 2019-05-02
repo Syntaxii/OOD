@@ -156,37 +156,55 @@ public class Main extends Application{
 						break;
 					}
 				}
-				else if(leaderboardIsShowing == true && submitted != true) {
-					if (currentInitialsAmount<3) {
-						if (event.getCode().isLetterKey()) {
-							switch(currentInitialsAmount) {
-							case 0: 
-								uiElements.addInitial1(event.getText());
-								currentInitialsAmount++;
-								break;
-							case 1:	
-								uiElements.addInitial2(event.getText());
-								currentInitialsAmount++;
-								break;
-							case 2:	
-								uiElements.addInitial3(event.getText());
-								currentInitialsAmount++;
-								break;
+				else if(leaderboardIsShowing == true) {
+					if (submitted != true) {
+						if (currentInitialsAmount<3) {
+							if (event.getCode().isLetterKey()) {
+								switch(currentInitialsAmount) {
+								case 0: 
+									uiElements.addInitial1(event.getText());
+									currentInitialsAmount++;
+									break;
+								case 1:	
+									uiElements.addInitial2(event.getText());
+									currentInitialsAmount++;
+									break;
+								case 2:	
+									uiElements.addInitial3(event.getText());
+									currentInitialsAmount++;
+									break;
+								}
+
 							}
-
 						}
-					}
-					else if (event.getCode() == KeyCode.ENTER) {
-						uiElements.submitScore();
-						submitted = true;
-						uiElements.connectLeaderboards();
-					}
+						else if (event.getCode() == KeyCode.ENTER) {
+							uiElements.submitScore();
+							submitted = true;
+							uiElements.connectLeaderboards();
+						}
 
-					if (event.getCode() == KeyCode.BACK_SPACE) {
-						uiElements.addInitial1("_");
-						uiElements.addInitial2("_");
-						uiElements.addInitial3("_");
-						currentInitialsAmount = 0;
+						if (event.getCode() == KeyCode.BACK_SPACE) {
+							uiElements.addInitial1("_");
+							uiElements.addInitial2("_");
+							uiElements.addInitial3("_");
+							currentInitialsAmount = 0;
+						}
+						
+					}
+					
+					switch(event.getCode()) {
+					case PAGE_UP:
+						uiElements.changeLeaderboardPosition(-5);
+						break;
+					case PAGE_DOWN:
+						uiElements.changeLeaderboardPosition(5);
+						break;
+					case TAB:
+						uiElements.connectLeaderboards();
+						uiElements.changeLeaderboardPosition(0);
+						break;
+					default:
+						break;
 					}
 				}
 				switch (event.getCode()) {
@@ -221,17 +239,20 @@ public class Main extends Application{
 
 
 				case NUMPAD8: uiElements.setDebug(); break;
+				
+				case NUMPAD9: player.setHealth(0);
+				break;
 
-				case NUMPAD0: case DELETE: Reset(); break;
+				case NUMPAD0: Reset(); break;
 
-				case MINUS: 	stage.setFullScreen(true); 
+				case F11: 	stage.setFullScreen(true); 
 				uiElements.changeUIPositions((width/2)-200, height-110);
 				stage.setFullScreenExitHint("");
 				break;
 
 				case ESCAPE: 	System.exit(0); break;
 
-				case PLUS:                
+				case F10:                
 					stage.setHeight(newHeight);
 					stage.setWidth(newWidth);
 					stage.setFullScreen(false);
@@ -241,7 +262,7 @@ public class Main extends Application{
 					break;
 				default:
 					break;
-					
+
 				}
 			}
 		});
@@ -428,7 +449,7 @@ public class Main extends Application{
 
 	private void PlayerChecks() {
 		if (player.isAlive()) {
-			
+
 			handleMovement();
 			rotatePlayer();
 			checkCollision();
@@ -504,7 +525,7 @@ public class Main extends Application{
 					setMouseColor(Color.SALMON);
 					cx = player.getPic()[0].getLayoutX() + player.getPic()[0].getBoundsInLocal().getWidth() / 2;
 					cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
-					
+
 					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
 					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
 					createBullet(calculateWeaponSpread(1)+mouseX, calculateWeaponSpread(1)+mouseY, cx, cy, projectiles);
@@ -690,7 +711,7 @@ public class Main extends Application{
 		cy = player.getPic()[0].getLayoutY() + player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		angle = Math.atan2(mouseY - cy, mouseX - cx) * 180 / Math.PI;
 		for (ImageView p : player.getPic())
-		p.setRotate(angle-3);
+			p.setRotate(angle-3);
 	}
 
 	private void getWeaponXandY() { 
@@ -711,9 +732,9 @@ public class Main extends Application{
 		double tempy = player.getPic()[0].getBoundsInLocal().getHeight() / 2;
 		if (x - tempx >= 0 && x + tempx <= width &&
 				y - tempy >= 0 && y + tempy <= height) {
-			 player.getPic()[0].relocate(x - tempx, y - tempy);
-			 player.getPic()[1].relocate(x - tempx-7, y - tempy+2);
-			 player.getPic()[2].relocate(x - tempx-7, y - tempy+2);
+			player.getPic()[0].relocate(x - tempx, y - tempy);
+			player.getPic()[1].relocate(x - tempx-7, y - tempy+2);
+			player.getPic()[2].relocate(x - tempx-7, y - tempy+2);
 		}
 
 	}
@@ -832,12 +853,12 @@ public class Main extends Application{
 		} //FACTORY 
 
 	}
-	
+
 	private double calculateWeaponSpread(double amount) {
 		double tempx = cx-mouseX;
 		double tempy = cy-mouseY;
 		double weaponSpread = Math.sqrt(Math.pow(tempx, 2) + Math.pow(tempy, 2));
-		
+
 		return (Math.random()-.5)*(amount*weaponSpread);
 	}
 }
