@@ -209,39 +209,39 @@ public class Main extends Application{
 				}
 				switch (event.getCode()) {
 
-				//Spawn Zombies
-				case NUMPAD1:
-					spawnZombie(EnemyType.BASIC);
-					break;
-
-				case NUMPAD2:
-					spawnZombie(EnemyType.FAST);
-					break;
-
-				case NUMPAD3:
-					spawnZombie(EnemyType.LETHAL);
-					break;
-
-					//Spawn Powerups
-				case NUMPAD4:
-					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
-					break;
-				case NUMPAD5:
-					spawnPowerup(PowerupType.REGENERATION, 0, 0);
-					break;
-
-				case NUMPAD6:
-					spawnPowerup(PowerupType.AMMO2, 0, 0);
-					break;
-				case NUMPAD7:
-					spawnPowerup(PowerupType.AMMO3, 0, 0);
-					break;
+//				//Spawn Zombies
+//				case NUMPAD1:
+//					spawnZombie(EnemyType.BASIC);
+//					break;
+//
+//				case NUMPAD2:
+//					spawnZombie(EnemyType.FAST);
+//					break;
+//
+//				case NUMPAD3:
+//					spawnZombie(EnemyType.LETHAL);
+//					break;
+//
+//					//Spawn Powerups
+//				case NUMPAD4:
+//					spawnPowerup(PowerupType.MAXDAMAGE, 0, 0);
+//					break;
+//				case NUMPAD5:
+//					spawnPowerup(PowerupType.REGENERATION, 0, 0);
+//					break;
+//
+//				case NUMPAD6:
+//					spawnPowerup(PowerupType.AMMO2, 0, 0);
+//					break;
+//				case NUMPAD7:
+//					spawnPowerup(PowerupType.AMMO3, 0, 0);
+//					break;
 
 
 				case NUMPAD8: uiElements.setDebug(); break;
 				
-				case NUMPAD9: player.setHealth(0);
-				break;
+//				case NUMPAD9: player.setHealth(0);
+//				break;
 
 				case NUMPAD0: Reset(); break;
 
@@ -474,6 +474,10 @@ public class Main extends Application{
 		}
 		else if (player.checkHPWarn() && frameCount%10==0) {
 			uiElements.warnHP(); ///if health is low, flash a warning for the player
+		}
+		
+		else if (!player.checkHPWarn() && uiElements.checkwarnHP()) {
+			uiElements.turnOffwarnHP();
 		}
 
 		if(player.isAlive() && frameCount%60==0) uiElements.updateTime(frameCount/60);
