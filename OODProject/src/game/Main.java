@@ -192,15 +192,15 @@ public class Main extends Application{
 				switch (event.getCode()) {
 
 				//Spawn Zombies
-				case NUMPAD1: case J:
+				case NUMPAD1:
 					spawnZombie(EnemyType.BASIC);
 					break;
 
-				case NUMPAD2: case K:
+				case NUMPAD2:
 					spawnZombie(EnemyType.FAST);
 					break;
 
-				case NUMPAD3: case L:
+				case NUMPAD3:
 					spawnZombie(EnemyType.LETHAL);
 					break;
 
@@ -231,7 +231,7 @@ public class Main extends Application{
 
 				case ESCAPE: 	System.exit(0); break;
 
-				case ENTER:                
+				case PLUS:                
 					stage.setHeight(newHeight);
 					stage.setWidth(newWidth);
 					stage.setFullScreen(false);
