@@ -1,4 +1,6 @@
 package game;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -35,9 +37,19 @@ public class UI {
 	private String initial1 = "_", initial2 = "_", initial3 = "_";
 	private int leaderboardStart = 1;
 	private ArrayList<String[]> leaderboardsStrings; 
+	private String connectionURL;
 
 	private UI(){
 		declareUI();
+		try {
+			FileReader fr = new FileReader("SQLLOGIN");
+			BufferedReader br = new BufferedReader(fr);
+			connectionURL = br.readLine();
+			br.close();
+		}
+		catch (Exception e){
+		}
+		
 	}
 
 	public ArrayList<Node> getUIElements(){
@@ -463,8 +475,7 @@ public class UI {
 				+ "---------------------------------------------------\n"
 				+"    \u2191 PG_UP    \u21BB TAB    \u2193 PG_DOWN    \n");
 
-		String connectionURL = "jdbc:sqlserver://databasesystemsproject.cy9rjwfchpnj.us-east-1.rds.amazonaws.com:1433;databaseName=OOD;user=admin;password=mypassword";
-
+		
 		try {
 			Connection con=DriverManager.getConnection(connectionURL);
 			Statement statement = con.createStatement();
@@ -711,7 +722,6 @@ public class UI {
 
 	public void submitScore() {
 
-		String connectionURL = "jdbc:sqlserver://databasesystemsproject.cy9rjwfchpnj.us-east-1.rds.amazonaws.com:1433;databaseName=OOD;user=admin;password=mypassword";
 
 		try {
 			Connection con=DriverManager.getConnection(connectionURL);
